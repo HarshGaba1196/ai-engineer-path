@@ -24,10 +24,12 @@ function xp(){
     + Math.round((state.exam||0)*150)
     + (state.bonus||0);
 }
+const rankName = l => l===RANKS.length-1 ? TRACK.rank : RANKS[l][1];
 function levelInfo(x=xp()){
-  let l=0; while(l<RANKS.length-1 && x>=RANKS[l+1][0]) l++;
-  const lo=RANKS[l][0], hi=l<RANKS.length-1?RANKS[l+1][0]:null;
-  return {level:l+1, name:RANKS[l][1], tag:RANKS[l][2], xp:x, next:hi, prog: hi==null?1:(x-lo)/(hi-lo), toNext: hi==null?0:hi-x};
+  const th=l=>Math.round(RANKS[l][0]*Math.max(0.5,PHASES.length/10));   // shorter paths need less XP per rank
+  let l=0; while(l<RANKS.length-1 && x>=th(l+1)) l++;
+  const lo=th(l), hi=l<RANKS.length-1?th(l+1):null;
+  return {level:l+1, name:rankName(l), tag:RANKS[l][2], xp:x, next:hi, prog: hi==null?1:(x-lo)/(hi-lo), toNext: hi==null?0:hi-x};
 }
 
 /* streaks: one entry per local calendar day with activity */
@@ -58,11 +60,11 @@ const BADGES = [
   ["build","</>","Shipped it","Finish your first build task",()=>buildsDone()>=1],
   ["build5","v5","Production ready","Finish 5 build tasks",()=>buildsDone()>=5],
   ["phase","∇","Converged","Master your first phase",()=>masteredCount()>=1],
-  ["half","½","Halfway there","Master 5 phases",()=>masteredCount()>=5],
+  ["half","½","Halfway there","Master half the phases in your path",()=>masteredCount()>=Math.ceil(PHASES.length/2)],
   ["tutor","λ","Curious mind","Ask the AI tutor a question",()=>!!F().tutor],
   ["daily","24h","Daily driver","Complete a daily challenge",()=>!!F().daily],
   ["boss","♛","Boss slayer","Beat the boss battle with 80% or more",()=>(state.exam||0)>=0.8],
-  ["all","AI","AI Engineer","Master all 10 phases",()=>masteredCount()===PHASES.length]];
+  ["all","AI","Path complete","Master every phase in your path",()=>masteredCount()===PHASES.length]];
 function checkBadges(){
   state.badges=state.badges||{}; const fresh=[];
   for(const b of BADGES){ if(!state.badges[b[0]] && b[4]()){ state.badges[b[0]]=Date.now(); fresh.push(b); } }
@@ -88,7 +90,7 @@ function save(){
 function quietSync(){ checkBadges(); lastLevel = levelInfo().level; renderPlayer(); }
 
 function levelUp(L){
-  const r=RANKS[L-1];
+  const r=[0,rankName(L-1),RANKS[L-1][2]];
   const el=$("levelup");
   el.innerHTML=`<div class="lu-card" role="dialog" aria-modal="true" aria-labelledby="luTitle">
     <div class="label" style="color:var(--xp)">Level up</div>
@@ -106,7 +108,7 @@ function levelUp(L){
 function renderPlayer(){
   const L=levelInfo(), s=streak(), today=studiedToday();
   const card=$("player"); if(!card) return;
-  card.innerHTML=`<div class="pl-top"><div class="pl-lvl num" aria-label="Level ${L.level}">${L.level}</div><div style="min-width:0"><b>${esc(L.name)}</b><span>${L.next==null?"Max rank reached":L.toNext+" XP to "+esc(RANKS[L.level][1])}</span></div></div>
+  card.innerHTML=`<div class="pl-top"><div class="pl-lvl num" aria-label="Level ${L.level}">${L.level}</div><div style="min-width:0"><b>${esc(L.name)}</b><span>${L.next==null?"Max rank reached":L.toNext+" XP to "+esc(rankName(L.level))}</span></div></div>
     <div class="pl-bar"><i style="width:${pct(L.prog)}"></i></div>
     <div class="pl-stats"><span class="${today?"lit":""}" title="${today?"You studied today":"Study today to keep your streak"}">${flame(today)} <b class="num">${s}</b> day streak</span><span><b class="num">${L.xp}</b> XP</span></div>`;
   $("chips").innerHTML=`<span class="tchip ${today?"lit":""}" title="Day streak">${flame(today)}<b class="num">${s}</b></span><span class="tchip xpchip" title="Total XP"><b class="num">${L.xp}</b> XP</span>`;

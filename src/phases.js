@@ -1,4 +1,4 @@
-const PHASES = [
+const MODULES = [
 { id:"py", title:"Python for AI work", weeks:"3 weeks",
   why:"Almost every AI library, notebook and paper is Python-first. You need fluent, idiomatic Python, not just syntax.",
   bridge:"FastAPI is your Spring Boot here: decorators instead of annotations, Pydantic models instead of DTOs with Bean Validation, uvicorn instead of embedded Tomcat. venv + pip/uv plays the role of Maven.",

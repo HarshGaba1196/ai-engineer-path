@@ -26,7 +26,7 @@ async function connect(){
     const uid = await user.id(); if(!uid) return;
     docRef = db.doc("data/users/" + uid + "/progress");
     const snap = await docRef.get();
-    if(snap.exists){ state = Object.assign(blank(), JSON.parse(snap.data().progress || "{}")); saveLocal(); quietSync(); route(); }
+    if(snap.exists){ state = Object.assign(blank(), JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); if(!needsPick && parse().name==="paths") history.replaceState(null, "", "#dashboard"); route(); }
     else if(hasProgress()) save();
     setSync("Synced to your account", true);
   }catch(e){}
@@ -62,6 +62,7 @@ function renderNav(r){
   const icon = d => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   $("nav").innerHTML =
     `<a href="#dashboard" class="${r.name==="dashboard"?"on":""}">${icon('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>')}<span class="t">Dashboard</span><span></span></a>
+     <a href="#paths" class="${r.name==="paths"?"on":""}">${icon('<path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="7" r="2"/>')}<span class="t">Switch path</span><span></span></a>
      <a href="#exam" class="${r.name==="exam"||r.name==="examrun"?"on":""}">${icon('<path d="M9 11l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/>')}<span class="t">Boss battle</span><span class="m">${state.exam!=null?pct(state.exam):""}</span></a>
      <a href="#daily" class="${r.name==="daily"?"on":""}">${flame(dailyDone())}<span class="t">Daily challenge</span><span class="m">${dailyDone()?"Done":"New"}</span></a>
      <div class="nav-h">Curriculum</div>` +
@@ -74,6 +75,7 @@ function parse(){
   if(h==="exam") return {name:"exam"};
   if(h==="exam-run") return {name:"examrun"};
   if(h==="daily") return {name:"daily"};
+  if(h==="paths") return {name:"paths"};
   const l = h.match(/^p-([a-z]+)-l(\d)$/);
   if(l && idx(l[1])>=0 && +l[2] < PHASES[idx(l[1])].concepts.length) return {name:"lesson", id:l[1], k:+l[2]};
   const m = h.match(/^p-([a-z]+)(?:-(quiz|build))?$/);
@@ -89,6 +91,7 @@ function route(){
   if(np==null){ cb.href="#exam"; cb.querySelector(".lbl").textContent="Fight the boss"; }
   else { const a=nextAction(np); cb.href=a.href; cb.querySelector(".lbl").textContent="Continue: phase "+(np+1); }
   const v = $("view");
+  if(r.name==="paths"){ crumbs(["Choose your path"]); v.innerHTML = pathsView(); bindPaths(); return; }
   if(r.name==="dashboard"){ crumbs(["Dashboard"]); v.innerHTML = dashboard(); bindDashboard(); }
   else if(r.name==="exam"){ crumbs(["Boss battle"]); v.innerHTML = examHome(); bindExamHome(); }
   else if(r.name==="examrun"){ if(quizRun?.mode!=="exam") startExam(); crumbs(["Boss battle","Fight"]); renderRunner(); }
@@ -195,8 +198,8 @@ function md(src){
   }).join("");
 }
 const TUTOR_PROMPTS = [["Explain it more simply","Explain this concept more simply, as if I'm new to it, in under 150 words."],
-  ["Java/Spring analogy","Explain this concept with an analogy from Java, Spring Boot or microservices, then point out where the analogy breaks down."],
-  ["Worked example","Show me a small, complete, runnable code example of this concept and walk through it line by line."],
+  ["Analogy from my field","Explain this concept with an analogy from my background, then point out where the analogy breaks down."],
+  ["Worked example","Show me a small, complete worked example of this concept and walk through it step by step. Use code only if it fits my role."],
   ["Quiz me","Ask me 3 short questions to check my understanding of this concept. Put the answers at the end under a heading 'Answers'."],
   ["Common mistakes","What do people commonly misunderstand or get wrong about this concept in real projects?"]];
 const tutorChats = {};
@@ -215,7 +218,7 @@ function lessonView(i, k){
       <div class="try"><div class="label" style="color:var(--amber)">Try it · about 10 minutes</div><p>${inline(L.try)}</p></div>
     </div>
     <label class="done-row"><input type="checkbox" id="lessonDone" ${done.has(k)?"checked":""}><span><b>I can explain this without notes</b><br><span class="muted" style="font-size:13px">Marks the concept as understood for this phase.</span></span></label></article>
-    <section class="card tutor" aria-label="AI tutor"><div class="card-h"><div><h2>Ask the tutor</h2><p class="muted" style="font-size:13px;margin-top:2px">Claude answers using this lesson and your Java background. Uses your Claude account.</p></div>
+    <section class="card tutor" aria-label="AI tutor"><div class="card-h"><div><h2>Ask the tutor</h2><p class="muted" style="font-size:13px;margin-top:2px">Claude answers using this lesson and your background. Uses your Claude account.</p></div>
       ${(tutorChats[key]||[]).length?`<button class="btn sec" id="tClear" style="padding:5px 10px;font-size:13px">Clear chat</button>`:""}</div>
       <div class="card-b" style="display:flex;flex-direction:column;gap:14px">
         <div class="chips">${TUTOR_PROMPTS.map(([l],j)=>`<button class="chipbtn" data-j="${j}">${l}</button>`).join("")}</div>
@@ -249,14 +252,14 @@ function bindLesson(i, k){
 }
 function tutorContext(i,k){
   const p=PHASES[i], L=LESSONS[p.id][k];
-  return `You are a patient, practical tutor inside a learning app. The learner is a backend engineer who knows Java, Spring Boot, microservices, basic Python and Angular, and is becoming an AI engineer.
+  return `You are a patient, practical tutor inside a learning app. The learner is ${TRACK.learner}, moving towards the role of ${TRACK.to}.
 They are studying phase ${i+1} "${p.title}", concept "${p.concepts[k][0]}" (${p.concepts[k][1]}).
 Lesson text they just read:
 <lesson>
 ${L.p.join("\n\n")}
 ${L.code?"\nExample code:\n"+L.code:""}
 </lesson>
-Answer their question clearly and accurately. Keep it under about 300 words unless they ask for more. Use Java or Spring analogies when they genuinely help. Use short fenced code blocks for code. Format with simple Markdown (paragraphs, bullet lists, **bold**). If the question is unrelated to AI or software engineering, gently steer back to the lesson.`;
+Answer their question clearly and accurately. Keep it under about 300 words unless they ask for more. Use analogies from ${TRACK.analogy} when they genuinely help. ${TRACK.tech?"Use short fenced code blocks for code.":"The learner doesn't code, so explain in plain language and avoid code unless they ask."} Format with simple Markdown (paragraphs, bullet lists, **bold**). If the question is unrelated to AI or software engineering, gently steer back to the lesson.`;
 }
 async function askTutor(i,k,question,label){
   const p=PHASES[i], key=p.id+"-"+k, log=$("tLog");
@@ -390,7 +393,7 @@ function examHome(){
   const ex=(state.history||[]).filter(h=>h.k==="e").slice(-8).reverse();
   return `<div class="boss-hero card"><div class="boss-glyph num" aria-hidden="true">♛</div><div>
       <div class="label" style="color:var(--bad)">Final boss</div><h1 style="margin-top:4px">The Checkpoint</h1>
-      <p class="muted" style="margin-top:6px;max-width:60ch">15 random questions from all ten phases. You have 3 lives: each wrong answer costs one, and losing all three ends the fight. Score 80% to defeat the boss and earn the Boss slayer badge.</p>
+      <p class="muted" style="margin-top:6px;max-width:60ch">15 random questions from all ${PHASES.length} phases of your path. You have 3 lives: each wrong answer costs one, and losing all three ends the fight. Score 80% to defeat the boss and earn the Boss slayer badge.</p>
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;align-items:center"><button class="btn danger-btn" id="startExam">Enter the battle</button><span class="hearts">${heart(1)}${heart(1)}${heart(1)}</span></div></div></div>
     <div class="kpis" style="grid-template-columns:repeat(3,minmax(0,1fr))">
       <div class="card kpi"><div class="label">Best score</div><b>${state.exam!=null?pct(state.exam):"–"}</b><small>${(state.exam||0)>=0.8?"Boss defeated":"80% to win"}</small></div>
@@ -412,4 +415,6 @@ $("resetBox").addEventListener("click",e=>{
   else if(e.target.id==="resetYes"){ state=blank(); quizRun=null; lastLevel=null; save(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Progress reset"); }
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
-loadLocal(); quietSync(); route(); connect();
+loadLocal(); initTrack(); quietSync();
+if(needsPick && (!location.hash || location.hash==="#dashboard")) history.replaceState(null, "", "#paths");
+route(); connect();

@@ -1,9 +1,18 @@
-# Backend to AI Engineer
+# AI Career Paths
 
-A gamified learning path for backend engineers (Java, Spring Boot, microservices) who want to become AI engineers.
+Gamified learning paths for moving into AI from your current role:
 
-- 10 phases, from Python and math through LLM APIs, RAG, agents, evals and production
-- 60 short lessons with code examples and 10-minute exercises
+| From | To |
+|---|---|
+| Backend engineer | AI engineer |
+| Frontend engineer | AI product engineer |
+| DevOps / SRE engineer | LLMOps engineer |
+| QA / test engineer | AI evals engineer |
+| Product manager | AI product manager |
+| Any non-technical role | AI-powered professional |
+
+- 26 shared modules; progress on a module counts in every path that uses it
+- 156 short lessons with examples and 10-minute exercises
 - Phase quizzes, build projects, a daily challenge and a boss battle
 - XP, ranks, day streaks and badges
 
@@ -17,8 +26,11 @@ Open `index.html` in a browser.
 
 | File | What it holds |
 |---|---|
-| `src/phases.js` | Phases, concepts, resources, build tasks and quiz questions |
-| `src/lessons.js` | Lesson text, code examples and exercises |
+| `src/phases.js` | Original 10 modules: concepts, resources, build tasks and quiz questions |
+| `src/lessons.js` | Lessons for those modules |
+| `src/modules2.js` | Modules and lessons added for the other paths |
+| `src/tracks.js` | Career paths: which modules each uses, plus role-specific bridges and builds |
+| `src/paths.js` | Path picker |
 | `src/game.js` | XP, ranks, streaks, badges, daily challenge |
 | `src/dash.js` | Dashboard |
 | `src/app.js` | Routing, lessons, quizzes, storage |

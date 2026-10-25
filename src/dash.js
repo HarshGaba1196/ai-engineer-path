@@ -13,7 +13,7 @@ function dashboard(){
       <div class="label" style="color:var(--xp)">Rank ${L.level} of ${RANKS.length}</div>
       <h1>${esc(L.name)}</h1>
       <p class="muted">${esc(L.tag)}</p>
-      <div class="pb-xp"><div class="bar xp"><i style="width:${pct(L.prog)}"></i></div><span class="num">${L.xp} XP${L.next!=null?` · ${L.toNext} to <b>${esc(RANKS[L.level][1])}</b>`:" · max rank"}</span></div>
+      <div class="pb-xp"><div class="bar xp"><i style="width:${pct(L.prog)}"></i></div><span class="num">${L.xp} XP${L.next!=null?` · ${L.toNext} to <b>${esc(rankName(L.level))}</b>`:" · max rank"}</span></div>
       <div class="pb-actions"><a class="btn" href="${next.href}">${esc(next.label)}</a>${dailyDone()?"":`<a class="btn sec" href="#daily">${flame(false)} Daily challenge</a>`}</div>
     </div>
     <div class="pb-side">
@@ -31,7 +31,7 @@ function dashboard(){
   </div>
 
   <div class="grid2">
-    <div class="card"><div class="card-h"><div><h2>Quest map</h2><p class="muted" style="font-size:13px;margin-top:2px">Ten worlds from backend engineer to AI engineer. Master each one at 80%.</p></div></div>
+    <div class="card"><div class="card-h"><div><h2>Quest map</h2><p class="muted" style="font-size:13px;margin-top:2px">${PHASES.length} worlds from ${esc(TRACK.from.toLowerCase())} to ${esc(TRACK.to.toLowerCase())}. Master each one at 80%. <a href="#paths">Switch path</a></p></div></div>
       <div class="quest">${questMap(ms, np)}</div></div>
     <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
       ${dailyCard()}
@@ -48,7 +48,7 @@ function dashboard(){
   <div class="card"><div class="card-h"><div><h2>How to study each phase</h2><p class="muted" style="font-size:13px;margin-top:2px">About an hour a day. Reading alone won't make it stick; the exercises and builds do.</p></div></div>
     <ol class="method">${[["Read the lesson","10–15 min. Each concept has a short lesson with an example."],
       ["Run the example","Type the code yourself instead of copying it, then change something and see what breaks."],
-      ["Ask the tutor","Stuck? Ask for a simpler explanation, a Java analogy or a worked example."],
+      ["Ask the tutor","Stuck? Ask for a simpler explanation, an analogy from your field or a worked example."],
       ["Do the exercise","Every lesson ends with a 10-minute task. Tick the lesson only when you can explain it without notes."],
       ["Watch or read the resource","Use the linked course or video for depth on the topics you found hardest."],
       ["Quiz, then build","Pass the quiz at 80%, then do the build task. The build is where the learning really sets in."]]
@@ -67,7 +67,7 @@ function questMap(ms, np){
   const xs=[8,38,62,38,8,38,62,38,8,38];
   return PHASES.map((p,i)=>{
     const m=ms[i], done=m>=0.8, cur=i===np;
-    return `<a class="qnode ${done?"done":""} ${cur?"cur":""}" href="#p-${p.id}" style="--x:${xs[i]}%">
+    return `<a class="qnode ${done?"done":""} ${cur?"cur":""}" href="#p-${p.id}" style="--x:${xs[i%xs.length]}%">
       <span class="qn-dot">${ring(m,64,6,"var(--line)",done?"var(--good)":"var(--accent)")}<span class="qn-in num">${done?"✓":i+1}</span>${cur?`<span class="qn-tag">You are here</span>`:""}</span>
       <span class="qn-txt"><b>${esc(p.title)}</b><small class="num">${pct(m)} · ${p.weeks}</small></span></a>`;
   }).join("");
