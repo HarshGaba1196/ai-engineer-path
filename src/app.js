@@ -443,5 +443,13 @@ $("resetBox").addEventListener("click",e=>{
   else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; lastXp=xp(); persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
+/* the AI tutor needs Claude; on the standalone (GitHub Pages) copy, announce it instead */
+(function(){
+  const KEY_SOON="ai-path-soon-dismissed"; let dismissed=false;
+  try{ dismissed = localStorage.getItem(KEY_SOON)==="1"; }catch(e){}
+  if(window.claude?.use || dismissed) return;
+  $("soonBanner").hidden=false;
+  $("soonClose").onclick=()=>{ $("soonBanner").hidden=true; try{ localStorage.setItem(KEY_SOON,"1"); }catch(e){} };
+})();
 loadLocal(); initTrack(); quietSync();
 route(); connect();
