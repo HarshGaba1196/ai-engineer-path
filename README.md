@@ -6,19 +6,23 @@ Gamified learning paths for moving into AI from your current role:
 |---|---|
 | Backend engineer | AI engineer |
 | Frontend engineer | AI product engineer |
+| Full-stack developer | AI engineer |
 | DevOps / SRE engineer | LLMOps engineer |
 | QA / test engineer | AI evals engineer |
 | Data analyst | Data scientist |
 | Data engineer | ML engineer |
+| Data scientist | LLM engineer |
 | UX / UI designer | AI UX designer |
 | Security engineer | AI security engineer |
 | Mobile developer | On-device AI engineer |
 | Business analyst | AI solutions consultant |
 | Product manager | AI product manager |
+| Project manager / Scrum master | AI program lead |
+| Technical writer | AI knowledge designer |
 | Any non-technical role | AI-powered professional |
 
-- 38 modules shared between paths; each path keeps its own progress, XP and badges
-- 228 short lessons with examples and 10-minute exercises
+- 42 modules shared between paths; each path keeps its own progress, XP and badges
+- 252 short lessons with examples and 10-minute exercises
 - Phase quizzes, build projects, a daily challenge and a boss battle
 - XP, ranks, day streaks and badges
 
@@ -37,6 +41,7 @@ Open `index.html` in a browser.
 | `src/modules2.js` | Modules and lessons for the first batch of extra paths |
 | `src/modules3.js` | Modules and lessons for the data analyst, data engineer and UX paths |
 | `src/modules4.js` | Modules and lessons for the security, mobile and business analyst paths |
+| `src/modules5.js` | Modules and lessons for the data scientist, project manager and technical writer paths |
 | `src/tracks.js` | Career paths: which modules each uses, plus role-specific bridges and builds |
 | `src/paths.js` | Path picker |
 | `src/game.js` | XP, ranks, streaks, badges, daily challenge |

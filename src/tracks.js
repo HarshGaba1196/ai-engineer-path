@@ -28,6 +28,24 @@ const TRACKS = [
     evals:{title:"Evals for your assistant in CI",steps:["Write 30 test conversations for your assistant, including 5 it should refuse.","Write code checks: valid JSON, citations present, under a word limit.","Add an LLM-as-judge rubric for helpfulness and hand-check 10 grades.","Run the suite with promptfoo in GitHub Actions on every pull request."]},
     ops:{title:"Capstone: ship an AI feature to production",steps:["Combine your streaming chat, RAG and agent into one app with authentication.","Add rate limits per user, cost logging per request and error tracking.","Test 10 prompt injections through user input and uploaded files, and fix what gets through.","Deploy it (Vercel, Netlify or your cloud), write a README with a demo GIF and share it."]}} },
 
+{ id:"fullstack", short:"Full-stack developer", from:"Full-stack developer", to:"AI engineer", rank:"AI Engineer", tech:true,
+  tagline:"Build complete AI products end to end: model calls and tools on the server, streaming UIs on the client, RAG, agents and production.",
+  stack:["JavaScript / TypeScript","React / Angular / Vue","Node / Java / Python backend","SQL","REST APIs"],
+  learner:"a full-stack developer who knows JavaScript or TypeScript, a frontend framework, a backend language such as Node, Java or Python, SQL and REST APIs",
+  analogy:"full-stack web development: frontend, backend and databases",
+  overlap:"High", modules:["llm","api","tsai","rag","agents","aiux","evals","ops"],
+  bridges:{
+    llm:"Tokens are request and response size, the context window is a hard payload limit, and latency grows with output length. That explains most performance and cost behaviour you'll see.",
+    api:"You'll use whichever backend you know. The patterns, like system prompts, structured output, tools and streaming, are the same in Spring AI, Python or Node.",
+    tsai:"This is the same work on the TypeScript side: server routes that call models and stream into your UI framework.",
+    rag:"RAG is a search endpoint plus a prompt template. You own the whole slice: ingestion job, vector table, API and the citations UI.",
+    agents:"An agent is a loop on your server that calls your own APIs as tools. Treat each tool like a public endpoint: validate inputs and check permissions.",
+    aiux:"As a full-stack developer you'll often design the AI experience yourself. These patterns stop users from getting confused or over-trusting.",
+    evals:"Evals are integration tests for prompts. Add them to the same CI pipeline that runs your unit and end-to-end tests.",
+    ops:"Your production habits carry over. Add token cost, quality scores and prompt versions to the dashboards you already keep."},
+  builds:{
+    ops:{title:"Capstone: a full-stack AI product",steps:["Build one product that combines streaming chat, RAG with citations and an agent with two tools.","Add authentication, per-user rate limits and cost tracking.","Run your eval suite in CI and red-team 10 prompt injections.","Deploy it publicly with a README and demo video, and add it to your portfolio."]}} },
+
 { id:"devops", short:"DevOps / SRE", from:"DevOps / SRE engineer", to:"LLMOps engineer", rank:"LLMOps Engineer", tech:true,
   tagline:"Run AI in production: model serving on GPUs, LLM gateways, pipelines, observability and cost control.",
   stack:["Linux","Docker","Kubernetes","CI/CD","Terraform","Monitoring"],
@@ -103,6 +121,24 @@ const TRACKS = [
     dl:{title:"GPU training job with checkpoints",steps:["Train a small PyTorch model on a public dataset with a custom Dataset and DataLoader.","Save checkpoints every epoch and resume from one after a restart.","Run it on a cloud GPU and record time and cost.","Write a short runbook for the job."]},
     llm:{title:"Embeddings at scale",steps:["Embed 100,000 short texts with a sentence-transformers model in batches.","Measure throughput on CPU vs GPU.","Store vectors in Postgres with pgvector or Parquet files.","Estimate the cost to re-embed everything with a hosted API instead."]},
     rag:{title:"Production RAG ingestion pipeline",steps:["Build a pipeline that pulls documents from a source (wiki, S3 or a database) on a schedule.","Chunk and embed only new or changed documents.","Upsert into a vector store with metadata and access tags.","Add monitoring for pipeline lag and failed documents."]}} },
+
+{ id:"datasci", short:"Data scientist", from:"Data scientist", to:"LLM engineer", rank:"LLM Engineer", tech:true,
+  tagline:"Move from classical models to building with LLMs: APIs, RAG, fine-tuning, agents and the evaluation rigour you already have.",
+  stack:["Python","pandas / scikit-learn","Statistics","Jupyter","Model evaluation"],
+  learner:"a data scientist who knows Python, pandas, scikit-learn, statistics, Jupyter and model evaluation",
+  analogy:"data science: modelling, statistics, feature engineering or model evaluation",
+  overlap:"High", modules:["llm","api","rag","finetune","agents","evals","mlops","ops"],
+  bridges:{
+    llm:"An LLM is a giant pretrained classifier over the next token. Softmax, cross-entropy and sampling are things you already know, now at a huge scale.",
+    api:"Building with LLM APIs is closer to software engineering than notebook work. Structured output is like enforcing a schema on model predictions.",
+    rag:"Retrieval is a ranking problem: you'll measure recall at k and MRR, just like a recommender. Your evaluation habits are a big advantage here.",
+    agents:"Agents are sequential decision loops. Think of them as a policy choosing actions, but with tools you write and limits you enforce.",
+    evals:"This is where data scientists shine. Eval design, sampling, labelling and statistical comparison are your strengths applied to text outputs.",
+    mlops:"You may have handed models to engineers before. Now you'll own tracking, registries and pipelines yourself.",
+    ops:"Production LLM work means monitoring quality and cost over time, the same way you'd monitor a deployed model for drift."},
+  builds:{
+    api:{title:"An LLM extraction service in Python",steps:["Build a FastAPI service that extracts structured fields from text using a Pydantic schema.","Validate output and retry once on failure.","Compare a small and a large model on 100 labelled examples: accuracy, latency and cost.","Write a short notebook report with the results and your recommendation."]},
+    ops:{title:"Capstone: an LLM product with measured quality",steps:["Combine RAG, a fine-tuned or prompted model, and an agent into one service.","Track quality with an eval suite and production sampling.","Add cost and latency dashboards and a model fallback.","Publish a write-up with your evaluation methodology and results."]}} },
 
 { id:"security", short:"Security engineer", from:"Security engineer", to:"AI security engineer", rank:"AI Security Engineer", tech:true,
   tagline:"Secure the AI systems everyone is shipping, and use AI to make security teams faster: threat modeling, red-teaming and AI in the SOC.",
@@ -182,6 +218,35 @@ const TRACKS = [
     aigov:"Responsible AI is part of the product: it affects risk reviews, launch approvals and user trust. Bring legal and security in early, as you would for payments or privacy."},
   builds:{
     aiux:{title:"Spec the AI experience",steps:["For your opportunity from AI product discovery, map the user journey including AI states: thinking, unsure, wrong, refused.","Decide where AI acts automatically and where users approve.","Specify citations, feedback controls and fallbacks.","Review the spec with a designer and an engineer, and capture their concerns."]}} },
+
+{ id:"pmgr", short:"Project manager", from:"Project manager / Scrum master", to:"AI program lead", rank:"AI Program Lead", tech:false,
+  tagline:"Lead AI projects to real results: plan around uncertainty, set quality milestones, manage AI risks and drive adoption.",
+  stack:["Project planning","Agile / Scrum","Risk management","Stakeholders","Reporting"],
+  learner:"a project manager or Scrum master who knows planning, agile delivery, risk management, stakeholder management and reporting, but doesn't code",
+  analogy:"project management: planning, agile ceremonies, risks or stakeholder updates",
+  overlap:"Medium", modules:["aifound","promptpro","aidelivery","aiship","aigov","aileader"],
+  bridges:{
+    aifound:"You don't need to build models, but you need to know why AI work is uncertain. That understanding is what makes your plans realistic.",
+    promptpro:"Prompting makes you faster at your own job, from status reports to risk analysis, and it helps you understand what your team is building.",
+    aiship:"Shipping AI is where delivery management meets quality management. Staged rollouts, kill switches and post-launch reviews fit naturally into your release planning.",
+    aigov:"Governance is part of delivery: approvals, risk reviews and compliance checks belong in your plan, not as a surprise at the end.",
+    aileader:"Program leads are often the people who spread AI practices across teams. Pilots, measurement and training are delivery work."},
+  builds:{
+    aiship:{title:"Launch plan for an AI project",steps:["Take the project from your delivery plan and define its launch quality bar and error budget.","Plan a staged rollout with metrics, owners and a kill switch.","Estimate cost per task and monthly cost at expected volume.","Present the plan to a stakeholder and capture their concerns."]}} },
+
+{ id:"writer", short:"Technical writer", from:"Technical writer", to:"AI knowledge designer", rank:"AI Knowledge Designer", tech:false,
+  tagline:"Own the knowledge that AI assistants answer from: AI-ready docs, knowledge bases, answer style and quality measurement.",
+  stack:["Technical writing","Information architecture","Docs tooling","Style guides","Content strategy"],
+  learner:"a technical writer who knows technical writing, information architecture, docs tooling, style guides and content strategy, but doesn't code much",
+  analogy:"technical writing, documentation structure or content strategy",
+  overlap:"Medium–high", modules:["aifound","promptpro","aidocs","knowledge","convdesign","aigov"],
+  bridges:{
+    aifound:"Knowing how models read and generate text explains why clear, explicit writing produces better AI answers, and where AI drafts go wrong.",
+    promptpro:"Prompts are briefs, and you write briefs for a living. Your clarity and structure skills make you good at prompting from day one.",
+    convdesign:"Assistants answer in your company's voice. Writers are natural owners of that voice, from answer length to how the assistant admits it doesn't know.",
+    aigov:"Writers often handle disclosures, AI-generated content labels and accuracy reviews. Knowing the rules helps you set good standards."},
+  builds:{
+    convdesign:{title:"Design a docs assistant's answers",steps:["Define the voice for a documentation assistant: length, tone and formatting.","Write rules for citing sources and for saying 'I don't know'.","Turn them into a system prompt with 4 example answers.","Test it with 15 real questions against your docs and refine twice."]}} },
 
 { id:"nontech", short:"Non-technical", from:"Any non-technical role", to:"AI-powered professional", rank:"AI-Powered Pro", tech:false,
   tagline:"Use AI to do your current job far better: prompting, daily workflows, no-code automation, and leading AI in your team.",
