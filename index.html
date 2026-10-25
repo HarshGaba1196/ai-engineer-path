@@ -10,7 +10,7 @@
 :root{
   --bg:#f4f6fa; --surface:#ffffff; --surface-2:#f8f9fc; --ink:#121826; --muted:#5b6478; --faint:#8b93a7; --line:#e3e7ef;
   --accent:#3155e6; --accent-ink:#ffffff; --accent-soft:#e9eefd; --amber:#a86400; --amber-soft:#fdf1df;
-  --good:#16794a; --good-soft:#e3f4ea; --bad:#b3312c; --bad-soft:#fbe8e7; --xp:#7442e0; --xp-soft:#efe8fd; --flame:#e2590f; --flame-soft:#fdebdf; --rose:#cc2f6a; --teal:#0b8079; --sky:#1f6fc5; --plum:#9334b0; --side:#0f1424; --side-ink:#c9cfdd; --side-muted:#7c859b; --side-line:#222a40; --side-hover:#1a2136;
+  --good:#16794a; --good-soft:#e3f4ea; --bad:#b3312c; --bad-soft:#fbe8e7; --xp:#7442e0; --xp-soft:#efe8fd; --flame:#e2590f; --flame-soft:#fdebdf; --rose:#cc2f6a; --teal:#0b8079; --sky:#1f6fc5; --plum:#9334b0; --lime:#4f7d00; --slate:#4b5b7a; --side:#0f1424; --side-ink:#c9cfdd; --side-muted:#7c859b; --side-line:#222a40; --side-hover:#1a2136;
   --shadow:0 1px 2px rgba(18,24,38,.05),0 4px 16px rgba(18,24,38,.05);
   --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
   --f-ui:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
@@ -20,12 +20,12 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0b0f1a; --surface:#131929; --surface-2:#171e30; --ink:#e7eaf2; --muted:#9aa3b8; --faint:#6f788e; --line:#252d43;
   --accent:#7f98ff; --accent-ink:#0b0f1a; --accent-soft:#1d2750; --amber:#f2aa45; --amber-soft:#33250f;
-  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --teal:#3fd0c4; --sky:#6cb8ff; --plum:#d58bf0; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
+  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --teal:#3fd0c4; --sky:#6cb8ff; --plum:#d58bf0; --lime:#a8e05f; --slate:#a9b8d6; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0b0f1a; --surface:#131929; --surface-2:#171e30; --ink:#e7eaf2; --muted:#9aa3b8; --faint:#6f788e; --line:#252d43;
   --accent:#7f98ff; --accent-ink:#0b0f1a; --accent-soft:#1d2750; --amber:#f2aa45; --amber-soft:#33250f;
-  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --teal:#3fd0c4; --sky:#6cb8ff; --plum:#d58bf0; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
+  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --teal:#3fd0c4; --sky:#6cb8ff; --plum:#d58bf0; --lime:#a8e05f; --slate:#a9b8d6; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -1502,6 +1502,173 @@ protoai:[
  {p:["AI can speed up design work: synthesising interview notes into themes, generating ideas, drafting microcopy and creating test content.","Treat outputs as starting points. Verify themes against the raw data and keep your design judgement in charge."],
   try:"Synthesise 5 interview transcripts with AI, then check each theme against quotes."}]
 });
+/* Batch 3 modules: security engineer, mobile developer and business analyst paths. */
+MODULES_EXTRA.push(
+/* ===== Security engineer → AI security engineer ===== */
+{ id:"aisecarch", title:"Securing AI systems", weeks:"4 weeks",
+  why:"Every company shipping AI needs someone who can threat-model it and design defenses that don't rely on the model behaving. That's the core job of an AI security engineer.",
+  bridge:"Treat the model as an untrusted component, like user input that can also make decisions. Classic controls still work: least privilege, isolation, validation, logging. They just need new placement.",
+  concepts:[["Threat modeling AI apps","Assets, trust boundaries and data flows in LLM systems."],["Defending against prompt injection","Privilege separation, input isolation, output checks."],["Securing tools and agents","Scoped credentials, sandboxes, approvals, egress control."],["Data protection","PII in prompts, retention, cross-tenant leakage in RAG."],["AI supply chain","Model files, datasets, dependencies and their risks."],["Monitoring and incident response","Logging prompts and actions, detection, playbooks."]],
+  res:[["Docs","OWASP Top 10 for LLM Applications","https://genai.owasp.org/llm-top-10/","Risks and mitigations for LLM apps."],["Framework","MITRE ATLAS","https://atlas.mitre.org/","Adversary tactics against AI systems."],["Framework","NIST AI Risk Management Framework","https://www.nist.gov/itl/ai-risk-management-framework","Governance and risk controls for AI."]],
+  build:{title:"Threat model and harden an AI agent",steps:["Draw a data-flow diagram of a RAG agent with tools, marking every trust boundary.","List threats per boundary using the OWASP LLM Top 10.","Implement three controls: scoped tool credentials, an approval step for writes, and output filtering.","Re-run your injection tests from the red-teaming module and document what's now blocked."]},
+  quiz:[
+   {q:"What's the most reliable defense against an agent being tricked into harmful actions?",o:["A stronger system prompt","Limiting what its tools can do and requiring approval for risky actions","A bigger model","Hiding the tool list"],a:1,e:"Prompts can be bypassed. Permissions and approvals enforced in code hold even when the model is fooled."},
+   {q:"A RAG system serves many customers from one vector index. Key risk?",o:["Slow queries","One tenant retrieving another tenant's documents","High cost","Duplicate chunks"],a:1,e:"Enforce tenant and access filters at retrieval time, not just in the prompt."},
+   {q:"Why can loading a downloaded model file be dangerous?",o:["It uses disk space","Some formats, like Python pickle, can run arbitrary code when loaded","It's always encrypted","It needs a GPU"],a:1,e:"Prefer safe formats like safetensors and verify sources and hashes."},
+   {q:"Where should secrets like API keys be in an LLM app?",o:["In the system prompt","Outside the prompt, held by the server or tool layer","In the user message","In retrieved documents"],a:1,e:"Assume prompts can leak. Keep secrets in code and infrastructure the model can't print."},
+   {q:"What should you log to investigate an AI incident?",o:["Nothing, for privacy","Prompts, retrieved sources, tool calls and outputs with trace ids, under your data policy","Only errors","Only user ids"],a:1,e:"Without these traces you can't reconstruct what the model saw and did."}]},
+{ id:"aisecops", title:"AI for security operations", weeks:"3 weeks",
+  why:"Security teams are using LLMs to triage alerts, analyse phishing, summarise threat intel and write detections. Knowing how to do this safely makes you a force multiplier in any SOC.",
+  bridge:"An LLM in the SOC is like a fast junior analyst: great at reading, summarising and drafting, but it needs supervision, clear runbooks and no unchecked authority.",
+  concepts:[["Alert triage with LLMs","Summaries, enrichment and prioritisation."],["Phishing and malware analysis","Explaining emails, scripts and indicators."],["Threat intel summaries","Turning reports into actionable indicators and detections."],["Detection engineering","Drafting Sigma/KQL/SPL rules and testing them."],["Security agents","Investigation agents with read-only tools and human approval."],["Risks of AI in the SOC","Hallucinated indicators, data exposure, attacker manipulation."]],
+  res:[["Project","Sigma rules","https://github.com/SigmaHQ/sigma","Open detection rule format and library."],["Framework","MITRE ATT&CK","https://attack.mitre.org/","Common language for attacker techniques."],["Docs","Claude: tool use","https://docs.claude.com/en/docs/agents-and-tools/tool-use/overview","Building assistants that call your tools."]],
+  build:{title:"An alert triage assistant",steps:["Collect 30 sample alerts (public datasets or your lab) with known outcomes.","Build an assistant that summarises each alert, maps it to ATT&CK and suggests a priority.","Give it two read-only tools, such as IP reputation and user lookup.","Measure agreement with the known outcomes and list where it must never act alone."]},
+  quiz:[
+   {q:"An LLM suggests an IP address as an indicator of compromise. What should you do?",o:["Block it immediately","Verify it against the source data before acting","Ignore it","Ask the model again"],a:1,e:"Models can hallucinate indicators. Always trace them back to real evidence."},
+   {q:"What's a safe first role for an investigation agent?",o:["Full admin access","Read-only enrichment and summarisation, with humans approving actions","Auto-isolating hosts","Deleting emails"],a:1,e:"Start read-only. Add actions only with approvals and strong guardrails."},
+   {q:"Why might attackers target your SOC's LLM?",o:["They can't","Content they control, like email bodies or logs, can carry prompt injections","LLMs are slow","For fun"],a:1,e:"Anything the model reads can contain instructions. Treat analysed content as hostile."},
+   {q:"LLMs help detection engineering most by…",o:["Replacing testing","Drafting rules and explanations that engineers then test against real data","Choosing which alerts to ignore","Writing incident reports alone"],a:1,e:"Drafts speed things up, but every rule needs testing for false positives and negatives."},
+   {q:"Before pasting incident data into an AI tool, check…",o:["Nothing","That the tool is approved for sensitive data under your policy","The time","The font"],a:1,e:"Incident data is often highly sensitive. Use approved tools with suitable data handling."}]},
+/* ===== Mobile developer → On-device AI engineer ===== */
+{ id:"mobileai", title:"AI features in mobile apps", weeks:"3 weeks",
+  why:"Users expect smart features in every app: summaries, assistants, smart replies and image understanding. Mobile developers who can ship them well are in high demand.",
+  bridge:"Calling a hosted model is just another network API, with the same rules you know: never ship secrets in the app, handle flaky networks, and stream for responsiveness.",
+  concepts:[["Architecture for mobile AI","App → your backend → model API; never keys in the binary."],["Streaming on mobile","SSE/WebSocket streams, SwiftUI and Compose updates."],["Platform AI frameworks","Apple Foundation Models, Android ML Kit GenAI and Gemini Nano."],["Structured output on device","Typed results, @Generable in Swift, JSON parsing on Android."],["Offline and flaky networks","Fallbacks, queuing, local-first features."],["Cost, privacy and app review","Usage limits, data disclosure, store policies."]],
+  res:[["Docs","Apple Foundation Models framework","https://developer.apple.com/documentation/foundationmodels","On-device language model on Apple platforms."],["Docs","ML Kit GenAI APIs","https://developers.google.com/ml-kit/genai","On-device GenAI features on Android."],["Docs","Anthropic API: streaming","https://docs.claude.com/en/docs/build-with-claude/streaming","Streaming responses from a hosted model."]],
+  build:{title:"Smart notes app",steps:["Build a notes screen in SwiftUI or Jetpack Compose.","Add 'Summarise' using the on-device model where available, falling back to your backend.","Stream the cloud response into the UI with a Stop button.","Add a usage limit per user and a privacy note explaining where data goes."]},
+  quiz:[
+   {q:"Where should the API key for a hosted model live?",o:["In the app's Info.plist","On your backend; the app calls your API","In obfuscated code","In the app's keychain at install"],a:1,e:"Anything in the app binary can be extracted. Keep keys on a server you control."},
+   {q:"What's a key advantage of Apple's on-device Foundation Models?",o:["It's the most capable model available","Private, offline and free per request","It runs on all Android phones","It needs no updates"],a:1,e:"On-device models keep data local and avoid per-call costs, with smaller capability than large cloud models."},
+   {q:"The network drops mid-stream on a train. Good behaviour?",o:["Crash","Keep the partial text, show a retry, and resume or regenerate when back online","Clear the screen","Show a generic error and lose the text"],a:1,e:"Mobile networks are unreliable. Design for interruption."},
+   {q:"How do you get typed results from Apple's on-device model?",o:["Parse free text with regex","Describe a Swift type with @Generable and ask the session to generate it","Use XML","It's not possible"],a:1,e:"Guided generation fills your Swift types directly, so you don't parse strings."},
+   {q:"What must you consider for app store review of AI features?",o:["Nothing","Data disclosure, content policies and user-generated content handling","Only the icon","Only pricing"],a:1,e:"Stores require clear privacy disclosures and moderation for generated content."}]},
+{ id:"ondevice", title:"Running models on device", weeks:"4 weeks",
+  why:"Custom on-device models power camera features, voice, personalisation and offline AI. This is specialist work that combines ML knowledge with deep mobile performance skills.",
+  bridge:"Optimising a model for a phone is like optimising an app: measure first, then cut size, memory and battery use. The NPU is a new co-processor to target, like the GPU for graphics.",
+  concepts:[["Mobile ML runtimes","Core ML, LiteRT (TensorFlow Lite), ONNX Runtime, ExecuTorch."],["Converting models","From PyTorch to Core ML or LiteRT, and checking results match."],["Quantization and compression","8-bit, 4-bit, pruning; accuracy trade-offs."],["Hardware acceleration","Neural Engine, NPUs, GPU delegates."],["Performance and battery","Latency, memory, thermal limits, profiling."],["Shipping and updating models","On-demand downloads, versioning, A/B testing models."]],
+  res:[["Docs","Core ML Tools","https://apple.github.io/coremltools/docs-guides/","Convert and optimise models for Apple devices."],["Docs","LiteRT (TensorFlow Lite)","https://ai.google.dev/edge/litert","Google's on-device ML runtime."],["Docs","ExecuTorch","https://pytorch.org/executorch/","Run PyTorch models on mobile and edge devices."]],
+  build:{title:"On-device image classifier",steps:["Fine-tune or download a small image model in PyTorch.","Convert it to Core ML or LiteRT and check outputs match the original on 20 images.","Quantize it and compare size, latency and accuracy.","Ship it in an app with a live camera preview and an FPS and latency overlay."]},
+  quiz:[
+   {q:"After converting a model to Core ML, what should you check first?",o:["The icon","That its outputs match the original model on the same inputs","The file name","The app size only"],a:1,e:"Conversion can change behaviour. Compare outputs before tuning anything else."},
+   {q:"What does 8-bit quantization usually do on a phone?",o:["Makes the model bigger","Cuts size and speeds up inference with a small accuracy loss","Removes the need for testing","Improves accuracy a lot"],a:1,e:"Smaller weights mean less memory and faster, more efficient inference."},
+   {q:"Your model runs fast at first, then slows down after a minute. Likely cause?",o:["A bug in Swift","Thermal throttling as the device heats up","Network latency","Too much RAM"],a:1,e:"Sustained heavy compute heats the device and the OS slows it. Test long sessions, not just one run."},
+   {q:"Why download a model after install instead of bundling it?",o:["It's required","To keep the app download small and update models without an app release","It's faster to load","For security only"],a:1,e:"On-demand delivery reduces install size and lets you ship model updates independently."},
+   {q:"What does the Neural Engine or NPU provide?",o:["More storage","Dedicated hardware for fast, efficient neural network inference","Better cameras","Network speed"],a:1,e:"Running on the NPU is often much faster and more battery-efficient than the CPU."}]},
+/* ===== Business analyst → AI solutions consultant ===== */
+{ id:"aireqs", title:"Requirements for AI solutions", weeks:"3 weeks",
+  why:"AI projects fail when requirements are vague: 'make it smart' isn't a spec. Business analysts who can turn processes into clear AI requirements and acceptance criteria are invaluable.",
+  bridge:"You already map processes, gather requirements and write acceptance criteria. For AI, add examples of good and bad outputs, error tolerances, and the data the AI will need.",
+  concepts:[["Finding AI use cases in processes","Process mapping, pain points, volume and variability."],["Writing AI requirements","Inputs, outputs, examples, constraints and edge cases."],["Acceptance criteria for AI","Quality bars, test sets and error budgets."],["Data requirements","What data is needed, where it lives, its quality and access."],["Human-in-the-loop design","Who reviews, when, and how exceptions are handled."],["Change and adoption","Impact on roles, training, and measuring adoption."]],
+  res:[["Guide","Google PAIR: People + AI Guidebook","https://pair.withgoogle.com/guidebook/","User needs and defining success for AI."],["Article","Hamel Husain: Your AI product needs evals","https://hamel.dev/blog/posts/evals/","Turning quality into testable criteria."],["Course","AI for Everyone (Andrew Ng)","https://www.coursera.org/learn/ai-for-everyone","Choosing and scoping AI projects."]],
+  build:{title:"AI requirements pack for one process",steps:["Map a real process end to end, such as invoice handling or support triage, and mark candidate AI steps.","Write requirements for one AI step with 10 example inputs and expected outputs.","Define acceptance criteria: a quality bar, error budget and what needs human review.","List data sources, owners and access issues, and review the pack with a stakeholder."]},
+  quiz:[
+   {q:"Which requirement is most useful for an AI feature?",o:["\"The AI should be accurate\"","\"Classify invoices into 6 categories; 95% correct on the 200-invoice test set; uncertain cases go to review\"","\"Use the latest model\"","\"Make it fast\""],a:1,e:"Specific categories, a measurable bar and an exception path make it testable."},
+   {q:"How should acceptance be tested for an AI step?",o:["One demo","A test set of real examples with a pass rate","Stakeholder opinion","Code review"],a:1,e:"AI is variable, so acceptance needs a representative set and a measured pass rate."},
+   {q:"What makes a process step a good candidate for AI?",o:["It's rare and high-stakes","High volume, mostly language or documents, with tolerance for some review","It requires physical work","It has no data"],a:1,e:"Volume and language-heavy work give AI the most leverage, and review handles errors."},
+   {q:"Why include bad output examples in requirements?",o:["To fill space","They show developers and testers what must be avoided","They confuse the model","Legal requirement"],a:1,e:"Negative examples clarify boundaries as much as positive ones."},
+   {q:"The AI is unsure about a case. What should the requirements say?",o:["Nothing","Route it to a person with the AI's suggestion and reason","Pick randomly","Reject the case"],a:1,e:"Define exception handling explicitly, so uncertainty doesn't turn into silent errors."}]},
+{ id:"aibiz", title:"Business cases & vendor selection", weeks:"3 weeks",
+  why:"Companies need help deciding which AI to adopt, buy or build, and whether it pays off. AI solutions consultants lead those decisions with clear business cases and fair vendor evaluations.",
+  bridge:"Business cases and vendor selection are familiar territory. AI adds usage-based costs, fast-changing vendors, and the need to test quality on your own data before you sign.",
+  concepts:[["Estimating value","Time saved, quality, revenue; baselines and assumptions."],["Total cost of ownership","Licences, usage, integration, maintenance, people."],["Build, buy or configure","Off-the-shelf tools vs platforms vs custom builds."],["Evaluating vendors","Pilots on your data, security, data terms, lock-in."],["Running a pilot","Scope, success metrics, go/no-go decisions."],["Presenting to decision makers","Clear options, risks, and a recommendation."]],
+  res:[["Report","Microsoft Work Trend Index","https://www.microsoft.com/en-us/worklab/work-trend-index","Data on AI adoption at work."],["Framework","NIST AI Risk Management Framework","https://www.nist.gov/itl/ai-risk-management-framework","Risk questions to ask vendors."],["Blog","One Useful Thing (Ethan Mollick)","https://www.oneusefulthing.org/","Practical thinking on AI in organisations."]],
+  build:{title:"Business case and vendor shortlist",steps:["Pick the process from your requirements pack and estimate the current cost (hours × rate × volume).","Estimate value and full cost for build, buy and configure options.","Compare 3 vendors on a scorecard: quality on your sample data, security, data terms, price and lock-in.","Write a 2-page recommendation with a pilot plan and go/no-go criteria."]},
+  quiz:[
+   {q:"A vendor demo looks perfect. What should you do next?",o:["Sign the contract","Run a pilot on your own real data and measure quality","Trust the case studies","Ask for a discount"],a:1,e:"Demos use ideal examples. Your data and edge cases decide real performance."},
+   {q:"Which cost is most often forgotten in AI business cases?",o:["The licence","Integration, change management and ongoing review time","The logo","The first meeting"],a:1,e:"Total cost includes the work around the tool, not just the subscription."},
+   {q:"When is building custom usually justified?",o:["Always","When the process is a core differentiator with unique data and no tool fits","When the team is bored","For any chatbot"],a:1,e:"Buy or configure for common needs; build where it's strategic and unique."},
+   {q:"What should a vendor's data terms tell you?",o:["Their office address","Whether your data is stored, for how long, and if it's used for training","Their logo colours","Nothing important"],a:1,e:"Data handling is often a deal-breaker for security and compliance."},
+   {q:"A good pilot ends with…",o:["A party","A go/no-go decision against criteria agreed at the start","More pilots by default","A new vendor"],a:1,e:"Agree success criteria up front so the decision is objective."}]}
+);
+
+Object.assign(LESSONS, {
+aisecarch:[
+ {p:["Threat modeling an AI app starts with a data-flow diagram: users, the app, the model provider, retrieval stores, tools and every external content source. Mark where untrusted data crosses into the model's context.","For each boundary ask: what could an attacker inject, what could leak, and what could the model be tricked into doing? The OWASP LLM Top 10 is a good checklist."],
+  try:"Draw a data-flow diagram for an email-reading assistant and mark three trust boundaries."},
+ {p:["No prompt fully stops injection. Design so a fooled model can't do much damage. Separate privileges: the component that reads untrusted content shouldn't also hold powerful tools.","Mark untrusted content clearly in prompts, validate and filter outputs before they reach other systems, and never render model output as raw HTML or execute it as code without checks."],
+  try:"Redesign an assistant so the part that reads emails can't send emails without a human."},
+ {p:["Agent tools are where damage happens. Give each tool its own scoped credentials, enforce authorization inside the tool (not in the prompt), and run code tools in sandboxes with no network or a strict allowlist.","Require human approval for destructive, financial or external actions, and set step and spend limits."],
+  code:"def delete_record(record_id: str, user: User):\n    # authorization lives in code, not in the prompt\n    if not user.can(\"records:delete\", record_id):\n        return \"Not allowed: you don't have permission to delete this record.\"\n    approval = request_human_approval(user, action=\"delete\", target=record_id)\n    if not approval.granted:\n        return \"Deletion was not approved.\"\n    records.delete(record_id)\n    return \"Deleted.\"",
+  try:"List every tool in an agent and write the permission check each one needs."},
+ {p:["Prompts often contain personal data. Minimise what you send, redact where possible, and know the provider's retention and training terms.","In RAG, enforce document permissions at retrieval: filter by tenant and user access before results reach the model. A prompt instruction like 'don't show other customers' data' is not a control."],
+  try:"Add tenant and permission filters to a vector search query and test cross-tenant access."},
+ {p:["AI supply chain risk includes model weights, datasets, libraries and hosted services. Some model formats, like Python pickle, can execute code when loaded, so prefer safetensors and verify sources and hashes.","Poisoned training or retrieval data can plant backdoors or misinformation. Track provenance and restrict who can write to knowledge sources."],
+  try:"Inventory the models, datasets and AI libraries in one project and note the source of each."},
+ {p:["You can't investigate what you didn't log. Record prompts, retrieved document ids, tool calls, outputs and decisions with trace ids, under your privacy policy.","Write detection rules for suspicious patterns, like many refused requests, unusual tool calls or data exfiltration attempts, and create an incident playbook for AI-specific events."],
+  try:"Write an incident playbook for 'agent sent sensitive data to an external address'."}],
+aisecops:[
+ {p:["LLMs can turn noisy alerts into short summaries: what happened, which user and host, what's unusual and a suggested priority. Enrichment tools add context like IP reputation and asset owner.","Keep analysts in charge. The model drafts; people decide, especially on containment."],
+  code:"PROMPT = \"\"\"You are a SOC analyst assistant. Summarise this alert in 3 bullets:\nwhat happened, why it might be malicious, what to check next.\nSuggest priority (low/medium/high) with one reason.\nOnly use facts from the alert. If something is unknown, say so.\n<alert>{alert_json}</alert>\"\"\"",
+  try:"Summarise 10 sample alerts with an LLM and compare its priorities with yours."},
+ {p:["LLMs are good at explaining suspicious emails and scripts: decoding obfuscated PowerShell, listing indicators, and explaining an attacker's likely goal.","Treat the analysed content as hostile: it may contain prompt injections aimed at your assistant. Never let analysis output trigger actions automatically."],
+  try:"Ask an LLM to explain a de-obfuscated malicious script from a public sample and verify its claims."},
+ {p:["Threat intel reports are long. LLMs can extract indicators, TTPs mapped to MITRE ATT&CK and recommended detections into a structured format.","Verify every extracted indicator against the source text, because hallucinated IPs and hashes are a real risk."],
+  try:"Extract indicators and ATT&CK techniques from a public threat report and spot-check 5 of them."},
+ {p:["LLMs can draft detection rules in Sigma, KQL or SPL from a description of attacker behaviour. They speed up the first draft and the documentation.","Every rule still needs testing against real logs for false positives and against attack simulations for true positives."],
+  code:"title: Suspicious PowerShell Download Cradle\nlogsource: { product: windows, category: process_creation }\ndetection:\n  selection:\n    Image|endswith: '\\powershell.exe'\n    CommandLine|contains|all: ['DownloadString', 'http']\n  condition: selection\nlevel: high",
+  try:"Have an LLM draft a Sigma rule, then test it against sample logs and fix the false positives."},
+ {p:["Investigation agents can query SIEMs, look up users and enrich indicators in a loop. Start with read-only tools, strict scopes and full logging.","Add containment actions, like isolating a host, only behind human approval and with clear limits."],
+  try:"Design an investigation agent: list its tools, which are read-only, and which need approval."},
+ {p:["AI in the SOC brings its own risks: hallucinated findings, sensitive data sent to unapproved services, over-trust by tired analysts, and attackers crafting logs or emails to manipulate the model.","Mitigate with verification steps, approved tooling, clear runbooks, and measuring the assistant's accuracy over time."],
+  try:"Write a one-page policy for safe LLM use in your SOC."}],
+mobileai:[
+ {p:["The safe architecture is app → your backend → model provider. Your backend holds keys, enforces auth and rate limits, and can switch models without an app update.","Anything shipped inside the app binary, including obfuscated keys, can be extracted."],
+  try:"Sketch the architecture for an AI feature in your app, including auth and rate limiting."},
+ {p:["Stream responses so text appears immediately. On iOS, consume a server-sent events stream with URLSession's async bytes; on Android, use OkHttp or Ktor with Kotlin flows.","Update the UI incrementally, keep the partial text if the stream breaks, and support cancellation."],
+  code:"// Swift: read a streamed response line by line\nlet (bytes, _) = try await URLSession.shared.bytes(for: request)\nfor try await line in bytes.lines {\n    guard line.hasPrefix(\"data: \") else { continue }\n    let chunk = String(line.dropFirst(6))\n    await MainActor.run { answer += chunk }\n}",
+  try:"Stream a response into a SwiftUI or Compose text view with a Stop button."},
+ {p:["Platforms now ship on-device models. On Apple platforms, the Foundation Models framework gives apps access to an on-device language model. On Android, ML Kit's GenAI APIs use Gemini Nano on supported devices for tasks like summarisation and proofreading.","They're private, offline and free per request, but smaller than cloud models and only on recent devices, so always plan a fallback."],
+  code:"import FoundationModels\n\nlet session = LanguageModelSession(instructions: \"Summarise notes in 3 short bullets.\")\nlet response = try await session.respond(to: noteText)\nprint(response.content)",
+  try:"Check model availability on a device and show a fallback UI when it's unavailable."},
+ {p:["Apps need typed data, not prose. With Apple's framework, describe a Swift type with @Generable and the model fills it. On Android or with cloud models, request JSON and decode it with kotlinx.serialization or Codable.","Validate values before using them, and handle failures with a friendly message."],
+  code:"@Generable\nstruct Recipe {\n    @Guide(description: \"Short recipe title\") var title: String\n    var ingredients: [String]\n    @Guide(description: \"Minutes to cook\") var minutes: Int\n}\n\nlet recipe = try await session.respond(to: \"Suggest a quick pasta\", generating: Recipe.self).content",
+  try:"Generate a typed result in your app and render it as a card."},
+ {p:["Mobile networks are unreliable. Keep partial results, queue requests when offline, and use on-device models for features that must work anywhere.","Show clear states: thinking, offline, retrying, and failed with a retry button."],
+  try:"Test your AI feature in airplane mode and on a throttled network, and fix the worst experience."},
+ {p:["Each cloud AI call costs money, so set per-user limits and cache results where it makes sense.","App stores require privacy disclosures about data sent to AI services and moderation for generated content. Explain clearly in the UI where data goes."],
+  try:"Write the privacy disclosure for your AI feature and add a per-user daily limit on the backend."}],
+ondevice:[
+ {p:["Each platform has a runtime: Core ML on Apple devices, LiteRT (formerly TensorFlow Lite) on Android and other platforms, ONNX Runtime across platforms, and ExecuTorch for PyTorch models.","Pick based on target devices, your training framework and hardware acceleration support."],
+  try:"List the runtimes available on your target devices and which hardware each can use."},
+ {p:["Conversion turns a trained model into the runtime's format. Trace or export the PyTorch model, convert it, then compare outputs with the original on the same inputs.","Small numeric differences are normal; large ones mean an unsupported operation or wrong preprocessing."],
+  code:"import torch, coremltools as ct\n\nmodel.eval()\nexample = torch.rand(1, 3, 224, 224)\ntraced = torch.jit.trace(model, example)\nmlmodel = ct.convert(traced, inputs=[ct.ImageType(name=\"image\", shape=example.shape)])\nmlmodel.save(\"Classifier.mlpackage\")",
+  try:"Convert a small PyTorch model and compare its top predictions with the original on 20 images."},
+ {p:["Quantization stores weights in 8-bit or fewer bits, cutting size and often speeding inference on mobile hardware. Pruning and palettization compress further.","Always re-measure accuracy on your test set after compressing; some layers are sensitive."],
+  try:"Quantize your model to 8-bit and record size, latency and accuracy before and after."},
+ {p:["Phones have dedicated AI hardware: Apple's Neural Engine and NPUs on Android chips. Running there is much faster and more battery-efficient than on the CPU.","Not every operation is supported on every accelerator, so profile to see where each layer runs."],
+  try:"Profile your model in Xcode's Core ML performance report or Android's profiling tools."},
+ {p:["Measure latency, peak memory, battery drain and thermal behaviour over several minutes, not just one inference.","Reduce input size, run less often, batch work and drop to a lighter model when the device is hot or the battery is low."],
+  try:"Run your model continuously for 5 minutes and chart latency over time."},
+ {p:["Big models bloat app downloads. Download them on demand, cache them, and version them so you can update a model without an app release.","Roll out new models gradually and compare metrics, the same way you'd A/B test a feature."],
+  try:"Implement on-demand model download with progress, caching and a version check."}],
+aireqs:[
+ {p:["Look for AI opportunities in processes that are high-volume, language or document heavy, and currently manual: reading emails, classifying requests, extracting data from forms, drafting replies.","Map the process, mark each step's volume and effort, and note where judgement or exceptions happen."],
+  try:"Map a process you know and mark the two steps with the most AI potential."},
+ {p:["AI requirements describe inputs, outputs and behaviour with examples. Include typical cases, edge cases and cases the AI must refuse or escalate.","Specify format, length, tone, and what information the AI may and may not use."],
+  code:"Requirement: Classify incoming supplier emails.\nInput: email subject and body (English or German).\nOutput: category (invoice, delivery issue, contract, other), confidence (high/low), one-line summary.\nExamples: 10 attached with expected outputs.\nMust escalate: legal threats, payment disputes over €10,000, unclear sender.\nMust not: reply to suppliers directly.",
+  try:"Write a requirement like the one above for one AI step in your process."},
+ {p:["Acceptance criteria for AI need a test set and a pass rate, for example '95% correct on 200 real invoices, and zero misrouted legal emails'.","Agree on an error budget for minor mistakes and zero tolerance areas for critical ones."],
+  try:"Define a test set size, pass rate and zero-tolerance cases for your AI step."},
+ {p:["AI needs the right data: the documents, history or knowledge it uses, plus examples for testing. Identify sources, owners, quality, sensitivity and access rules.","Missing or messy data is a common reason AI projects stall, so surface it early."],
+  try:"Build a data inventory table: source, owner, quality, sensitivity, access status."},
+ {p:["Decide where people stay involved: review every output at first, then only low-confidence cases as quality is proven.","Specify the review interface, who reviews, how fast, and how their corrections feed back into improvements."],
+  try:"Design the review step: who reviews which cases and what they see on screen."},
+ {p:["AI changes how people work. Document the impact on each role, the training needed, and how success will be measured after go-live, such as adoption, time saved and error rates.","Involve the people doing the work early; they know the edge cases."],
+  try:"Write a change impact summary for one role affected by your AI step."}],
+aibiz:[
+ {p:["Estimate value from the current baseline: volume × time per task × cost per hour, plus quality and speed improvements. State your assumptions clearly.","Use ranges (low, expected, high) rather than one optimistic number."],
+  try:"Calculate the current cost of a process and the value of a 30% and 60% time saving."},
+ {p:["Total cost of ownership includes licences or usage fees, integration work, security reviews, training, ongoing monitoring and the people who review outputs.","Usage-based pricing can grow quickly with adoption, so model costs at different volumes."],
+  try:"Build a 3-year TCO table for one AI option at low, expected and high usage."},
+ {p:["Buy when a tool fits a common need. Configure a platform when you need some customisation. Build when the process is strategic, the data is unique, and no product fits.","Many organisations combine them: buy for general productivity, build for core workflows."],
+  try:"Score your use case on fit, uniqueness and strategic value, and pick build, buy or configure."},
+ {p:["Evaluate vendors with a scorecard: quality on your own sample data, security certifications, data handling and training terms, integration, support, pricing and exit options.","Insist on a pilot with your real examples; demos are not evidence."],
+  try:"Create a vendor scorecard with weights and test it on two real products."},
+ {p:["Pilots should be small, time-boxed and measured: a defined group, a few weeks, and success criteria agreed before starting.","End with a clear decision: scale, adjust and re-test, or stop."],
+  try:"Write a one-page pilot plan with go/no-go criteria."},
+ {p:["Decision makers want options, not just enthusiasm. Present the problem, two or three options with costs, value and risks, and a clear recommendation.","Address risks openly: data, accuracy, adoption and vendor lock-in. It builds trust in your recommendation."],
+  try:"Draft a 5-slide recommendation for your AI use case."}]
+});
 
 /* ---------- career paths: each path is an ordered list of modules, with role-specific bridges and builds ---------- */
 MODULES.push(...MODULES_EXTRA);
@@ -1608,6 +1775,42 @@ const TRACKS = [
     llm:{title:"Embeddings at scale",steps:["Embed 100,000 short texts with a sentence-transformers model in batches.","Measure throughput on CPU vs GPU.","Store vectors in Postgres with pgvector or Parquet files.","Estimate the cost to re-embed everything with a hosted API instead."]},
     rag:{title:"Production RAG ingestion pipeline",steps:["Build a pipeline that pulls documents from a source (wiki, S3 or a database) on a schedule.","Chunk and embed only new or changed documents.","Upsert into a vector store with metadata and access tags.","Add monitoring for pipeline lag and failed documents."]}} },
 
+{ id:"security", short:"Security engineer", from:"Security engineer", to:"AI security engineer", rank:"AI Security Engineer", tech:true,
+  tagline:"Secure the AI systems everyone is shipping, and use AI to make security teams faster: threat modeling, red-teaming and AI in the SOC.",
+  stack:["AppSec","Threat modeling","SIEM / SOC","Pen testing","Python scripting"],
+  learner:"a security engineer who knows application security, threat modeling, SIEM and SOC work, penetration testing and Python scripting",
+  analogy:"application security, threat modeling, SOC operations or penetration testing",
+  overlap:"Medium–high", modules:["py","llm","api","rag","agents","redteam","aisecarch","aisecops"],
+  bridges:{
+    py:"You probably script in Python already. Here the focus shifts to the AI ecosystem: notebooks, model SDKs and small services you'll test and attack.",
+    llm:"Understand the target before you attack it. Tokens, context windows and sampling explain why models can be steered, and why they leak or hallucinate.",
+    api:"Build the things you'll later secure. Knowing how system prompts, structured output and tool calls work shows you exactly where trust is placed.",
+    rag:"RAG adds a new attack surface: anything written into the knowledge base can end up in the model's instructions. Access control at retrieval time is the key control.",
+    agents:"Agents are the riskiest pattern: a model holding credentials and taking actions. Think of each tool as a privileged API exposed to untrusted input.",
+    redteam:"This is penetration testing for language. Your attacker mindset transfers directly; the payloads are words instead of packets."},
+  builds:{
+    py:{title:"Security tooling for AI projects",steps:["Write a Python script that scans a repo for hard-coded API keys and unsafe model loading (pickle, torch.load without weights_only).","Add a FastAPI endpoint that wraps an LLM call and logs every prompt and response with a trace id.","Use asyncio to send 50 test prompts concurrently and record responses.","Package the tools with uv and run them in CI."]},
+    api:{title:"A deliberately vulnerable LLM app",steps:["Build a small LLM app with a system prompt containing a fake secret and one tool that reads user records.","Try to extract the secret and access another user's record.","Fix it: move the secret out of the prompt and enforce authorization in the tool.","Write a short before-and-after report."]},
+    rag:{title:"Multi-tenant RAG with access control",steps:["Build a RAG system over documents from two fake tenants.","Show that a naive query can retrieve the other tenant's data.","Add tenant and permission filters at retrieval time.","Plant a poisoned document with hidden instructions and test whether it changes answers."]},
+    agents:{title:"Least-privilege agent",steps:["Build an agent with three tools: read tickets, search docs and send email.","Run each tool with its own scoped credential.","Require human approval for sending email, and block external recipients.","Try to trick the agent into exfiltrating data through a ticket's content, and log what happens."]}} },
+
+{ id:"mobile", short:"Mobile developer", from:"Mobile developer", to:"On-device AI engineer", rank:"On-device AI Engineer", tech:true,
+  tagline:"Ship AI inside iOS and Android apps: hosted models done right, platform AI frameworks, and custom models running fast on the phone.",
+  stack:["Swift / SwiftUI","Kotlin / Compose","Mobile performance","REST APIs","App store releases"],
+  learner:"a mobile developer who knows Swift and SwiftUI or Kotlin and Jetpack Compose, mobile performance, REST APIs and app store releases",
+  analogy:"iOS or Android development, mobile performance or app releases",
+  overlap:"Medium", modules:["llm","mobileai","ondevice","aiux","rag","evals","ops"],
+  bridges:{
+    llm:"Know the engine you're putting in your app. Tokens drive cost and latency, and context limits decide how much of a user's data a feature can use.",
+    aiux:"Mobile adds constraints to AI UX: small screens, interruptions, and users on the move. Short answers, clear states and quick recovery matter even more.",
+    rag:"On mobile, retrieval can run on your backend or on device. Small embedding models and a local index enable private search over a user's own content.",
+    evals:"Evals are your UI tests for AI. Test prompts and models against fixed examples before a release, because you can't hotfix an app as easily as a website.",
+    ops:"Production on mobile means monitoring crash-free sessions plus AI quality, cost per user and model latency across many device types."},
+  builds:{
+    rag:{title:"Private search over a user's notes",steps:["Run a small embedding model on device (Core ML or LiteRT) for the user's notes.","Store vectors locally and build instant semantic search.","Send only the top results to a cloud model for an answer, with user consent.","Compare speed and quality with a fully cloud version."]},
+    evals:{title:"Release checks for an AI feature",steps:["Write 30 test inputs for your app's AI feature, including edge cases.","Run them against the on-device and cloud paths and record pass rates.","Add the suite to CI so it runs before every release build.","Track results across app versions."]},
+    ops:{title:"Capstone: ship it to the store",steps:["Combine your AI features into one polished app with onboarding and privacy disclosures.","Add analytics for usage, latency, fallback rate and cost per user.","Run a TestFlight or internal testing beta with 5 people and fix the top issues.","Prepare the store listing and submit, or publish a demo video and repo."]}} },
+
 { id:"ux", from:"UX / UI designer", to:"AI UX designer", rank:"AI UX Designer", tech:false, short:"UX designer",
   tagline:"Design how people work with AI: conversations, trust, prototypes with real models and responsible experiences.",
   stack:["User research","Interaction design","Prototyping","Figma","Content design"],
@@ -1622,6 +1825,20 @@ const TRACKS = [
   builds:{
     aiux:{title:"Redesign an AI feature end to end",steps:["Audit an AI feature in a product you use: list confusing moments and trust problems.","Design improved onboarding, loading, error and refusal states.","Add citations and a feedback control and explain what each logs.","Present the redesign as a short case study with before and after."]},
     aigov:{title:"Design for trust and consent",steps:["Pick an AI feature that uses personal data.","Design the disclosure, consent and opt-out moments.","Design how a user challenges or corrects an AI decision.","Review your designs against the EU AI Act transparency rules."]}} },
+
+{ id:"ba", short:"Business analyst", from:"Business analyst", to:"AI solutions consultant", rank:"AI Solutions Consultant", tech:false,
+  tagline:"Turn business problems into AI solutions that work: find use cases, write AI requirements, build business cases and pick the right vendors.",
+  stack:["Requirements","Process mapping","Stakeholders","Excel / SQL","Business cases"],
+  learner:"a business analyst who knows requirements gathering, process mapping, stakeholder management, Excel and some SQL, but doesn't code",
+  analogy:"business analysis: requirements, process mapping or stakeholder work",
+  overlap:"Medium–high", modules:["aifound","promptpro","aireqs","nocode","aibiz","aigov"],
+  bridges:{
+    aifound:"Knowing what AI can and can't do is what makes your requirements realistic. It's the difference between 'make it smart' and a spec engineers can deliver.",
+    promptpro:"Prompting is the fastest way to test whether an idea works before writing requirements. A prompt with examples is a working prototype of a spec.",
+    nocode:"No-code tools let you prove a process automation yourself, so your recommendation comes with a working pilot instead of a diagram.",
+    aigov:"You'll often be the one asking the uncomfortable questions in a project: what data is used, who's accountable, and which rules apply."},
+  builds:{
+    nocode:{title:"Automate a process step yourself",steps:["Take the AI step from your requirements pack.","Build it in Zapier, Make or n8n with an AI step that outputs the fields you specified.","Run it on your test set and measure the pass rate against your acceptance criteria.","Add a human review step for uncertain cases and present the result to a stakeholder."]}} },
 
 { id:"pm", short:"Product manager", from:"Product manager", to:"AI product manager", rank:"AI Product Manager", tech:false,
   tagline:"Decide what AI to build, define what good looks like, and ship AI features users trust. No coding required.",
@@ -1900,11 +2117,11 @@ const isCurrent = t => !needsPick && t.id===TRACK.id;
 const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
-const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
+const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
 let homeFilter = "all", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
-  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web or mobile interfaces","frontend"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"]]},
-  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
+  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Security and threat detection","security"]]},
+  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
 
 function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;

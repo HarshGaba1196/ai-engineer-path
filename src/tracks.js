@@ -104,6 +104,42 @@ const TRACKS = [
     llm:{title:"Embeddings at scale",steps:["Embed 100,000 short texts with a sentence-transformers model in batches.","Measure throughput on CPU vs GPU.","Store vectors in Postgres with pgvector or Parquet files.","Estimate the cost to re-embed everything with a hosted API instead."]},
     rag:{title:"Production RAG ingestion pipeline",steps:["Build a pipeline that pulls documents from a source (wiki, S3 or a database) on a schedule.","Chunk and embed only new or changed documents.","Upsert into a vector store with metadata and access tags.","Add monitoring for pipeline lag and failed documents."]}} },
 
+{ id:"security", short:"Security engineer", from:"Security engineer", to:"AI security engineer", rank:"AI Security Engineer", tech:true,
+  tagline:"Secure the AI systems everyone is shipping, and use AI to make security teams faster: threat modeling, red-teaming and AI in the SOC.",
+  stack:["AppSec","Threat modeling","SIEM / SOC","Pen testing","Python scripting"],
+  learner:"a security engineer who knows application security, threat modeling, SIEM and SOC work, penetration testing and Python scripting",
+  analogy:"application security, threat modeling, SOC operations or penetration testing",
+  overlap:"Medium–high", modules:["py","llm","api","rag","agents","redteam","aisecarch","aisecops"],
+  bridges:{
+    py:"You probably script in Python already. Here the focus shifts to the AI ecosystem: notebooks, model SDKs and small services you'll test and attack.",
+    llm:"Understand the target before you attack it. Tokens, context windows and sampling explain why models can be steered, and why they leak or hallucinate.",
+    api:"Build the things you'll later secure. Knowing how system prompts, structured output and tool calls work shows you exactly where trust is placed.",
+    rag:"RAG adds a new attack surface: anything written into the knowledge base can end up in the model's instructions. Access control at retrieval time is the key control.",
+    agents:"Agents are the riskiest pattern: a model holding credentials and taking actions. Think of each tool as a privileged API exposed to untrusted input.",
+    redteam:"This is penetration testing for language. Your attacker mindset transfers directly; the payloads are words instead of packets."},
+  builds:{
+    py:{title:"Security tooling for AI projects",steps:["Write a Python script that scans a repo for hard-coded API keys and unsafe model loading (pickle, torch.load without weights_only).","Add a FastAPI endpoint that wraps an LLM call and logs every prompt and response with a trace id.","Use asyncio to send 50 test prompts concurrently and record responses.","Package the tools with uv and run them in CI."]},
+    api:{title:"A deliberately vulnerable LLM app",steps:["Build a small LLM app with a system prompt containing a fake secret and one tool that reads user records.","Try to extract the secret and access another user's record.","Fix it: move the secret out of the prompt and enforce authorization in the tool.","Write a short before-and-after report."]},
+    rag:{title:"Multi-tenant RAG with access control",steps:["Build a RAG system over documents from two fake tenants.","Show that a naive query can retrieve the other tenant's data.","Add tenant and permission filters at retrieval time.","Plant a poisoned document with hidden instructions and test whether it changes answers."]},
+    agents:{title:"Least-privilege agent",steps:["Build an agent with three tools: read tickets, search docs and send email.","Run each tool with its own scoped credential.","Require human approval for sending email, and block external recipients.","Try to trick the agent into exfiltrating data through a ticket's content, and log what happens."]}} },
+
+{ id:"mobile", short:"Mobile developer", from:"Mobile developer", to:"On-device AI engineer", rank:"On-device AI Engineer", tech:true,
+  tagline:"Ship AI inside iOS and Android apps: hosted models done right, platform AI frameworks, and custom models running fast on the phone.",
+  stack:["Swift / SwiftUI","Kotlin / Compose","Mobile performance","REST APIs","App store releases"],
+  learner:"a mobile developer who knows Swift and SwiftUI or Kotlin and Jetpack Compose, mobile performance, REST APIs and app store releases",
+  analogy:"iOS or Android development, mobile performance or app releases",
+  overlap:"Medium", modules:["llm","mobileai","ondevice","aiux","rag","evals","ops"],
+  bridges:{
+    llm:"Know the engine you're putting in your app. Tokens drive cost and latency, and context limits decide how much of a user's data a feature can use.",
+    aiux:"Mobile adds constraints to AI UX: small screens, interruptions, and users on the move. Short answers, clear states and quick recovery matter even more.",
+    rag:"On mobile, retrieval can run on your backend or on device. Small embedding models and a local index enable private search over a user's own content.",
+    evals:"Evals are your UI tests for AI. Test prompts and models against fixed examples before a release, because you can't hotfix an app as easily as a website.",
+    ops:"Production on mobile means monitoring crash-free sessions plus AI quality, cost per user and model latency across many device types."},
+  builds:{
+    rag:{title:"Private search over a user's notes",steps:["Run a small embedding model on device (Core ML or LiteRT) for the user's notes.","Store vectors locally and build instant semantic search.","Send only the top results to a cloud model for an answer, with user consent.","Compare speed and quality with a fully cloud version."]},
+    evals:{title:"Release checks for an AI feature",steps:["Write 30 test inputs for your app's AI feature, including edge cases.","Run them against the on-device and cloud paths and record pass rates.","Add the suite to CI so it runs before every release build.","Track results across app versions."]},
+    ops:{title:"Capstone: ship it to the store",steps:["Combine your AI features into one polished app with onboarding and privacy disclosures.","Add analytics for usage, latency, fallback rate and cost per user.","Run a TestFlight or internal testing beta with 5 people and fix the top issues.","Prepare the store listing and submit, or publish a demo video and repo."]}} },
+
 { id:"ux", from:"UX / UI designer", to:"AI UX designer", rank:"AI UX Designer", tech:false, short:"UX designer",
   tagline:"Design how people work with AI: conversations, trust, prototypes with real models and responsible experiences.",
   stack:["User research","Interaction design","Prototyping","Figma","Content design"],
@@ -118,6 +154,20 @@ const TRACKS = [
   builds:{
     aiux:{title:"Redesign an AI feature end to end",steps:["Audit an AI feature in a product you use: list confusing moments and trust problems.","Design improved onboarding, loading, error and refusal states.","Add citations and a feedback control and explain what each logs.","Present the redesign as a short case study with before and after."]},
     aigov:{title:"Design for trust and consent",steps:["Pick an AI feature that uses personal data.","Design the disclosure, consent and opt-out moments.","Design how a user challenges or corrects an AI decision.","Review your designs against the EU AI Act transparency rules."]}} },
+
+{ id:"ba", short:"Business analyst", from:"Business analyst", to:"AI solutions consultant", rank:"AI Solutions Consultant", tech:false,
+  tagline:"Turn business problems into AI solutions that work: find use cases, write AI requirements, build business cases and pick the right vendors.",
+  stack:["Requirements","Process mapping","Stakeholders","Excel / SQL","Business cases"],
+  learner:"a business analyst who knows requirements gathering, process mapping, stakeholder management, Excel and some SQL, but doesn't code",
+  analogy:"business analysis: requirements, process mapping or stakeholder work",
+  overlap:"Medium–high", modules:["aifound","promptpro","aireqs","nocode","aibiz","aigov"],
+  bridges:{
+    aifound:"Knowing what AI can and can't do is what makes your requirements realistic. It's the difference between 'make it smart' and a spec engineers can deliver.",
+    promptpro:"Prompting is the fastest way to test whether an idea works before writing requirements. A prompt with examples is a working prototype of a spec.",
+    nocode:"No-code tools let you prove a process automation yourself, so your recommendation comes with a working pilot instead of a diagram.",
+    aigov:"You'll often be the one asking the uncomfortable questions in a project: what data is used, who's accountable, and which rules apply."},
+  builds:{
+    nocode:{title:"Automate a process step yourself",steps:["Take the AI step from your requirements pack.","Build it in Zapier, Make or n8n with an AI step that outputs the fields you specified.","Run it on your test set and measure the pass rate against your acceptance criteria.","Add a human review step for uncertain cases and present the result to a stakeholder."]}} },
 
 { id:"pm", short:"Product manager", from:"Product manager", to:"AI product manager", rank:"AI Product Manager", tech:false,
   tagline:"Decide what AI to build, define what good looks like, and ship AI features users trust. No coding required.",
