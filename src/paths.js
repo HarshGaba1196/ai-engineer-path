@@ -18,11 +18,11 @@ const isCurrent = t => !needsPick && t.id===TRACK.id;
 const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
-const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], pm:["◎","--flame"], nontech:["★","--rose"]};
+const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
 let homeFilter = "all", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
-  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web or mobile interfaces","frontend"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"]]},
-  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
+  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web or mobile interfaces","frontend"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"]]},
+  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
 
 function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
@@ -67,14 +67,14 @@ function pathCards(){
   }).join("");
 }
 function routeMap(){
-  const W=610, H=320, n=TRACKS.length, y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
+  const W=610, n=TRACKS.length, H=Math.max(320, 60+n*34), y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
   const rows = TRACKS.map((t,i)=>{
     const [,c]=LOOK[t.id];
     return `<g class="route" data-id="${t.id}" tabindex="0" role="link" aria-label="${esc(t.from)} to ${esc(t.to)}" style="--c:var(${c})">
       <path class="rl" d="M150 ${y(i)} C ${hx-60} ${y(i)}, ${hx-60} ${hy}, ${hx-26} ${hy}"/>
       <path class="rl" d="M${hx+26} ${hy} C ${hx+60} ${hy}, ${hx+60} ${y(i)}, ${W-175} ${y(i)}"/>
       <circle class="rd" cx="150" cy="${y(i)}" r="5"/><circle class="rd" cx="${W-175}" cy="${y(i)}" r="5"/>
-      <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.from.replace(" engineer","").replace("Any non-technical role","Non-technical"))}</text>
+      <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.short||t.from)}</text>
       <text class="rt to" x="${W-165}" y="${y(i)+4}">${esc(t.to.replace("professional","pro"))}</text>
       <rect x="0" y="${y(i)-16}" width="${W}" height="32" fill="transparent"/>
     </g>`;

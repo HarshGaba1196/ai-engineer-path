@@ -10,7 +10,7 @@
 :root{
   --bg:#f4f6fa; --surface:#ffffff; --surface-2:#f8f9fc; --ink:#121826; --muted:#5b6478; --faint:#8b93a7; --line:#e3e7ef;
   --accent:#3155e6; --accent-ink:#ffffff; --accent-soft:#e9eefd; --amber:#a86400; --amber-soft:#fdf1df;
-  --good:#16794a; --good-soft:#e3f4ea; --bad:#b3312c; --bad-soft:#fbe8e7; --xp:#7442e0; --xp-soft:#efe8fd; --flame:#e2590f; --flame-soft:#fdebdf; --rose:#cc2f6a; --side:#0f1424; --side-ink:#c9cfdd; --side-muted:#7c859b; --side-line:#222a40; --side-hover:#1a2136;
+  --good:#16794a; --good-soft:#e3f4ea; --bad:#b3312c; --bad-soft:#fbe8e7; --xp:#7442e0; --xp-soft:#efe8fd; --flame:#e2590f; --flame-soft:#fdebdf; --rose:#cc2f6a; --teal:#0b8079; --sky:#1f6fc5; --plum:#9334b0; --side:#0f1424; --side-ink:#c9cfdd; --side-muted:#7c859b; --side-line:#222a40; --side-hover:#1a2136;
   --shadow:0 1px 2px rgba(18,24,38,.05),0 4px 16px rgba(18,24,38,.05);
   --f-display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
   --f-ui:"Plus Jakarta Sans","Segoe UI",system-ui,sans-serif;
@@ -20,12 +20,12 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0b0f1a; --surface:#131929; --surface-2:#171e30; --ink:#e7eaf2; --muted:#9aa3b8; --faint:#6f788e; --line:#252d43;
   --accent:#7f98ff; --accent-ink:#0b0f1a; --accent-soft:#1d2750; --amber:#f2aa45; --amber-soft:#33250f;
-  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
+  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --teal:#3fd0c4; --sky:#6cb8ff; --plum:#d58bf0; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0b0f1a; --surface:#131929; --surface-2:#171e30; --ink:#e7eaf2; --muted:#9aa3b8; --faint:#6f788e; --line:#252d43;
   --accent:#7f98ff; --accent-ink:#0b0f1a; --accent-soft:#1d2750; --amber:#f2aa45; --amber-soft:#33250f;
-  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
+  --good:#4cc488; --good-soft:#123222; --bad:#ff7d76; --bad-soft:#3a1a1c; --xp:#b192ff; --xp-soft:#2a1f4d; --flame:#ff8a3d; --flame-soft:#3a2111; --rose:#ff7aa8; --teal:#3fd0c4; --sky:#6cb8ff; --plum:#d58bf0; --side:#080b14; --side-ink:#c9cfdd; --side-muted:#6f788e; --side-line:#1b2236; --side-hover:#131a2b;
   --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -1333,18 +1333,187 @@ aileader:[
  {p:["Show your AI skills with outcomes, not tool lists. Case studies with the problem, what you did and the measured result stand out on a CV, on LinkedIn and in interviews.","Roles like AI operations specialist, AI enablement lead or AI-savvy analyst value exactly this experience."],
   try:"Write a 5-line case study of your best AI result so far."}]
 });
+/* Batch 2 modules: data analyst, data engineer and UX designer paths. */
+MODULES_EXTRA.push(
+/* ===== Data analyst → Data scientist ===== */
+{ id:"stats", title:"Statistics & experimentation", weeks:"4 weeks",
+  why:"Data scientists are trusted because they can tell signal from noise. Statistics turns 'the number went up' into 'this change caused an effect, and here is how sure we are'.",
+  bridge:"You already compute averages and trends in SQL and dashboards. Statistics adds the question every stakeholder should ask: could this difference just be random?",
+  concepts:[["Distributions","Normal, skewed and long-tailed data; why the mean can mislead."],["Sampling and uncertainty","Standard error, confidence intervals, sample size."],["Hypothesis testing","p-values, t-tests, chi-square, and what they don't mean."],["A/B testing","Design, power, run length, peeking and guardrail metrics."],["Regression analysis","Linear and logistic regression for explanation, not just prediction."],["Correlation vs causation","Confounders, Simpson's paradox, when you can claim cause."]],
+  res:[["Book","OpenIntro Statistics (free)","https://www.openintro.org/book/os/","Clear, free introductory statistics."],["Book","Trustworthy Online Controlled Experiments (summary site)","https://experimentguide.com/","The standard reference on A/B testing."],["Video","StatQuest","https://statquest.org/video-index/","Short, friendly explanations of statistics and ML."]],
+  build:{title:"Analyse a real A/B test",steps:["Download a public A/B test dataset (for example, from Kaggle).","Check the sample sizes and compute the conversion rate for each group with confidence intervals.","Run the right significance test and explain the p-value in one plain sentence.","Write a one-page decision memo: ship, don't ship, or run longer, with your reasons."]},
+  quiz:[
+   {q:"A test shows p = 0.03. What does that mean?",o:["There's a 97% chance the variant is better","If there were no real difference, a result this extreme would happen about 3% of the time","The effect is large","The test must be repeated"],a:1,e:"A p-value is about the data under 'no effect'. It doesn't tell you the probability the variant is better, or how big the effect is."},
+   {q:"Average order value is $80 but most orders are under $40. Why?",o:["A data bug","A few very large orders pull the mean up in a skewed distribution","The median is wrong","Rounding"],a:1,e:"In skewed data the mean is pulled by outliers. Report the median too."},
+   {q:"Why shouldn't you stop an A/B test the first time it looks significant?",o:["It wastes money","Repeated peeking inflates false positives","Users get confused","Tools don't allow it"],a:1,e:"Checking many times and stopping when lucky makes 'significant' results much more likely by chance. Fix the sample size first."},
+   {q:"Ice cream sales and drownings rise together. What's the most likely explanation?",o:["Ice cream causes drowning","A confounder: hot weather drives both","Drowning causes ice cream sales","It's random"],a:1,e:"A third factor drives both. Correlation alone doesn't show cause."},
+   {q:"Which tells you how precise an estimate is?",o:["The p-value","The confidence interval","The mean","The row count alone"],a:1,e:"A confidence interval shows a range of plausible values. Narrow means precise."}]},
+{ id:"dsflow", title:"The data science workflow", weeks:"3 weeks",
+  why:"Models are a small part of data science. Framing the problem, exploring data, validating honestly and communicating results decide whether your work changes anything.",
+  bridge:"You already turn business questions into queries and dashboards. Data science adds a model in the middle and a stronger duty to show how wrong it might be.",
+  concepts:[["Problem framing","From a business question to a measurable target."],["Exploratory data analysis","Profiling, plots, leakage hunting, data quirks."],["Baselines","Simple rules and models to beat before anything fancy."],["Honest validation","Time-based splits, leakage, metrics that match the decision."],["Explaining models","Feature importance, SHAP, partial dependence."],["Communicating results","Storytelling with data, uncertainty, recommendations."]],
+  res:[["Course","Kaggle Learn","https://www.kaggle.com/learn","Short practical courses on pandas, ML and visualisation."],["Book","Python Data Science Handbook (free)","https://jakevdp.github.io/PythonDataScienceHandbook/","NumPy, pandas, Matplotlib and scikit-learn."],["Docs","SHAP","https://shap.readthedocs.io/","Explaining model predictions."]],
+  build:{title:"End-to-end churn analysis",steps:["Frame a churn question with a clear target and the decision it supports.","Explore the data in a notebook and list 5 findings, including one data quality issue.","Beat a simple baseline with a model, using a time-based split.","Present the result in 5 slides: question, finding, model, uncertainty, recommendation."]},
+  quiz:[
+   {q:"Your churn model is 99% accurate in testing but useless in production. Most likely cause?",o:["Too few features","Data leakage: a feature that wasn't available at prediction time","The wrong library","The server is slow"],a:1,e:"Leakage lets the model 'see the future'. Check every feature is known at the moment of prediction."},
+   {q:"Why build a simple baseline first?",o:["It's required","It shows whether a complex model adds real value","Baselines are always best","To save memory"],a:1,e:"If a rule of thumb gets 90% of the value, the complex model must justify its cost."},
+   {q:"Predicting next month's sales: how should you split the data?",o:["Randomly","By time: train on earlier periods, test on later ones","By customer name","Not at all"],a:1,e:"Random splits leak future information. Time-based splits mimic real use."},
+   {q:"What does SHAP help with?",o:["Speeding up training","Explaining how each feature pushed a prediction up or down","Cleaning data","Storing models"],a:1,e:"SHAP values attribute a prediction to features, which helps trust and debugging."},
+   {q:"The best final slide of an analysis is…",o:["A table of all model parameters","A clear recommendation with its expected impact and uncertainty","The code","A thank-you slide"],a:1,e:"Stakeholders act on recommendations. Show what to do, why, and how sure you are."}]},
+{ id:"llmdata", title:"LLMs for data work", weeks:"3 weeks",
+  why:"LLMs unlock data that used to be too messy to analyse: free text, reviews, tickets and documents. They also speed up your own work, from writing SQL to summarising findings.",
+  bridge:"Think of an LLM as a very fast, slightly unreliable labelling team. You give it instructions and examples, check a sample of its work, and then let it process thousands of rows.",
+  concepts:[["Text to structured data","Classifying and extracting fields from free text at scale."],["Embeddings for analysis","Clustering feedback, finding themes, semantic search."],["Natural language to SQL","Letting people ask questions of data, and its risks."],["Validating LLM labels","Comparing with human labels, measuring agreement."],["AI-assisted analysis","Using assistants for code, charts and summaries safely."],["Cost and scale","Batching, caching, smaller models, privacy of data."]],
+  res:[["Docs","Claude: structured outputs","https://docs.claude.com/en/docs/build-with-claude/structured-outputs","Reliable JSON from models."],["Docs","Sentence Transformers","https://sbert.net/","Embeddings for clustering and search."],["Docs","Claude: batch processing","https://docs.claude.com/en/docs/build-with-claude/batch-processing","Cheaper large-scale processing."]],
+  build:{title:"Theme analysis of customer feedback",steps:["Take 2,000 reviews or support tickets.","Use an LLM to extract sentiment, product area and main complaint into a table. Check 100 rows by hand.","Cluster the complaints with embeddings and name each cluster.","Build a dashboard of themes over time and write three insights."]},
+  quiz:[
+   {q:"An LLM labelled 10,000 tickets. How do you know the labels are good?",o:["Trust the model","Hand-label a random sample and measure agreement","Count the labels","Ask the model if it's sure"],a:1,e:"A labelled sample tells you the accuracy. Without it you don't know how wrong the dashboard is."},
+   {q:"What are embeddings most useful for in analysis?",o:["Storing numbers","Grouping similar texts and finding themes","Making charts","Encrypting data"],a:1,e:"Texts with similar meaning get similar vectors, so they cluster together."},
+   {q:"A main risk of natural-language-to-SQL for business users?",o:["It's too slow","Wrong but plausible queries that people trust without checking","It needs a GPU","It can't count"],a:1,e:"A confident wrong number is worse than no number. Show the SQL, use governed views and test common questions."},
+   {q:"You need to classify 1 million rows cheaply. Best approach?",o:["The largest model, one row at a time","A smaller model, batch processing and clear examples, checked on a sample","Manual labelling","Skip validation"],a:1,e:"Smaller models and batch APIs cut cost a lot. Validate quality on a sample."},
+   {q:"Before sending customer data to an LLM API, you should…",o:["Just send it","Check data policy, remove unneeded personal data and use approved services","Translate it","Compress it"],a:1,e:"Data protection rules still apply. Send only what's needed to approved providers."}]},
+/* ===== Data engineer → ML engineer ===== */
+{ id:"features", title:"Data for machine learning", weeks:"3 weeks",
+  why:"Most ML problems are data problems. Data engineers who understand training data, features and embeddings become the backbone of ML teams.",
+  bridge:"Feature pipelines are ETL with stricter rules: the same transformation must run identically for training and serving, and every value must be correct as of a point in time.",
+  concepts:[["Training data pipelines","Point-in-time correct datasets, labels and splits."],["Feature stores","Offline/online stores, reuse, consistency (Feast)."],["Training-serving skew","Why models break when features differ in production."],["Data quality for ML","Validation, schema checks, drift (Great Expectations)."],["Labelling pipelines","Human and model labelling, quality control."],["Embedding pipelines","Chunking, embedding at scale, re-indexing vector stores."]],
+  res:[["Docs","Feast","https://docs.feast.dev/","Open-source feature store."],["Docs","Great Expectations","https://docs.greatexpectations.io/","Data validation and quality checks."],["Course","Made With ML","https://madewithml.com/","Data and MLOps for production ML."]],
+  build:{title:"Feature pipeline for a churn model",steps:["Build a pipeline that produces point-in-time correct features for each customer and date.","Register the features in Feast with an offline and online store.","Add data quality checks that fail the pipeline on bad data.","Serve the same features to a model online and prove training and serving values match."]},
+  quiz:[
+   {q:"What is training-serving skew?",o:["Slow training","Features computed differently in training and production, so the model sees different data","GPU imbalance","Too many features"],a:1,e:"If production features don't match training features, accuracy drops silently. Share one definition."},
+   {q:"Why must training data be point-in-time correct?",o:["For speed","So each example only uses information available at that moment, avoiding leakage","Storage rules","Compliance only"],a:1,e:"Using later data in features leaks the future and inflates test scores."},
+   {q:"What does a feature store mainly provide?",o:["Model training","Shared, consistent features for both training (offline) and serving (online)","Dashboards","Labelling"],a:1,e:"It gives one definition of each feature, reusable across models and consistent between training and serving."},
+   {q:"An embedding model is upgraded. What must happen to the vector store?",o:["Nothing","Re-embed the documents, because old and new vectors aren't comparable","Delete it","Add a column"],a:1,e:"Vectors from different models live in different spaces. Re-index everything with the new model."},
+   {q:"Where should data validation run in an ML pipeline?",o:["Only at the end","Before training and before serving, failing fast on bad data","Never","Only in dashboards"],a:1,e:"Catching bad data early stops broken models from being trained or fed garbage."}]},
+/* ===== UX designer → AI UX designer ===== */
+{ id:"convdesign", title:"Conversation design", weeks:"3 weeks",
+  why:"When the interface is a conversation, the words are the design. Conversation designers shape how AI assistants speak, guide users and recover from misunderstandings.",
+  bridge:"You already design flows, microcopy and error states. Conversation design applies the same craft to turns of dialogue, where the user can say anything at any moment.",
+  concepts:[["Persona and voice","Personality, tone and consistency for an assistant."],["Conversation flows","Happy paths, branches and open-ended turns."],["Clarifying and confirming","Asking good questions and confirming actions."],["Repair and fallback","Misunderstandings, 'I don't know' and handing over to a human."],["Designing system prompts","Turning design decisions into model instructions."],["Multimodal and voice","Speech, images and when to show instead of tell."]],
+  res:[["Guide","Google: Conversation design","https://developers.google.com/assistant/conversation-design/welcome","Classic principles of conversation design."],["Docs","Claude prompt engineering guide","https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview","How instructions shape model behaviour."],["Guide","Google PAIR: People + AI Guidebook","https://pair.withgoogle.com/guidebook/","Designing human-AI interaction."]],
+  build:{title:"Design an assistant's conversations",steps:["Define a persona for a support assistant: voice, tone, and 3 do's and don'ts.","Map 3 key flows, including a clarification and a handover to a human.","Write the system prompt that captures your design decisions.","Test it with 15 real-style messages and revise the prompt twice."]},
+  quiz:[
+   {q:"A user's request is ambiguous. What should a well-designed assistant do?",o:["Guess and answer","Ask one short clarifying question, or offer the likely options","Refuse","Repeat the question back"],a:1,e:"A focused clarifying question avoids wrong answers without making the user work hard."},
+   {q:"What's the purpose of an assistant persona?",o:["Decoration","Consistent voice and behaviour users can predict and trust","Making it seem human","Branding only"],a:1,e:"A clear persona keeps tone and behaviour consistent across thousands of conversations."},
+   {q:"The assistant can't help. Best design?",o:["Keep trying","Say so clearly and offer a next step, like a human handover or a link","Change the subject","End the chat"],a:1,e:"Good repair keeps users moving forward instead of stuck in loops."},
+   {q:"Where do design decisions about tone and rules end up for an LLM assistant?",o:["In a Figma file only","In the system prompt and the examples it contains","In CSS","In the database"],a:1,e:"The system prompt is the spec the model follows, so designers increasingly write and test it."},
+   {q:"Before an assistant books, pays or deletes something, it should…",o:["Do it quickly","Confirm the action and its details with the user","Ask for a password","Show an ad"],a:1,e:"Confirmation prevents costly mistakes and keeps users in control."}]},
+{ id:"protoai", title:"Prototyping & testing AI experiences", weeks:"3 weeks",
+  why:"Static mockups can't show how AI behaves. AI UX designers prototype with real model outputs, test with users early and design around variability.",
+  bridge:"Your research and prototyping skills still apply. The difference is that the 'content' of the prototype changes every time, so you test ranges of behaviour, not one perfect screen.",
+  concepts:[["Why static mockups fail","Variable outputs, latency and errors you can't fake well."],["Prototyping with real models","Claude artifacts, v0 and no-code builders."],["Wizard-of-Oz testing","A human plays the AI to test concepts early."],["Designing for variability","Short, long, wrong and refused outputs in layouts."],["Usability testing AI","Tasks, trust, over-reliance and recovery."],["AI in your design workflow","Research synthesis, ideation and copy with AI."]],
+  res:[["Tool","Claude artifacts","https://support.claude.com/","Build working prototypes by describing them."],["Tool","v0 by Vercel","https://v0.app/","Generate UI prototypes from prompts."],["Articles","Nielsen Norman Group on AI","https://www.nngroup.com/topic/ai/","Research on designing and testing AI."]],
+  build:{title:"Prototype and test an AI feature",steps:["Pick an AI feature idea and build a working prototype with Claude artifacts, v0 or a no-code tool.","Design layouts for at least 4 output types: great, too long, wrong and refused.","Run 3 usability sessions and note where users over-trust or get stuck.","Write up findings with clips or quotes and 5 design changes."]},
+  quiz:[
+   {q:"Why aren't static mockups enough for AI features?",o:["They're too slow to make","Real outputs vary in length, quality and timing, which mockups hide","Clients dislike them","They can't show colour"],a:1,e:"A perfect mock answer hides the messy reality users will see. Prototype with real outputs."},
+   {q:"What is a Wizard-of-Oz test?",o:["A fantasy theme","A person secretly plays the AI so you can test the concept before building it","A load test","A survey"],a:1,e:"It's a fast, cheap way to learn if a concept works before engineering effort."},
+   {q:"Designing for variability means…",o:["Using many colours","Making layouts work for short, long, wrong and refused outputs","Random layouts","More animations"],a:1,e:"AI output changes every time. Layouts and flows must handle the full range."},
+   {q:"In usability tests of AI features, a key thing to watch is…",o:["Font preferences","Over-reliance: users accepting wrong answers without checking","Mouse speed","Screen size"],a:1,e:"Over-trust is a major risk. Design and test cues that help users verify."},
+   {q:"A good use of AI in your own design work?",o:["Replacing user research","Synthesising interview notes into themes you then verify","Skipping testing","Choosing the final design"],a:1,e:"AI speeds up synthesis and ideation, but designers still validate and decide."}]}
+);
+
+Object.assign(LESSONS, {
+stats:[
+ {p:["A distribution shows how values spread out. Many business metrics, like order values or session times, are skewed: most values are small and a few are huge.","In skewed data, the mean is pulled up by outliers, so report the median and percentiles too. Always plot a histogram before summarising a metric."],
+  code:"import pandas as pd\norders = pd.read_csv(\"orders.csv\")\nprint(orders.amount.describe(percentiles=[.5, .9, .99]))\norders.amount.plot.hist(bins=50)",
+  try:"Plot the distribution of a key metric you report and compare its mean and median."},
+ {p:["You almost never see the whole population, only a sample. Different samples give different answers, and the standard error measures how much an estimate would move between samples.","A 95% confidence interval gives a range of plausible values. Bigger samples give narrower intervals: to halve the width, you need four times the data."],
+  code:"import numpy as np\np, n = 0.12, 2000                 # 12% conversion from 2,000 users\nse = np.sqrt(p * (1 - p) / n)\nprint(f\"{p:.1%} ± {1.96*se:.1%}\")   # about 12.0% ± 1.4%",
+  try:"Compute a confidence interval for a conversion rate from your own data."},
+ {p:["A hypothesis test asks: if there were no real effect, how surprising is this data? The p-value is that probability. Small p-values suggest the effect is real.","A p-value isn't the chance your idea is right, and it says nothing about size. A tiny, useless effect can be 'significant' with enough data. Always report the effect size and its interval."],
+  code:"from scipy import stats\nstat, p = stats.ttest_ind(group_a, group_b, equal_var=False)\nprint(round(p, 4))",
+  try:"Run a t-test on two groups in your data and explain the result in one plain sentence."},
+ {p:["An A/B test randomly splits users so that the only systematic difference is your change. Decide the metric, the minimum effect you care about and the sample size before starting.","Don't stop early when results look good, watch guardrail metrics like errors and cancellations, and run for full weeks to cover weekly cycles."],
+  try:"Use an online sample size calculator to plan a test for a 5% relative lift on your main metric."},
+ {p:["Regression estimates how an outcome changes with several factors at once, holding others constant. Linear regression suits numbers; logistic regression suits yes/no outcomes.","Coefficients describe associations in your data. They only mean cause if the design supports it, as in a randomised experiment."],
+  code:"import statsmodels.formula.api as smf\nm = smf.ols(\"revenue ~ ad_spend + C(region) + season\", data=df).fit()\nprint(m.summary())",
+  try:"Fit a regression with three predictors and interpret one coefficient in plain words."},
+ {p:["Correlation means two things move together; causation means one changes the other. Confounders, like weather driving both ice cream sales and swimming, create correlations without cause.","Simpson's paradox is when a trend reverses after splitting data into groups. Experiments are the gold standard for causal claims; otherwise, be careful with wording."],
+  try:"Find a correlation in your data and list two possible confounders."}],
+dsflow:[
+ {p:["Start with the decision, not the data. 'Reduce churn' becomes 'predict which customers will cancel in the next 30 days so the retention team can call the top 500 each week'.","A good framing names the target, the time window, who acts on the output, and how success will be measured."],
+  try:"Rewrite a vague business request from your work as a measurable data science problem."},
+ {p:["Exploratory data analysis (EDA) means getting to know the data: distributions, missing values, odd categories, duplicates and relationships between variables.","Hunt for leakage: columns that wouldn't exist at prediction time, like 'cancellation_reason' in a churn model."],
+  code:"df.info()\ndf.isna().mean().sort_values(ascending=False).head(10)\ndf.describe(include=\"all\").T\ndf.groupby(\"churned\").mean(numeric_only=True)",
+  try:"Profile a dataset and list three surprises you found."},
+ {p:["A baseline is the simplest reasonable approach: predict the most common class, use last month's value, or a one-line business rule.","Every model must beat the baseline by enough to justify its complexity. Sometimes the rule wins, and that's a valid result."],
+  try:"Write a one-line rule baseline for a prediction problem and measure its accuracy."},
+ {p:["Validation should mirror real use. For time-based problems, train on the past and test on the future. Keep a final test set you look at only once.","Choose metrics that match the decision. If the team can call 500 customers, precision in the top 500 matters more than overall accuracy."],
+  try:"Evaluate a model with a time-based split and with a random split, and compare the scores."},
+ {p:["Stakeholders trust models they understand. Global feature importance shows what matters overall; SHAP values explain individual predictions.","Explanations also catch bugs: if 'customer_id' is the top feature, something is wrong."],
+  code:"import shap\nexplainer = shap.TreeExplainer(model)\nshap_values = explainer.shap_values(X_test)\nshap.summary_plot(shap_values, X_test)",
+  try:"Create a SHAP summary plot for a tree model and explain the top 3 features."},
+ {p:["Lead with the answer: what you found and what to do. Then show the evidence, the uncertainty and the limits.","Use one clear chart per message, plain words instead of jargon, and a recommendation someone can act on this week."],
+  try:"Turn an analysis into a 5-slide story: question, answer, evidence, uncertainty, next step."}],
+llmdata:[
+ {p:["LLMs can turn free text into columns: sentiment, topic, product, urgency or any field you define. Give clear category definitions and examples, and ask for structured JSON.","This unlocks analysis of reviews, tickets, survey answers and call notes that used to need manual coding."],
+  code:"PROMPT = \"\"\"Classify the review. Return JSON with:\nsentiment: positive|neutral|negative\narea: delivery|product|price|support|other\ncomplaint: short phrase or null\n\nReview: {text}\"\"\"",
+  try:"Classify 50 reviews with an LLM into 3 fields and load the result into a DataFrame."},
+ {p:["Embeddings turn each text into a vector, so similar meanings sit close together. Cluster them to discover themes you didn't know to look for.","Then ask an LLM to name each cluster from a sample of its texts. You get a fast, data-driven theme map."],
+  code:"from sentence_transformers import SentenceTransformer\nfrom sklearn.cluster import KMeans\nE = SentenceTransformer(\"all-MiniLM-L6-v2\").encode(texts, normalize_embeddings=True)\ndf[\"cluster\"] = KMeans(n_clusters=8, n_init=\"auto\").fit_predict(E)",
+  try:"Cluster 500 feedback comments and name the clusters."},
+ {p:["Natural-language-to-SQL lets people ask 'what were sales by region last quarter?' and get a query. It works best on a small, well-documented set of tables or views.","Show the generated SQL, test it on common questions, and restrict access to read-only governed data."],
+  try:"Give an LLM your table schemas and 10 business questions. Check how many queries are correct."},
+ {p:["LLM labels are measurements with error. Hand-label a random sample of 100 to 200 rows and compare: accuracy per class, and where the model and humans disagree.","Report results with that error in mind, and re-check whenever the prompt or model changes."],
+  try:"Hand-label 100 rows and compute the LLM's accuracy and confusion matrix."},
+ {p:["Assistants can write pandas code, suggest charts and draft summaries. Treat them like a fast junior analyst: review the code, check the numbers and own the conclusions.","Keep the data private where required, and prefer tools that run code on your data rather than guessing."],
+  try:"Use an AI assistant to analyse a dataset, then verify two of its numbers yourself."},
+ {p:["At scale, cost matters. Use the smallest model that meets your accuracy bar, batch APIs for offline jobs, short prompts and caching for repeated instructions.","Estimate cost before running: rows × tokens per row × price. A 1-million-row job can cost dollars or thousands depending on these choices."],
+  try:"Estimate the cost of labelling 1 million short reviews with two different models."}],
+features:[
+ {p:["A training dataset has one row per example, such as a customer on a date, with features computed only from data available at that moment and a label from later.","Point-in-time joins are the core skill: join each event to the latest feature values before its timestamp, never after."],
+  code:"-- latest feature value before each label timestamp\nSELECT l.customer_id, l.label_ts, l.churned, f.orders_30d\nFROM labels l\nLEFT JOIN LATERAL (\n  SELECT orders_30d FROM customer_features f\n  WHERE f.customer_id = l.customer_id AND f.computed_at <= l.label_ts\n  ORDER BY f.computed_at DESC LIMIT 1\n) f ON true;",
+  try:"Build a point-in-time correct training table for a simple churn label."},
+ {p:["A feature store manages feature definitions, an offline store for training and an online store for low-latency serving. Feast is the common open-source option.","It lets teams reuse features across models and guarantees the same definition is used everywhere."],
+  try:"Define two features in Feast and materialise them to an online store."},
+ {p:["Training-serving skew happens when production features are computed differently from training features: different code, different time windows or missing values handled differently.","Prevent it with one shared feature definition, logging served features, and comparing their distributions with training data."],
+  try:"Log features at serving time for a day and compare their distribution with the training set."},
+ {p:["Bad data makes bad models, often silently. Validate schemas, ranges, null rates and distributions before training and before serving.","Tools like Great Expectations or dbt tests let you write these checks as code and fail pipelines early."],
+  try:"Write 5 data quality checks for a training table and make the pipeline fail when one breaks."},
+ {p:["Labels come from business events, human annotators or models. Each source needs quality checks: agreement between annotators, audits of model labels and clear guidelines.","Version labels like data, because relabelling changes what the model learns."],
+  try:"Design a labelling workflow with guidelines, a review step and an agreement check."},
+ {p:["RAG systems need embedding pipelines: extract documents, chunk them, embed, and upsert into a vector store with metadata. Make them incremental so only changed documents are re-processed.","When the embedding model changes, re-embed everything, because vectors from different models aren't comparable."],
+  try:"Build an incremental embedding pipeline that only re-embeds documents whose content hash changed."}],
+convdesign:[
+ {p:["A persona defines how the assistant sounds and behaves: its role, personality, tone and boundaries. It keeps thousands of conversations consistent.","Write it down with examples: 'Friendly but brief. Uses plain words. Never jokes about billing issues.'"],
+  try:"Write a one-page persona for an assistant in a product you know."},
+ {p:["Map the most important flows: the happy path, common branches and where users get stuck. With LLMs, users can go off-script anytime, so design for open turns too.","Focus your effort on high-value and high-risk flows, like payments, cancellations and complaints."],
+  try:"Map one flow as a branching diagram with at least two off-script turns."},
+ {p:["Good assistants ask one clear question when they need information, and offer likely options to make answering easy.","Before actions with consequences, confirm the key details: 'Cancel your Premium plan, effective 1 May. Confirm?'"],
+  try:"Rewrite three vague assistant questions into specific ones with options."},
+ {p:["Misunderstandings are normal. Design repair: rephrase, offer choices, admit limits and hand over to a human with the context preserved.","Never trap users in loops. After two failed attempts, change strategy."],
+  try:"Design the repair path for when the assistant misunderstands twice in a row."},
+ {p:["For LLM assistants, the system prompt is where the persona, rules and flows become behaviour. Designers increasingly write and test these prompts.","Include tone guidance, do's and don'ts, example replies and how to handle uncertainty, then test with realistic messages."],
+  code:"You are Ava, the support assistant for Bloom, a plant delivery service.\nTone: warm, concise, plain English. Max 3 short sentences unless asked.\nAlways: confirm order numbers before changes; offer a human if the user is upset.\nNever: promise refunds (say a teammate will review); give plant medical advice beyond care tips.\nIf unsure: say so and offer to connect the user with the team.",
+  try:"Write a system prompt from your persona and test it with 10 messages."},
+ {p:["Voice interfaces need shorter turns, confirmation of what was heard, and no long lists. Visual interfaces can show options, cards and images instead of describing them.","Choose the mode that fits the context: hands-busy, on the go, or at a desk."],
+  try:"Adapt one flow for voice: shorten replies and add a confirmation of what was heard."}],
+protoai:[
+ {p:["AI output varies in length, quality and timing. A mockup with one perfect answer hides the wrong, slow, long and refused cases users will meet.","Test with real outputs as early as possible, even if the visual design is rough."],
+  try:"Run the same prompt 5 times and lay out all 5 outputs in your mockup. What breaks?"},
+ {p:["You can build working AI prototypes without engineering: Claude artifacts and v0 turn descriptions into interactive interfaces, and no-code tools connect to models.","A clickable prototype with real responses teaches you more in a day than weeks of static screens."],
+  try:"Build a working prototype of an AI feature by describing it to Claude or v0."},
+ {p:["In a Wizard-of-Oz test, a person behind the scenes plays the AI and types responses. It tests the concept, flow and expectations before anything is built.","It's especially useful for agents and assistants, where you want to learn what users ask for."],
+  try:"Run a 15-minute Wizard-of-Oz session with a colleague playing the assistant."},
+ {p:["Design layouts for every kind of output: very short, very long, with tables or lists, partially wrong, refused, and slow.","Use truncation with expand, clear source links, and states for loading and failure."],
+  try:"Design the same answer card for 4 output types: short, long, wrong and refused."},
+ {p:["When testing AI features, watch for over-reliance: users accepting wrong answers without checking. Also watch whether they understand what the AI can do and how they recover from errors.","Include tasks where the AI gives a subtly wrong answer, and see if your design helps users notice."],
+  try:"Write a usability test plan with one task that includes a deliberately wrong AI answer."},
+ {p:["AI can speed up design work: synthesising interview notes into themes, generating ideas, drafting microcopy and creating test content.","Treat outputs as starting points. Verify themes against the raw data and keep your design judgement in charge."],
+  try:"Synthesise 5 interview transcripts with AI, then check each theme against quotes."}]
+});
 
 /* ---------- career paths: each path is an ordered list of modules, with role-specific bridges and builds ---------- */
 MODULES.push(...MODULES_EXTRA);
 const TRACKS = [
-{ id:"backend", from:"Backend engineer", to:"AI engineer", rank:"AI Engineer", tech:true,
+{ id:"backend", short:"Backend", from:"Backend engineer", to:"AI engineer", rank:"AI Engineer", tech:true,
   tagline:"Build LLM apps, RAG, agents and production AI systems on top of your Java and Spring skills.",
   stack:["Java","Spring Boot","Microservices","Python (basic)","Angular"],
   learner:"a backend engineer who knows Java, Spring Boot, microservices, basic Python and Angular",
   analogy:"Java, Spring Boot or microservices",
   overlap:"High", modules:["py","math","ml","dl","llm","api","rag","agents","evals","ops"], bridges:{}, builds:{} },
 
-{ id:"frontend", from:"Frontend engineer", to:"AI product engineer", rank:"AI Product Engineer", tech:true,
+{ id:"frontend", short:"Frontend", from:"Frontend engineer", to:"AI product engineer", rank:"AI Product Engineer", tech:true,
   tagline:"Build the interfaces people actually use AI through: streaming chat, copilots, generative UI and on-device models.",
   stack:["TypeScript","Angular / React","CSS","Browser APIs","REST"],
   learner:"a frontend engineer who knows TypeScript, Angular or React, CSS, browser APIs and REST",
@@ -1363,7 +1532,7 @@ const TRACKS = [
     evals:{title:"Evals for your assistant in CI",steps:["Write 30 test conversations for your assistant, including 5 it should refuse.","Write code checks: valid JSON, citations present, under a word limit.","Add an LLM-as-judge rubric for helpfulness and hand-check 10 grades.","Run the suite with promptfoo in GitHub Actions on every pull request."]},
     ops:{title:"Capstone: ship an AI feature to production",steps:["Combine your streaming chat, RAG and agent into one app with authentication.","Add rate limits per user, cost logging per request and error tracking.","Test 10 prompt injections through user input and uploaded files, and fix what gets through.","Deploy it (Vercel, Netlify or your cloud), write a README with a demo GIF and share it."]}} },
 
-{ id:"devops", from:"DevOps / SRE engineer", to:"LLMOps engineer", rank:"LLMOps Engineer", tech:true,
+{ id:"devops", short:"DevOps / SRE", from:"DevOps / SRE engineer", to:"LLMOps engineer", rank:"LLMOps Engineer", tech:true,
   tagline:"Run AI in production: model serving on GPUs, LLM gateways, pipelines, observability and cost control.",
   stack:["Linux","Docker","Kubernetes","CI/CD","Terraform","Monitoring"],
   learner:"a DevOps/SRE engineer who knows Linux, Docker, Kubernetes, CI/CD, Terraform, monitoring and scripting",
@@ -1382,7 +1551,7 @@ const TRACKS = [
     evals:{title:"Eval gates in a deployment pipeline",steps:["Write 30 golden test cases for an LLM endpoint.","Add a pipeline stage that runs them and computes a pass rate.","Block deployment if the pass rate drops more than 5 points from the last release.","Store results per run and graph them over time."]},
     ops:{title:"Capstone: production LLM platform",steps:["Combine your gateway, a self-hosted model and a hosted model behind one endpoint.","Add OpenTelemetry tracing, dashboards for latency, tokens and cost, and SLO alerts.","Write runbooks for provider outage, cost spike and prompt-injection incident.","Run a game day: break something on purpose and practise the response."]}} },
 
-{ id:"qa", from:"QA / test engineer", to:"AI evals engineer", rank:"AI Evals Engineer", tech:true,
+{ id:"qa", short:"QA / test", from:"QA / test engineer", to:"AI evals engineer", rank:"AI Evals Engineer", tech:true,
   tagline:"Become the person who decides whether AI is good enough to ship: evals, graders, red-teaming and quality platforms.",
   stack:["Test design","Selenium / Playwright","JUnit / pytest","CI","Bug triage"],
   learner:"a QA/test engineer who knows test design, automation frameworks (Selenium, Playwright, JUnit or pytest), CI pipelines and bug triage",
@@ -1402,7 +1571,59 @@ const TRACKS = [
     rag:{title:"Build and test a small RAG system",steps:["Build a minimal RAG over 30 documents (any framework).","Write 20 questions with the document id that answers each, and test retrieval hit rate.","Write faithfulness tests: does the answer contain claims not in the retrieved text?","Change chunk size and show how both metrics move."]},
     ops:{title:"Capstone: quality plan for an AI product",steps:["Write a full test strategy for an AI feature: offline evals, red-teaming, online monitoring.","Set up production sampling with automated grading on a schedule.","Create a dashboard with quality, safety and cost trends.","Run a release review: decide go or no-go with evidence, as you would sign off a release."]}} },
 
-{ id:"pm", from:"Product manager", to:"AI product manager", rank:"AI Product Manager", tech:false,
+{ id:"analyst", from:"Data analyst", to:"Data scientist", rank:"Data Scientist", tech:true, short:"Data analyst",
+  tagline:"Go from reporting what happened to predicting what will happen: statistics, experiments, machine learning and LLMs for data.",
+  stack:["SQL","Excel","BI dashboards","Basic Python","Business metrics"],
+  learner:"a data analyst who knows SQL, Excel, BI tools like Power BI or Tableau, business metrics and some Python",
+  analogy:"SQL queries, spreadsheets or dashboards",
+  overlap:"Medium–high", modules:["py","math","stats","ml","dsflow","llm","llmdata"],
+  bridges:{
+    py:"pandas is SQL and Excel in code: filters are WHERE clauses, groupby is GROUP BY, and merge is a JOIN. Most of your analysis instincts carry straight over.",
+    math:"You don't need proofs. Focus on intuition: vectors for embeddings, gradients for how models learn, and probabilities for what model outputs mean.",
+    ml:"A model is a formula learned from historical data, like a forecast in Excel that fits itself. Your feel for business metrics helps you pick the right evaluation metric.",
+    llm:"LLMs read and write text the way your SQL reads tables. Knowing their limits, like hallucination and token costs, matters before you trust them with data."},
+  builds:{
+    py:{title:"Rebuild a dashboard in pandas",steps:["Pick a report you build in SQL or Excel today.","Rebuild it in a Jupyter notebook with pandas: load, clean, group and pivot.","Add two charts with matplotlib or seaborn.","Turn the notebook into a script that runs end to end and saves the charts."]},
+    math:{title:"Gradient descent by hand",steps:["In a notebook, fit a straight line to sales vs ad spend with your own gradient descent loop.","Plot the loss as it trains.","Compare your result with numpy.polyfit.","Write three sentences explaining what the slope means to a stakeholder."]},
+    ml:{title:"Your first predictive model",steps:["Pick a business question with a yes/no outcome, such as 'will this customer churn?'.","Train logistic regression and a random forest with scikit-learn.","Compare them with precision and recall and explain which matters for the business.","Present the top 3 drivers to a non-technical colleague."]},
+    llm:{title:"Explore what LLMs can do with your data",steps:["Ask an LLM to summarise 20 customer comments and check its accuracy.","Count tokens for a typical comment and estimate the cost of 100,000.","Try the same prompt at temperature 0 and 1 and compare consistency.","List 3 analysis tasks where you'd trust it and 3 where you wouldn't."]}} },
+
+{ id:"dataeng", from:"Data engineer", to:"ML engineer", rank:"ML Engineer", tech:true, short:"Data engineer",
+  tagline:"Use your pipeline skills to build, ship and run machine learning: features, training, RAG data and model serving.",
+  stack:["SQL","Python","Spark / dbt","Airflow","Data warehouses","Cloud"],
+  learner:"a data engineer who knows SQL, Python, Spark or dbt, Airflow, data warehouses and cloud data platforms",
+  analogy:"data pipelines, warehouses, orchestration or data quality",
+  overlap:"High", modules:["math","ml","dl","llm","features","rag","mlops","serving"],
+  bridges:{
+    math:"Just enough math to read model code: vectors and matrices are arrays with shapes, and gradients are how training updates weights. Think of shapes like schemas.",
+    ml:"Training is a batch job that turns a table into a model. Your strengths in joins, time windows and data quality decide whether models work in production.",
+    dl:"Deep learning training is a long-running, GPU-heavy pipeline. Data loaders are your ingestion layer, and checkpoints are your restartable state.",
+    llm:"Tokens are the unit of cost and capacity, and embeddings are a new column type you'll compute and store at scale.",
+    rag:"RAG is a search index fed by a pipeline. Ingestion, chunking, embedding and incremental updates are data engineering problems with a model at the end.",
+    mlops:"Experiment tracking, model registries and pipeline orchestration will feel familiar: it's DataOps with models as the artifacts.",
+    serving:"Serving models is running a stateful, latency-sensitive service. Batch inference fits your existing pipelines; online inference adds GPUs and autoscaling."},
+  builds:{
+    ml:{title:"Training pipeline in your orchestrator",steps:["Build an Airflow (or Dagster) DAG that extracts training data and trains a scikit-learn model.","Add a data validation task before training.","Store the model and metrics as versioned artifacts.","Add a batch inference task that writes predictions back to the warehouse."]},
+    dl:{title:"GPU training job with checkpoints",steps:["Train a small PyTorch model on a public dataset with a custom Dataset and DataLoader.","Save checkpoints every epoch and resume from one after a restart.","Run it on a cloud GPU and record time and cost.","Write a short runbook for the job."]},
+    llm:{title:"Embeddings at scale",steps:["Embed 100,000 short texts with a sentence-transformers model in batches.","Measure throughput on CPU vs GPU.","Store vectors in Postgres with pgvector or Parquet files.","Estimate the cost to re-embed everything with a hosted API instead."]},
+    rag:{title:"Production RAG ingestion pipeline",steps:["Build a pipeline that pulls documents from a source (wiki, S3 or a database) on a schedule.","Chunk and embed only new or changed documents.","Upsert into a vector store with metadata and access tags.","Add monitoring for pipeline lag and failed documents."]}} },
+
+{ id:"ux", from:"UX / UI designer", to:"AI UX designer", rank:"AI UX Designer", tech:false, short:"UX designer",
+  tagline:"Design how people work with AI: conversations, trust, prototypes with real models and responsible experiences.",
+  stack:["User research","Interaction design","Prototyping","Figma","Content design"],
+  learner:"a UX/UI designer who knows user research, interaction design, prototyping in Figma and content design, but doesn't code",
+  analogy:"UX design, research and prototyping",
+  overlap:"Medium", modules:["aifound","promptpro","aiux","convdesign","protoai","aigov"],
+  bridges:{
+    aifound:"You don't need to build models, but you need to know their materials and limits, the way you understand what a browser or a screen size allows.",
+    promptpro:"Prompts are content design for machines. The skills you use to write clear microcopy and briefs make you good at writing prompts.",
+    aiux:"This is your core craft applied to AI: expectations, states, trust and feedback. Your research instincts help you find where AI helps and where it gets in the way.",
+    aigov:"Responsible AI is a design responsibility too: disclosure, consent, fairness and keeping users in control are decisions you make in the interface."},
+  builds:{
+    aiux:{title:"Redesign an AI feature end to end",steps:["Audit an AI feature in a product you use: list confusing moments and trust problems.","Design improved onboarding, loading, error and refusal states.","Add citations and a feedback control and explain what each logs.","Present the redesign as a short case study with before and after."]},
+    aigov:{title:"Design for trust and consent",steps:["Pick an AI feature that uses personal data.","Design the disclosure, consent and opt-out moments.","Design how a user challenges or corrects an AI decision.","Review your designs against the EU AI Act transparency rules."]}} },
+
+{ id:"pm", short:"Product manager", from:"Product manager", to:"AI product manager", rank:"AI Product Manager", tech:false,
   tagline:"Decide what AI to build, define what good looks like, and ship AI features users trust. No coding required.",
   stack:["Discovery","Roadmaps","Metrics","Stakeholders","User research"],
   learner:"a product manager who knows discovery, roadmaps, metrics and working with engineering teams, but doesn't code",
@@ -1416,7 +1637,7 @@ const TRACKS = [
   builds:{
     aiux:{title:"Spec the AI experience",steps:["For your opportunity from AI product discovery, map the user journey including AI states: thinking, unsure, wrong, refused.","Decide where AI acts automatically and where users approve.","Specify citations, feedback controls and fallbacks.","Review the spec with a designer and an engineer, and capture their concerns."]}} },
 
-{ id:"nontech", from:"Any non-technical role", to:"AI-powered professional", rank:"AI-Powered Pro", tech:false,
+{ id:"nontech", short:"Non-technical", from:"Any non-technical role", to:"AI-powered professional", rank:"AI-Powered Pro", tech:false,
   tagline:"Use AI to do your current job far better: prompting, daily workflows, no-code automation, and leading AI in your team.",
   stack:["Operations","Marketing","HR","Sales","Support","Finance"],
   learner:"a non-technical professional (for example in operations, marketing, HR, sales, finance or support) who wants to use AI to do their job better, without coding",
@@ -1679,11 +1900,11 @@ const isCurrent = t => !needsPick && t.id===TRACK.id;
 const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
-const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], pm:["◎","--flame"], nontech:["★","--rose"]};
+const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
 let homeFilter = "all", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
-  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web or mobile interfaces","frontend"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"]]},
-  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
+  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web or mobile interfaces","frontend"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"]]},
+  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
 
 function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
@@ -1728,14 +1949,14 @@ function pathCards(){
   }).join("");
 }
 function routeMap(){
-  const W=610, H=320, n=TRACKS.length, y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
+  const W=610, n=TRACKS.length, H=Math.max(320, 60+n*34), y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
   const rows = TRACKS.map((t,i)=>{
     const [,c]=LOOK[t.id];
     return `<g class="route" data-id="${t.id}" tabindex="0" role="link" aria-label="${esc(t.from)} to ${esc(t.to)}" style="--c:var(${c})">
       <path class="rl" d="M150 ${y(i)} C ${hx-60} ${y(i)}, ${hx-60} ${hy}, ${hx-26} ${hy}"/>
       <path class="rl" d="M${hx+26} ${hy} C ${hx+60} ${hy}, ${hx+60} ${y(i)}, ${W-175} ${y(i)}"/>
       <circle class="rd" cx="150" cy="${y(i)}" r="5"/><circle class="rd" cx="${W-175}" cy="${y(i)}" r="5"/>
-      <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.from.replace(" engineer","").replace("Any non-technical role","Non-technical"))}</text>
+      <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.short||t.from)}</text>
       <text class="rt to" x="${W-165}" y="${y(i)+4}">${esc(t.to.replace("professional","pro"))}</text>
       <rect x="0" y="${y(i)-16}" width="${W}" height="32" fill="transparent"/>
     </g>`;
