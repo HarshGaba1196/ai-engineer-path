@@ -76,9 +76,11 @@ function badgeHTML(b, earned){
 
 /* save = record activity, award badges, persist, celebrate */
 let lastLevel = null;
+let lastXp = null;
 function save(){
   recordDay();
   const fresh = checkBadges();
+  logXp();
   persist();
   const L = levelInfo().level;
   if(lastLevel!=null && L>lastLevel) levelUp(L);
@@ -87,7 +89,20 @@ function save(){
   lastLevel = L;
   renderPlayer();
 }
-function quietSync(){ checkBadges(); lastLevel = levelInfo().level; renderPlayer(); }
+function quietSync(){ checkBadges(); lastLevel = levelInfo().level; lastXp = xp(); renderPlayer(); }
+/* XP earned per calendar day (all paths), used for the daily goal and the activity heatmap */
+function logXp(){
+  const now = xp();
+  if(lastXp!=null && now>lastXp){
+    const k=dayKey(), goal=root.goal||50;
+    root.xpLog=root.xpLog||{};
+    const before=root.xpLog[k]||0; root.xpLog[k]=before+(now-lastXp);
+    const keys=Object.keys(root.xpLog).sort(); if(keys.length>400) delete root.xpLog[keys[0]];
+    if(before<goal && root.xpLog[k]>=goal) setTimeout(()=>{ toast(`Daily goal reached: ${root.xpLog[k]} XP today`); confetti(90); }, 400);
+  }
+  lastXp = now;
+}
+const xpToday = () => (root.xpLog||{})[dayKey()]||0;
 
 function levelUp(L){
   const r=[0,rankName(L-1),RANKS[L-1][2]];

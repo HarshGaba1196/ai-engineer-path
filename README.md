@@ -35,7 +35,8 @@ Gamified learning paths for moving into AI from your current role:
 - 55 modules shared between paths; each path keeps its own progress, XP and badges
 - 330 short lessons with examples and 10-minute exercises
 - Phase quizzes, build projects, a daily challenge and a boss battle
-- XP, ranks, day streaks and badges
+- XP, ranks, day streaks, a daily XP goal, an activity heatmap and badges
+- Search across roles, skills, tools and lesson topics
 
 It's a single static page with no backend. Progress is saved in your browser (localStorage), so each person and each browser has its own progress.
 
@@ -56,7 +57,8 @@ Open `index.html` in a browser.
 | `src/modules6.js` | Modules and lessons for DBA, IT, support, marketing, sales, HR and teacher paths |
 | `src/modules7.js` | Modules and lessons for finance, legal, team lead and student paths |
 | `src/tracks.js` | Career paths: which modules each uses, plus role-specific bridges and builds |
-| `src/paths.js` | Path picker |
+| `src/paths.js` | Home page, path cards, route map, path finder and detail page |
+| `src/home.js` | Streak and goals panel, path search |
 | `src/game.js` | XP, ranks, streaks, badges, daily challenge |
 | `src/dash.js` | Dashboard |
 | `src/app.js` | Routing, lessons, quizzes, storage |

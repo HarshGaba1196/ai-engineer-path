@@ -440,7 +440,7 @@ $("resetBox").addEventListener("click",e=>{
   const box=$("resetBox");
   if(e.target.id==="resetBtn") box.innerHTML=`<div class="confirm"><span>Erase progress on this path?</span><button class="danger" id="resetYes">Erase</button><button id="resetNo">Cancel</button></div>`;
   else if(e.target.id==="resetNo") box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`;
-  else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
+  else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; lastXp=xp(); persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
 loadLocal(); initTrack(); quietSync();

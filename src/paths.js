@@ -28,7 +28,7 @@ function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
   const nLessons = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+(LESSONS[id]||[]).length,0);
   const nQs = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+MODULES.find(m=>m.id===id).quiz.length,0);
-  return `<section class="home-hero">
+  return `${root.track?streakPanel():""}<section class="home-hero">
     <div class="hh-text">
       <div class="label" style="color:var(--xp)">${TRACKS.length} career paths into AI</div>
       <h1>Make your leap into AI, from the job you already have</h1>
@@ -46,20 +46,29 @@ function pathsView(){
     </div>
     <div class="hh-map card" aria-label="Route map from current roles to AI roles"><div class="map-tabs seg" role="tablist" aria-label="Route map roles">${[["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-map="${k}" aria-selected="${mapMode===k}">${l}</button>`).join("")}</div><div id="mapBox">${routeMap()}</div><p class="map-hint">Hover or tap a role to see where it leads</p></div>
   </section>
+  ${root.track?"":streakPanel()}
   <section class="card finder" id="finder" ${finder.step?"":"hidden"}></section>
   <div class="home-bar">
-    <h2>All paths</h2>
+    <div class="search-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="pathSearch" type="search" autocomplete="off" placeholder="Search roles, skills or topics: SQL, Figma, Kubernetes…" value="${esc(homeQuery)}" aria-label="Search paths"><kbd>/</kbd></div>
     <div class="seg" role="tablist" aria-label="Filter paths">${[["all","All"],["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-filter="${k}" aria-selected="${homeFilter===k}">${l}</button>`).join("")}</div>
   </div>
+  <div class="search-meta"><h2 id="pathCount">${countLabel()}</h2><div class="sugg">${!homeQuery?`<span class="muted">Try:</span>${["SQL","Python","Excel","Kubernetes","Figma","Security","Teaching","No coding"].map(s=>`<button class="chipbtn" data-q="${s}">${s}</button>`).join("")}`:`<button class="chipbtn" id="clearQ">Clear search ×</button>`}</div></div>
   <div class="paths" id="pathGrid">${pathCards()}</div>`;
 }
+function visibleTracks(){ return TRACKS.filter(t=>(homeFilter==="all" || (homeFilter==="tech")===t.tech) && searchMatch(t, homeQuery).ok); }
+function countLabel(){ const n=visibleTracks().length; return homeQuery ? `${n} ${n===1?"path matches":"paths match"} “${esc(homeQuery)}”` : homeFilter==="all" ? "All paths" : `${n} ${homeFilter==="tech"?"technical":"non-technical"} paths`; }
 function pathCards(){
-  return TRACKS.filter(t=>homeFilter==="all" || (homeFilter==="tech")===t.tech).map((t,i)=>{
+  const list=visibleTracks();
+  if(!list.length) return `<div class="card empty-search"><b>No paths match “${esc(homeQuery)}”.</b><p class="muted">Try a skill or tool you use today, like SQL, Excel, Figma, Python or Kubernetes, or clear the filters.</p></div>`;
+  return list.map((t,i)=>{
+    const why = homeQuery ? searchMatch(t, homeQuery).why : null;
     const m=pathMastery(t), cur=isCurrent(t), started=!!root.paths[t.id] && m>0, ps=trackPhases(t), [g,c]=LOOK[t.id];
     return `<a class="card path-card ${cur?"cur":""} ${finder.pick===t.id?"match":""}" href="#path-${t.id}" data-id="${t.id}" style="--c:var(${c});--i:${i}">
       <span class="pc-top"><span class="pc-glyph num">${esc(g)}</span>${cur?'<span class="pill good">Your path</span>':started?`<span class="pill prog">${pct(m)} done</span>`:finder.pick===t.id?'<span class="pill warn">Best match</span>':""}</span>
-      <span class="pc-from">${esc(t.from)}</span>
-      <span class="pc-to">${arrow}<b>${esc(t.to)}</b></span>
+      <span class="pc-from">${homeQuery?markText(t.from,homeQuery):esc(t.from)}</span>
+      <span class="pc-to">${arrow}<b>${homeQuery?markText(t.to,homeQuery):esc(t.to)}</b></span>
+      ${why?`<span class="pc-why">Matches ${esc(why.kind.startsWith("topic")?why.kind.replace("topic: ","in "):why.kind)}: <b>${markText(why.text,homeQuery)}</b></span>`:""}
       <span class="pc-meta num">${ps.length} phases · ~${trackWeeks(t)} weeks · ${t.tech?"Technical":"No coding"}</span>
       ${started||cur?`<span class="bar ${m>=0.8?"good":""}"><i style="width:${pct(m)}"></i></span>`:""}
       <span class="pc-peek"><span class="label">First up</span>${ps.slice(0,3).map(p=>`<span>${esc(p.title)}</span>`).join("")}<span class="muted">+${ps.length-3} more · See details →</span></span>
@@ -112,6 +121,9 @@ function refreshGrid(){
   const g=$("pathGrid"); if(!g) return;
   g.innerHTML=pathCards(); bindCards();
   document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-selected", b.dataset.filter===homeFilter));
+  const c=$("pathCount"); if(c) c.innerHTML=countLabel();
+  const sg=document.querySelector(".sugg"); if(sg){ sg.innerHTML = !homeQuery ? `<span class="muted">Try:</span>${["SQL","Python","Excel","Kubernetes","Figma","Security","Teaching","No coding"].map(s=>`<button class="chipbtn" data-q="${s}">${s}</button>`).join("")}` : `<button class="chipbtn" id="clearQ">Clear search ×</button>`; bindSugg(); }
+  const vis=visibleTracks(); if(homeQuery && vis.length===1){ mapMode=vis[0].tech?"tech":"non"; renderMap(); highlight(vis[0].id); } else if(!pinned) highlight(null);
 }
 let pinned=null;
 function highlight(id, pin){
@@ -136,8 +148,16 @@ function bindHome(){
   document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); if(homeFilter!=="all" && homeFilter!==mapMode){ mapMode=homeFilter; renderMap(); } });
   document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{ mapMode=b.dataset.map; renderMap(); });
   bindRoutes();
+  const si=$("pathSearch");
+  si.oninput=()=>{ homeQuery=si.value.trim(); refreshGrid(); };
+  si.onkeydown=e=>{ if(e.key==="Escape"){ si.value=""; homeQuery=""; refreshGrid(); } if(e.key==="Enter"){ const first=document.querySelector(".path-card"); if(first) go("path-"+first.dataset.id); } };
+  bindSugg(); bindStreakPanel();
   bindCards(); renderFinder(); countUp();
   if(finder.pick) highlight(finder.pick, true);
+}
+function bindSugg(){
+  document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{ homeQuery=b.dataset.q; $("pathSearch").value=homeQuery; refreshGrid(); });
+  if($("clearQ")) $("clearQ").onclick=()=>{ homeQuery=""; $("pathSearch").value=""; refreshGrid(); $("pathSearch").focus(); };
 }
 function renderMap(){
   $("mapBox").innerHTML=routeMap(); bindRoutes();
@@ -188,7 +208,7 @@ function bindPaths(){
   if($("findBtn")) bindHome();
   document.querySelectorAll("[data-track]").forEach(b=>b.onclick=()=>{
     const id=b.dataset.track, changed = needsPick || id!==TRACK.id;
-    root.track=id; quizRun=null; initTrack(); lastLevel=levelInfo().level; persist(); renderPlayer();   // picking a path isn't study activity, so no streak day
+    root.track=id; quizRun=null; initTrack(); lastLevel=levelInfo().level; lastXp=xp(); persist(); renderPlayer();   // picking a path isn't study activity, so no streak day
     if(changed) toast(`Path set: ${TRACK.from} → ${TRACK.to}`);
     go("dashboard");
   });

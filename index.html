@@ -429,6 +429,68 @@ a.brand{text-decoration:none}
 @media (prefers-reduced-motion:reduce){ .map .route .rl,.map .hub-glow,.path-card{animation:none} }
 .map-tabs{display:flex;width:max-content;margin:0 auto 6px}
 .map-tabs button{padding:5px 12px;font-size:13px}
+/* home: streak panel and search */
+.streak-panel{display:grid;grid-template-columns:1.25fr 1fr 1fr 1.35fr;gap:0;padding:0;overflow:hidden}
+.streak-panel.risk{border-color:var(--flame);box-shadow:0 0 0 3px var(--flame-soft)}
+.sp-cell{padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.sp-cell+.sp-cell{border-left:1px solid var(--line)}
+.sp-streak{background:linear-gradient(160deg,var(--flame-soft),transparent 70%)}
+.sp-flame{color:var(--faint);line-height:0}
+.sp-flame.lit svg{animation:flicker 1.6s ease-in-out infinite;filter:drop-shadow(0 4px 10px color-mix(in srgb,var(--flame) 45%,transparent))}
+.streak-panel.risk .sp-flame svg{animation:pulseRisk 1.4s ease-in-out infinite}
+@keyframes pulseRisk{50%{transform:scale(1.1);opacity:.6}}
+.sp-num{display:flex;align-items:baseline;gap:8px}
+.sp-num b{font-size:46px;line-height:1;color:var(--ink)}
+.sp-num span{font-size:14px;color:var(--muted);font-weight:600}
+.sp-msg{font-size:13.5px;color:var(--muted)}
+.sp-msg b{color:var(--ink)}
+.streak-panel.risk .sp-msg b{color:var(--flame)}
+.sp-mile{display:flex;flex-direction:column;gap:5px;margin-top:auto}
+.sp-mile-h{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.bar.flame i{background:var(--flame)}
+.sp-goal{align-items:center;text-align:center}
+.goal-ring{position:relative;width:108px;height:108px}
+.goal-ring .ring{width:108px;height:108px}
+.gr-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gr-in b{font-size:28px;line-height:1}
+.gr-in span{font-size:11.5px;color:var(--muted)}
+.goal-seg button{display:flex;flex-direction:column;align-items:center;padding:5px 10px;font-size:12.5px;line-height:1.2}
+.goal-seg small{font-size:10.5px;opacity:.75}
+.sp-lvl-row{display:flex;gap:12px;align-items:center}
+.pl-lvl.big{width:44px;height:44px;font-size:20px;border-radius:12px;flex:none}
+.sp-lvl-row b{display:block;font-size:15px}
+.sp-lvl-row small{display:block;font-size:12px}
+.sp-totals{display:flex;gap:16px;flex-wrap:wrap;margin-top:auto}
+.sp-totals span{display:flex;flex-direction:column;font-size:11.5px;color:var(--muted)}
+.sp-totals b{font-size:18px;color:var(--ink)}
+.hm{display:flex;gap:4px}
+.hm-col{display:flex;flex-direction:column;gap:4px;flex:1}
+.hm-cell{display:block;aspect-ratio:1;max-width:100%;border-radius:3px;background:var(--line);outline:none;cursor:default}
+.hm-cell.l1{background:color-mix(in srgb,var(--flame) 30%,var(--line))}
+.hm-cell.l2{background:color-mix(in srgb,var(--flame) 55%,var(--line))}
+.hm-cell.l3{background:color-mix(in srgb,var(--flame) 80%,var(--line))}
+.hm-cell.l4{background:var(--flame)}
+.hm-cell.fut{background:transparent}
+.hm-cell.today{box-shadow:0 0 0 2px var(--ink)}
+.hm-cell[data-tip]:hover,.hm-cell[data-tip]:focus-visible{transform:scale(1.25);box-shadow:0 0 0 2px var(--flame)}
+.hm-foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px}
+.hm-legend{display:inline-flex;align-items:center;gap:3px;color:var(--faint)}
+.hm-legend .hm-cell{width:10px;height:10px}
+.sp-cta{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--line);background:var(--surface-2)}
+.home-bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 57px);z-index:4;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);padding:10px 0;margin:0 -2px}
+.search-box{flex:1;min-width:240px;display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:0 12px;color:var(--faint);transition:border-color .15s,box-shadow .15s}
+.search-box:focus-within{border-color:var(--xp);box-shadow:0 0 0 3px var(--xp-soft)}
+.search-box input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:15px;color:var(--ink);padding:11px 0;outline:none}
+.search-box kbd{font:600 11px var(--f-mono);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--faint)}
+.search-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.search-meta h2{font-size:18px}
+.sugg{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px}
+.pc-why{font-size:12.5px;color:var(--muted);background:var(--surface-2);border-radius:6px;padding:4px 8px}
+mark{background:color-mix(in srgb,var(--amber) 30%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+.empty-search{grid-column:1/-1;padding:28px;text-align:center;display:flex;flex-direction:column;gap:6px}
+@media (max-width:1060px){ .streak-panel{grid-template-columns:1fr 1fr} .sp-cell:nth-child(3){border-left:0} .sp-cell:nth-child(n+3){border-top:1px solid var(--line)} }
+@media (max-width:560px){ .streak-panel{grid-template-columns:1fr} .sp-cell+.sp-cell{border-left:0;border-top:1px solid var(--line)} .home-bar{top:calc(env(safe-area-inset-top,0px) + 57px)} .search-box{min-width:0;width:100%} }
+@media (prefers-reduced-motion:reduce){ .sp-flame svg{animation:none!important} }
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .scrim{display:none}
@@ -2587,9 +2649,11 @@ function badgeHTML(b, earned){
 
 /* save = record activity, award badges, persist, celebrate */
 let lastLevel = null;
+let lastXp = null;
 function save(){
   recordDay();
   const fresh = checkBadges();
+  logXp();
   persist();
   const L = levelInfo().level;
   if(lastLevel!=null && L>lastLevel) levelUp(L);
@@ -2598,7 +2662,20 @@ function save(){
   lastLevel = L;
   renderPlayer();
 }
-function quietSync(){ checkBadges(); lastLevel = levelInfo().level; renderPlayer(); }
+function quietSync(){ checkBadges(); lastLevel = levelInfo().level; lastXp = xp(); renderPlayer(); }
+/* XP earned per calendar day (all paths), used for the daily goal and the activity heatmap */
+function logXp(){
+  const now = xp();
+  if(lastXp!=null && now>lastXp){
+    const k=dayKey(), goal=root.goal||50;
+    root.xpLog=root.xpLog||{};
+    const before=root.xpLog[k]||0; root.xpLog[k]=before+(now-lastXp);
+    const keys=Object.keys(root.xpLog).sort(); if(keys.length>400) delete root.xpLog[keys[0]];
+    if(before<goal && root.xpLog[k]>=goal) setTimeout(()=>{ toast(`Daily goal reached: ${root.xpLog[k]} XP today`); confetti(90); }, 400);
+  }
+  lastXp = now;
+}
+const xpToday = () => (root.xpLog||{})[dayKey()]||0;
 
 function levelUp(L){
   const r=[0,rankName(L-1),RANKS[L-1][2]];
@@ -2769,7 +2846,7 @@ function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
   const nLessons = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+(LESSONS[id]||[]).length,0);
   const nQs = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+MODULES.find(m=>m.id===id).quiz.length,0);
-  return `<section class="home-hero">
+  return `${root.track?streakPanel():""}<section class="home-hero">
     <div class="hh-text">
       <div class="label" style="color:var(--xp)">${TRACKS.length} career paths into AI</div>
       <h1>Make your leap into AI, from the job you already have</h1>
@@ -2787,20 +2864,29 @@ function pathsView(){
     </div>
     <div class="hh-map card" aria-label="Route map from current roles to AI roles"><div class="map-tabs seg" role="tablist" aria-label="Route map roles">${[["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-map="${k}" aria-selected="${mapMode===k}">${l}</button>`).join("")}</div><div id="mapBox">${routeMap()}</div><p class="map-hint">Hover or tap a role to see where it leads</p></div>
   </section>
+  ${root.track?"":streakPanel()}
   <section class="card finder" id="finder" ${finder.step?"":"hidden"}></section>
   <div class="home-bar">
-    <h2>All paths</h2>
+    <div class="search-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="pathSearch" type="search" autocomplete="off" placeholder="Search roles, skills or topics: SQL, Figma, Kubernetes…" value="${esc(homeQuery)}" aria-label="Search paths"><kbd>/</kbd></div>
     <div class="seg" role="tablist" aria-label="Filter paths">${[["all","All"],["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-filter="${k}" aria-selected="${homeFilter===k}">${l}</button>`).join("")}</div>
   </div>
+  <div class="search-meta"><h2 id="pathCount">${countLabel()}</h2><div class="sugg">${!homeQuery?`<span class="muted">Try:</span>${["SQL","Python","Excel","Kubernetes","Figma","Security","Teaching","No coding"].map(s=>`<button class="chipbtn" data-q="${s}">${s}</button>`).join("")}`:`<button class="chipbtn" id="clearQ">Clear search ×</button>`}</div></div>
   <div class="paths" id="pathGrid">${pathCards()}</div>`;
 }
+function visibleTracks(){ return TRACKS.filter(t=>(homeFilter==="all" || (homeFilter==="tech")===t.tech) && searchMatch(t, homeQuery).ok); }
+function countLabel(){ const n=visibleTracks().length; return homeQuery ? `${n} ${n===1?"path matches":"paths match"} “${esc(homeQuery)}”` : homeFilter==="all" ? "All paths" : `${n} ${homeFilter==="tech"?"technical":"non-technical"} paths`; }
 function pathCards(){
-  return TRACKS.filter(t=>homeFilter==="all" || (homeFilter==="tech")===t.tech).map((t,i)=>{
+  const list=visibleTracks();
+  if(!list.length) return `<div class="card empty-search"><b>No paths match “${esc(homeQuery)}”.</b><p class="muted">Try a skill or tool you use today, like SQL, Excel, Figma, Python or Kubernetes, or clear the filters.</p></div>`;
+  return list.map((t,i)=>{
+    const why = homeQuery ? searchMatch(t, homeQuery).why : null;
     const m=pathMastery(t), cur=isCurrent(t), started=!!root.paths[t.id] && m>0, ps=trackPhases(t), [g,c]=LOOK[t.id];
     return `<a class="card path-card ${cur?"cur":""} ${finder.pick===t.id?"match":""}" href="#path-${t.id}" data-id="${t.id}" style="--c:var(${c});--i:${i}">
       <span class="pc-top"><span class="pc-glyph num">${esc(g)}</span>${cur?'<span class="pill good">Your path</span>':started?`<span class="pill prog">${pct(m)} done</span>`:finder.pick===t.id?'<span class="pill warn">Best match</span>':""}</span>
-      <span class="pc-from">${esc(t.from)}</span>
-      <span class="pc-to">${arrow}<b>${esc(t.to)}</b></span>
+      <span class="pc-from">${homeQuery?markText(t.from,homeQuery):esc(t.from)}</span>
+      <span class="pc-to">${arrow}<b>${homeQuery?markText(t.to,homeQuery):esc(t.to)}</b></span>
+      ${why?`<span class="pc-why">Matches ${esc(why.kind.startsWith("topic")?why.kind.replace("topic: ","in "):why.kind)}: <b>${markText(why.text,homeQuery)}</b></span>`:""}
       <span class="pc-meta num">${ps.length} phases · ~${trackWeeks(t)} weeks · ${t.tech?"Technical":"No coding"}</span>
       ${started||cur?`<span class="bar ${m>=0.8?"good":""}"><i style="width:${pct(m)}"></i></span>`:""}
       <span class="pc-peek"><span class="label">First up</span>${ps.slice(0,3).map(p=>`<span>${esc(p.title)}</span>`).join("")}<span class="muted">+${ps.length-3} more · See details →</span></span>
@@ -2853,6 +2939,9 @@ function refreshGrid(){
   const g=$("pathGrid"); if(!g) return;
   g.innerHTML=pathCards(); bindCards();
   document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-selected", b.dataset.filter===homeFilter));
+  const c=$("pathCount"); if(c) c.innerHTML=countLabel();
+  const sg=document.querySelector(".sugg"); if(sg){ sg.innerHTML = !homeQuery ? `<span class="muted">Try:</span>${["SQL","Python","Excel","Kubernetes","Figma","Security","Teaching","No coding"].map(s=>`<button class="chipbtn" data-q="${s}">${s}</button>`).join("")}` : `<button class="chipbtn" id="clearQ">Clear search ×</button>`; bindSugg(); }
+  const vis=visibleTracks(); if(homeQuery && vis.length===1){ mapMode=vis[0].tech?"tech":"non"; renderMap(); highlight(vis[0].id); } else if(!pinned) highlight(null);
 }
 let pinned=null;
 function highlight(id, pin){
@@ -2877,8 +2966,16 @@ function bindHome(){
   document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); if(homeFilter!=="all" && homeFilter!==mapMode){ mapMode=homeFilter; renderMap(); } });
   document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{ mapMode=b.dataset.map; renderMap(); });
   bindRoutes();
+  const si=$("pathSearch");
+  si.oninput=()=>{ homeQuery=si.value.trim(); refreshGrid(); };
+  si.onkeydown=e=>{ if(e.key==="Escape"){ si.value=""; homeQuery=""; refreshGrid(); } if(e.key==="Enter"){ const first=document.querySelector(".path-card"); if(first) go("path-"+first.dataset.id); } };
+  bindSugg(); bindStreakPanel();
   bindCards(); renderFinder(); countUp();
   if(finder.pick) highlight(finder.pick, true);
+}
+function bindSugg(){
+  document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{ homeQuery=b.dataset.q; $("pathSearch").value=homeQuery; refreshGrid(); });
+  if($("clearQ")) $("clearQ").onclick=()=>{ homeQuery=""; $("pathSearch").value=""; refreshGrid(); $("pathSearch").focus(); };
 }
 function renderMap(){
   $("mapBox").innerHTML=routeMap(); bindRoutes();
@@ -2929,11 +3026,120 @@ function bindPaths(){
   if($("findBtn")) bindHome();
   document.querySelectorAll("[data-track]").forEach(b=>b.onclick=()=>{
     const id=b.dataset.track, changed = needsPick || id!==TRACK.id;
-    root.track=id; quizRun=null; initTrack(); lastLevel=levelInfo().level; persist(); renderPlayer();   // picking a path isn't study activity, so no streak day
+    root.track=id; quizRun=null; initTrack(); lastLevel=levelInfo().level; lastXp=xp(); persist(); renderPlayer();   // picking a path isn't study activity, so no streak day
     if(changed) toast(`Path set: ${TRACK.from} → ${TRACK.to}`);
     go("dashboard");
   });
 }
+
+/* ---------- home: streak & goals panel, path search ---------- */
+const GOALS = [[20,"Casual"],[50,"Regular"],[100,"Serious"]];
+const MILESTONES = [3,7,14,30,60,100,180,365];
+let homeQuery = "";
+
+function totalXpAllPaths(){
+  return TRACKS.filter(t=>root.paths[t.id]).reduce((a,t)=>a+levelInfoFor(t, pathData(t)).xp,0);
+}
+function heatLevel(k){
+  const x=(root.xpLog||{})[k]||0;
+  if(x>=100) return 4; if(x>=50) return 3; if(x>=25) return 2; if(x>0 || (root.days||[]).includes(k)) return 1; return 0;
+}
+function heatmap(){
+  const weeks=12, today=new Date(), start=new Date(today);
+  start.setDate(start.getDate()-today.getDay()-(weeks-1)*7);          // Sunday, 12 weeks ago
+  let cols="";
+  for(let w=0; w<weeks; w++){
+    let cells="";
+    for(let d=0; d<7; d++){
+      const day=new Date(start); day.setDate(start.getDate()+w*7+d);
+      const k=dayKey(day), future=day>today, x=(root.xpLog||{})[k]||0;
+      const label=day.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"});
+      cells+= future ? `<i class="hm-cell fut"></i>` : `<i class="hm-cell l${heatLevel(k)} ${k===dayKey()?"today":""}" data-tip="${label}: ${x?`+${x} XP`:(root.days||[]).includes(k)?"studied":"no activity"}" tabindex="0"></i>`;
+    }
+    cols+=`<span class="hm-col">${cells}</span>`;
+  }
+  return `<div class="hm">${cols}</div>`;
+}
+function countdownText(){
+  const n=new Date(), m=new Date(n); m.setHours(24,0,0,0);
+  const mins=Math.max(0,Math.round((m-n)/60000));
+  return `${Math.floor(mins/60)}h ${String(mins%60).padStart(2,"0")}m`;
+}
+function streakPanel(){
+  const s=streak(), best=bestStreak(), today=studiedToday(), goal=root.goal||50, xt=xpToday();
+  const next=MILESTONES.find(m=>m>s) || s+100, prevM=[0,...MILESTONES].filter(m=>m<=s).pop()||0;
+  const L = root.track ? levelInfo() : null, total=totalXpAllPaths(), gp=Math.min(1,xt/goal);
+  const nBadges = Object.values(root.paths).reduce((a,p)=>a+Object.keys(p.badges||{}).length,0);
+  const msg = today ? `<b>Streak safe for today.</b> Come back tomorrow to make it ${s+1}.`
+            : s ? `<b>Your ${s}-day streak ends in <span id="spCountdown">${countdownText()}</span>.</b> One lesson or the daily challenge keeps it alive.`
+            : `<b>Start a streak today.</b> One lesson is enough to light the flame.`;
+  const cta = !root.track ? `<button class="btn" id="spPick">Pick a path to start</button>`
+            : `${dailyDone()?"":`<a class="btn flame-btn" href="#daily">${flame(false)} Today's challenge · 5 min</a>`}<a class="btn ${dailyDone()?"":"sec"}" href="#dashboard">Continue: ${esc(TRACK.to)}</a>`;
+  return `<section class="card streak-panel ${today?"safe":s?"risk":""}" aria-label="Your streak and goals">
+    <div class="sp-cell sp-streak">
+      <div class="sp-flame ${today?"lit":""}">${flame(today).replace('width="14" height="14"','width="56" height="56"')}</div>
+      <div class="sp-num"><b class="num">${s}</b><span>day streak</span></div>
+      <p class="sp-msg">${msg}</p>
+      <div class="sp-mile"><div class="sp-mile-h"><span>Next: <b>${next}-day</b> streak</span><span class="num">${s}/${next}</span></div><div class="bar flame"><i style="width:${pct((s-prevM)/(next-prevM))}"></i></div><small class="muted">Best streak: <b class="num">${best}</b> days</small></div>
+    </div>
+    <div class="sp-cell sp-goal">
+      <div class="label">Today's goal</div>
+      <div class="goal-ring">${ring(gp,108,10,"var(--line)",gp>=1?"var(--good)":"var(--xp)")}<div class="gr-in"><b class="num">${xt}</b><span class="num">/ ${goal} XP</span></div></div>
+      <div class="seg goal-seg" role="radiogroup" aria-label="Daily XP goal">${GOALS.map(([v,l])=>`<button role="radio" data-goal="${v}" aria-checked="${goal===v}" aria-selected="${goal===v}">${l}<small class="num">${v}</small></button>`).join("")}</div>
+      <small class="muted">${gp>=1?"Goal reached. Nice work!":`${goal-xt} XP to go today`}</small>
+    </div>
+    <div class="sp-cell sp-level">
+      ${L?`<div class="label">Level · ${esc(TRACK.to)}</div>
+      <div class="sp-lvl-row"><span class="pl-lvl num big">${L.level}</span><div><b>${esc(L.name)}</b><small class="muted num">${L.xp} XP${L.next!=null?` · ${L.toNext} to ${esc(rankName(L.level))}`:""}</small></div></div>
+      <div class="bar xp"><i style="width:${pct(L.prog)}"></i></div>`:`<div class="label">Level</div><p class="muted" style="font-size:14px">Pick a path to start earning XP and levelling up.</p>`}
+      <div class="sp-totals num"><span><b>${total}</b>total XP</span><span><b>${nBadges}</b>badges</span><span><b>${(root.days||[]).length}</b>study days</span></div>
+    </div>
+    <div class="sp-cell sp-heat">
+      <div class="label">Last 12 weeks</div>
+      ${heatmap()}
+      <div class="hm-foot"><span id="hmTip" class="muted">Hover a day to see your XP</span><span class="hm-legend">Less <i class="hm-cell l0"></i><i class="hm-cell l1"></i><i class="hm-cell l2"></i><i class="hm-cell l3"></i><i class="hm-cell l4"></i> More</span></div>
+    </div>
+    <div class="sp-cta">${cta}</div>
+  </section>`;
+}
+let countdownTimer=null;
+function bindStreakPanel(){
+  document.querySelectorAll("[data-goal]").forEach(b=>b.onclick=()=>{ root.goal=+b.dataset.goal; persist(); rerenderStreak(); toast(`Daily goal: ${root.goal} XP`); });
+  const tip=$("hmTip");
+  document.querySelectorAll(".hm-cell[data-tip]").forEach(c=>{ const show=()=>{ tip.textContent=c.dataset.tip; }; c.onmouseenter=show; c.onfocus=show; c.onclick=show; });
+  if($("spPick")) $("spPick").onclick=()=>{ $("pathSearch")?.focus(); $("pathSearch")?.scrollIntoView({behavior:"smooth",block:"center"}); };
+  clearInterval(countdownTimer);
+  countdownTimer=setInterval(()=>{ const el=$("spCountdown"); if(el) el.textContent=countdownText(); else clearInterval(countdownTimer); }, 30000);
+}
+function rerenderStreak(){ const el=document.querySelector(".streak-panel"); if(!el) return; el.outerHTML=streakPanel(); bindStreakPanel(); }
+
+/* search: every word must match the role, skills, modules or topics of a path */
+const hayCache={};
+function haystack(t){
+  if(hayCache[t.id]) return hayCache[t.id];
+  const ps=trackPhases(t);
+  const parts=[[t.from,"role"],[t.to,"role"],[t.short||"","role"],[t.tagline,"about"],[t.tech?"technical coding":"non-technical no coding","type"],
+    ...t.stack.map(s=>[s,"skill"]), ...ps.map(p=>[p.title,"module"]), ...ps.flatMap(p=>p.concepts.map(c=>[c[0],"topic: "+p.title]))];
+  return hayCache[t.id]=parts.map(([text,kind])=>({text, low:text.toLowerCase(), kind}));
+}
+function searchMatch(t, q){
+  const words=q.toLowerCase().split(/\s+/).filter(Boolean); if(!words.length) return {ok:true};
+  const hay=haystack(t); let why=null;
+  for(const w of words){
+    const hit=hay.find(h=>h.low.includes(w)); if(!hit) return {ok:false};
+    if(!why && !["role","about","type"].includes(hit.kind)) why=hit;
+  }
+  return {ok:true, why};
+}
+function markText(text, q){
+  let out=esc(text);
+  q.toLowerCase().split(/\s+/).filter(w=>w.length>1).forEach(w=>{ out=out.replace(new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig"),"<mark>$1</mark>"); });
+  return out;
+}
+document.addEventListener("keydown",e=>{
+  if(e.key!=="/" || ["INPUT","TEXTAREA"].includes(document.activeElement?.tagName)) return;
+  const s=$("pathSearch"); if(s){ e.preventDefault(); s.focus(); s.scrollIntoView({behavior:"smooth",block:"center"}); }
+});
 
 /* ---------- state & storage ---------- */
 const KEY = "ai-path-progress-v1";
@@ -3376,7 +3582,7 @@ $("resetBox").addEventListener("click",e=>{
   const box=$("resetBox");
   if(e.target.id==="resetBtn") box.innerHTML=`<div class="confirm"><span>Erase progress on this path?</span><button class="danger" id="resetYes">Erase</button><button id="resetNo">Cancel</button></div>`;
   else if(e.target.id==="resetNo") box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`;
-  else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
+  else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; lastXp=xp(); persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
 loadLocal(); initTrack(); quietSync();
