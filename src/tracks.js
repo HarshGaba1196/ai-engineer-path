@@ -227,6 +227,25 @@ const TRACKS = [
     rag:{title:"Ask-your-notes chatbot",steps:["Collect 30 of your notes or documents.","Chunk and embed them with sentence-transformers and store them in a simple vector store.","Answer questions with citations using an LLM.","Write 15 test questions and report how many it answers correctly."]},
     agents:{title:"A study-helper agent",steps:["Give an agent two tools: search your notes and a calculator.","Let it answer multi-step questions.","Limit it to 5 steps and print each step.","Record a demo and add it to your portfolio."]}} },
 
+{ id:"scrum", short:"Scrum master", from:"Scrum master / agile coach", to:"AI automation engineer", rank:"AI Automation Engineer", tech:true,
+  tagline:"Move from running the process to building the tools: learn to code, then automate agile workflows with Python, AI and no-code.",
+  stack:["Scrum / Kanban","Jira / Azure Boards","Facilitation","Metrics and reporting","Continuous improvement"],
+  learner:"a Scrum master or agile coach who knows Scrum, Kanban, Jira or Azure Boards, facilitation and delivery metrics, and is new to programming",
+  analogy:"agile and Scrum: sprints, backlogs, ceremonies or team metrics",
+  overlap:"Medium", modules:["progbasics","py","llm","promptpro","nocode","agileai","agents"],
+  bridges:{
+    progbasics:"Programming is like writing a very precise working agreement: the computer follows it exactly. Start small, run often, and treat each error message like a blocker with a clear cause.",
+    py:"Python is the language of automation and AI. Think of each script as a small product increment: build, run, inspect, improve.",
+    llm:"Knowing how models work tells you which agile tasks AI can handle, like summarising and drafting, and where a human must stay in the loop.",
+    promptpro:"Prompting is like writing a good story: clear context, a goal and acceptance criteria. You already know how to do that.",
+    nocode:"No-code tools let you ship your first automations in days, before your coding skills catch up. Many team automations never need more.",
+    agents:"An agent loop is like a mini sprint: plan the next step, act, review the result, repeat, with a clear definition of done and a timebox."},
+  builds:{
+    py:{title:"Your first agile data script",steps:["Export your team's last 10 sprints from Jira as CSV.","Load it with pandas and compute velocity, carry-over and cycle time.","Plot the trend with matplotlib.","Put the notebook on GitHub with a short README."]},
+    llm:{title:"Test what AI can do with sprint data",steps:["Give an AI assistant anonymised sprint data and ask for a sprint summary.","Check every claim against the data and count the mistakes.","Try temperature 0 and 1 and compare consistency.","List three agile tasks you'd trust it with, and three you wouldn't."]},
+    nocode:{title:"A no-code standup digest",steps:["In n8n, Zapier or Make, collect async standup messages from a Slack or Teams channel each morning.","Add an AI step that summarises progress, plans and blockers into clear fields.","Post the digest to the channel, with blockers at the top.","Run it for a week and ask the team what to change."]},
+    agents:{title:"A backlog refinement agent",steps:["Give an agent three tools: search Jira issues, read an issue and draft a comment.","Ask it to prepare refinement: flag unclear stories, likely duplicates and missing criteria.","Require your approval before any comment is posted.","Cap it at 10 steps, log every action, and demo it at your next refinement."]}} },
+
 { id:"ux", from:"UX / UI designer", to:"AI UX designer", rank:"AI UX Designer", tech:false, short:"UX designer",
   tagline:"Design how people work with AI: conversations, trust, prototypes with real models and responsible experiences.",
   stack:["User research","Interaction design","Prototyping","Figma","Content design"],

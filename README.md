@@ -21,6 +21,7 @@ Gamified learning paths for moving into AI from your current role:
 | Technical writer | AI knowledge designer |
 | Database administrator | AI database engineer |
 | IT support / sysadmin | AI automation engineer |
+| Scrum master / agile coach | AI automation engineer |
 | Student / career switcher | Junior AI engineer |
 | Customer support | AI support operations specialist |
 | Marketing | AI marketing specialist |
@@ -32,8 +33,8 @@ Gamified learning paths for moving into AI from your current role:
 | Manager / team lead | AI-ready leader |
 | Any non-technical role | AI-powered professional |
 
-- 55 modules shared between paths; each path keeps its own progress, XP and badges
-- 330 short lessons with examples and 10-minute exercises
+- 56 modules shared between paths; each path keeps its own progress, XP and badges
+- 336 short lessons with examples and 10-minute exercises
 - Phase quizzes, build projects, a daily challenge and a boss battle
 - XP, ranks, day streaks, a daily XP goal, an activity heatmap and badges
 - Search across roles, skills, tools and lesson topics
@@ -56,9 +57,10 @@ Open `index.html` in a browser.
 | `src/modules5.js` | Modules and lessons for the data scientist, project manager and technical writer paths |
 | `src/modules6.js` | Modules and lessons for DBA, IT, support, marketing, sales, HR and teacher paths |
 | `src/modules7.js` | Modules and lessons for finance, legal, team lead and student paths |
+| `src/modules8.js` | Automating agile workflows (Scrum master path) |
 | `src/tracks.js` | Career paths: which modules each uses, plus role-specific bridges and builds |
-| `src/paths.js` | Home page, path cards, route map, path finder and detail page |
-| `src/home.js` | Streak and goals panel, path search |
+| `src/paths.js` | Home page, path cards, path finder and detail page |
+| `src/home.js` | Streak and goals panel, path search, role showcase |
 | `src/game.js` | XP, ranks, streaks, badges, daily challenge |
 | `src/dash.js` | Dashboard |
 | `src/app.js` | Routing, lessons, quizzes, storage |

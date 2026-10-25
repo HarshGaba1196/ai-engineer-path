@@ -2200,6 +2200,40 @@ firstjob:[
  {p:["Many jobs are filled through people. Join communities, share what you build, contribute to open source and ask for referrals.","Target companies where your previous domain knowledge is valuable."],
   try:"List 10 target companies and one person to contact at each."}]
 });
+/* Scrum master → AI automation engineer: automating agile workflows. */
+MODULES_EXTRA.push(
+{ id:"agileai", title:"Automating agile workflows with AI", weeks:"4 weeks",
+  why:"Scrum masters spend hours on reports, backlog hygiene, standup notes and retro follow-ups. Automating that work with code and AI is a direct, visible way to grow into a technical role.",
+  bridge:"You already know where agile teams lose time and which ceremonies matter. Now you'll build the tools yourself: scripts that read Jira, AI that drafts and checks, and automations the team actually trusts.",
+  concepts:[["Where AI helps in agile","Standups, refinement, reporting and retros: what to automate first."],["Working with the Jira API","REST calls, JQL, API tokens; Azure DevOps works the same way."],["Backlog quality checks","AI reviews stories for acceptance criteria, size and duplicates."],["Sprint reporting and forecasting","Summaries from sprint data, and Monte Carlo forecasts."],["Standup and retro assistants","Summarising updates, clustering retro feedback, tracking actions."],["Rolling out automation to a team","Approvals, permissions, privacy, measuring time saved."]],
+  res:[["Docs","Jira Cloud REST API","https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/","Read and update issues, sprints and boards."],["Docs","Azure DevOps REST API","https://learn.microsoft.com/en-us/rest/api/azure/devops/","The same ideas for Azure Boards users."],["Docs","n8n Jira node","https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.jira/","No-code Jira automations with AI steps."]],
+  build:{title:"A sprint assistant bot",steps:["Write a Python script that pulls the current sprint's issues from Jira with an API token kept in an environment variable.","Generate a sprint summary with an LLM: progress, blockers and risks, using only the issue data.","Check every story for missing acceptance criteria and draft suggestions; post them as comments only after you approve each one.","Schedule it weekly (n8n or a cron job) to post the summary to Slack or Teams, and measure the time it saves you."]},
+  quiz:[
+   {q:"What is JQL used for?",o:["Styling Jira boards","Querying Jira issues, for example all open bugs in the current sprint","Writing Python","Sending emails"],a:1,e:"JQL is Jira's query language. Your scripts use it to fetch exactly the issues they need."},
+   {q:"Where should your Jira API token live?",o:["In the script, committed to Git","In an environment variable or secrets store","In a Jira comment","In the sprint report"],a:1,e:"Tokens give access to your company's data. Keep them out of code and shared files."},
+   {q:"An AI finds stories without acceptance criteria. What should happen next?",o:["Rewrite them automatically","Suggest criteria for the team to review and accept","Delete the stories","Ignore them"],a:1,e:"The team owns the backlog. AI suggests, people decide."},
+   {q:"Why use a Monte Carlo forecast instead of average velocity?",o:["It's more colourful","It gives a range of likely dates with probabilities, based on real throughput variation","It needs no data","It's always earlier"],a:1,e:"Simulating many futures from past throughput shows how likely each finish date is, which is more honest than one number."},
+   {q:"The team worries the standup bot reports on individuals. Best response?",o:["Ignore it","Agree what it summarises, keep it about work rather than people, and let the team shape it","Make it mandatory","Hide it"],a:1,e:"Automation only sticks with team trust. Design it with them, not for them."}]}
+);
+
+Object.assign(LESSONS, {
+agileai:[
+ {p:["Start with the work you repeat every sprint: writing the sprint report, chasing missing acceptance criteria, summarising standups, grouping retro notes and updating stakeholders.","Pick tasks that are frequent, rule-based or text-heavy, and low risk if the first version is imperfect. A weekly sprint summary is a perfect first project."],
+  try:"List everything you do in one sprint and mark the three tasks that take the most time and are most repetitive."},
+ {p:["Jira's REST API lets code read and update issues. You authenticate with your email and an API token, then query with JQL, the same language you use in Jira's search bar.","Azure DevOps has an equivalent REST API with WIQL queries, so the same approach works for Azure Boards."],
+  code:"import os, requests\n\nJIRA = \"https://your-company.atlassian.net\"\nauth = (os.environ[\"JIRA_EMAIL\"], os.environ[\"JIRA_TOKEN\"])\n\nr = requests.get(f\"{JIRA}/rest/api/3/search/jql\", auth=auth, params={\n    \"jql\": \"sprint in openSprints() AND project = TEAM\",\n    \"fields\": \"summary,status,assignee,customfield_10016\",\n    \"maxResults\": 100,\n})\nfor issue in r.json()[\"issues\"]:\n    f = issue[\"fields\"]\n    print(issue[\"key\"], f[\"status\"][\"name\"], \"-\", f[\"summary\"])",
+  try:"Create an API token in your Atlassian account and print all issues in your current sprint."},
+ {p:["An LLM can review stories against your team's definition of ready: is there a clear user, a goal, acceptance criteria, and is it small enough? It can also spot likely duplicates.","Return structured results, such as missing items and a suggested fix, and show them to the team for approval before anything changes in Jira."],
+  code:"PROMPT = \"\"\"Review this user story against our definition of ready.\nReturn JSON: {\"ready\": true|false, \"missing\": [..], \"suggested_acceptance_criteria\": [..]}\nOnly use the story text. Don't invent requirements.\n<story>{summary}\\n{description}</story>\"\"\"",
+  try:"Run the check on 10 stories from your backlog and compare the AI's verdicts with your own."},
+ {p:["Sprint reports combine data (done vs planned, carry-over, blockers) with a short narrative. Compute the numbers in code, then let the LLM write the narrative from those facts only.","For forecasting, Monte Carlo simulation samples your past weekly throughput thousands of times to show how likely each finish date is."],
+  code:"import random\n\nthroughput = [6, 4, 7, 5, 3, 6, 8, 5]   # items finished per week, last 8 weeks\nremaining = 40\nweeks_needed = []\nfor _ in range(10_000):\n    left, weeks = remaining, 0\n    while left > 0:\n        left -= random.choice(throughput); weeks += 1\n    weeks_needed.append(weeks)\nweeks_needed.sort()\nprint(\"50%:\", weeks_needed[5000], \"weeks | 85%:\", weeks_needed[8500], \"weeks\")",
+  try:"Run a Monte Carlo forecast on your team's real throughput and share the 50% and 85% dates."},
+ {p:["Async standups in Slack or Teams can be summarised into progress, plans and blockers, with blockers highlighted for follow-up.","For retros, AI can cluster sticky notes into themes and draft action items. Keep the discussion human; use AI to save the clerical work."],
+  try:"Paste anonymised retro notes into an AI assistant, cluster them into themes, and compare with how the team grouped them."},
+ {p:["Automations touch team data and people's work, so roll them out carefully: least-privilege tokens, human approval before writing to Jira, and clear rules about what is summarised.","Measure the result, such as minutes saved per sprint or fewer stories rejected in refinement, and share it. That evidence is what builds your technical credibility."],
+  try:"Write a one-page rollout note for your sprint bot: what it does, what it never does, who approves, and how you'll measure it."}]
+});
 
 /* ---------- career paths: each path is an ordered list of modules, with role-specific bridges and builds ---------- */
 MODULES.push(...MODULES_EXTRA);
@@ -2428,6 +2462,25 @@ const TRACKS = [
     api:{title:"Your first LLM app in Python",steps:["Get an API key and call a model from a Python script, keeping the key in an environment variable.","Build a small FastAPI endpoint that summarises text.","Ask for JSON output with a Pydantic model and validate it.","Put it on GitHub with a README and a short demo GIF."]},
     rag:{title:"Ask-your-notes chatbot",steps:["Collect 30 of your notes or documents.","Chunk and embed them with sentence-transformers and store them in a simple vector store.","Answer questions with citations using an LLM.","Write 15 test questions and report how many it answers correctly."]},
     agents:{title:"A study-helper agent",steps:["Give an agent two tools: search your notes and a calculator.","Let it answer multi-step questions.","Limit it to 5 steps and print each step.","Record a demo and add it to your portfolio."]}} },
+
+{ id:"scrum", short:"Scrum master", from:"Scrum master / agile coach", to:"AI automation engineer", rank:"AI Automation Engineer", tech:true,
+  tagline:"Move from running the process to building the tools: learn to code, then automate agile workflows with Python, AI and no-code.",
+  stack:["Scrum / Kanban","Jira / Azure Boards","Facilitation","Metrics and reporting","Continuous improvement"],
+  learner:"a Scrum master or agile coach who knows Scrum, Kanban, Jira or Azure Boards, facilitation and delivery metrics, and is new to programming",
+  analogy:"agile and Scrum: sprints, backlogs, ceremonies or team metrics",
+  overlap:"Medium", modules:["progbasics","py","llm","promptpro","nocode","agileai","agents"],
+  bridges:{
+    progbasics:"Programming is like writing a very precise working agreement: the computer follows it exactly. Start small, run often, and treat each error message like a blocker with a clear cause.",
+    py:"Python is the language of automation and AI. Think of each script as a small product increment: build, run, inspect, improve.",
+    llm:"Knowing how models work tells you which agile tasks AI can handle, like summarising and drafting, and where a human must stay in the loop.",
+    promptpro:"Prompting is like writing a good story: clear context, a goal and acceptance criteria. You already know how to do that.",
+    nocode:"No-code tools let you ship your first automations in days, before your coding skills catch up. Many team automations never need more.",
+    agents:"An agent loop is like a mini sprint: plan the next step, act, review the result, repeat, with a clear definition of done and a timebox."},
+  builds:{
+    py:{title:"Your first agile data script",steps:["Export your team's last 10 sprints from Jira as CSV.","Load it with pandas and compute velocity, carry-over and cycle time.","Plot the trend with matplotlib.","Put the notebook on GitHub with a short README."]},
+    llm:{title:"Test what AI can do with sprint data",steps:["Give an AI assistant anonymised sprint data and ask for a sprint summary.","Check every claim against the data and count the mistakes.","Try temperature 0 and 1 and compare consistency.","List three agile tasks you'd trust it with, and three you wouldn't."]},
+    nocode:{title:"A no-code standup digest",steps:["In n8n, Zapier or Make, collect async standup messages from a Slack or Teams channel each morning.","Add an AI step that summarises progress, plans and blockers into clear fields.","Post the digest to the channel, with blockers at the top.","Run it for a week and ask the team what to change."]},
+    agents:{title:"A backlog refinement agent",steps:["Give an agent three tools: search Jira issues, read an issue and draft a comment.","Ask it to prepare refinement: flag unclear stories, likely duplicates and missing criteria.","Require your approval before any comment is posted.","Cap it at 10 steps, log every action, and demo it at your next refinement."]}} },
 
 { id:"ux", from:"UX / UI designer", to:"AI UX designer", rank:"AI UX Designer", tech:false, short:"UX designer",
   tagline:"Design how people work with AI: conversations, trust, prototypes with real models and responsible experiences.",
@@ -2845,11 +2898,11 @@ const isCurrent = t => !needsPick && t.id===TRACK.id;
 const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
-const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], fullstack:["⧉","--indigo"], datasci:["∂","--cyan"], pmgr:["▦","--brown"], writer:["¶","--mint"], dba:["⊞","--sky"], itops:["⌘","--slate"], student:["◔","--xp"], support:["“”","--teal"], marketing:["✦","--rose"], sales:["↗","--good"], hr:["◍","--plum"], teacher:["✎","--amber"], finance:["%","--cyan"], legal:["§","--indigo"], lead:["▲","--flame"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
+const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], fullstack:["⧉","--indigo"], datasci:["∂","--cyan"], pmgr:["▦","--brown"], writer:["¶","--mint"], dba:["⊞","--sky"], itops:["⌘","--slate"], student:["◔","--xp"], support:["“”","--teal"], marketing:["✦","--rose"], sales:["↗","--good"], hr:["◍","--plum"], teacher:["✎","--amber"], finance:["%","--cyan"], legal:["§","--indigo"], lead:["▲","--flame"], scrum:["↻","--lime"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
 let homeFilter = "all", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
-  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Full-stack web development","fullstack"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Data science and modelling","datasci"],["Security and threat detection","security"],["Databases and SQL administration","dba"],["IT support and systems administration","itops"]]},
-  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Project or delivery management","pmgr"],["Technical writing or documentation","writer"],["Customer support","support"],["Marketing","marketing"],["Sales","sales"],["HR or recruiting","hr"],["Teaching or training","teacher"],["Finance or accounting","finance"],["Legal or compliance","legal"],["Managing a team","lead"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
+  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Full-stack web development","fullstack"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Data science and modelling","datasci"],["Security and threat detection","security"],["Databases and SQL administration","dba"],["IT support and systems administration","itops"],["Agile delivery or Scrum","scrum"]]},
+  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Project or delivery management","pmgr"],["Scrum master or agile coach, aiming for a technical role","scrum"],["Technical writing or documentation","writer"],["Customer support","support"],["Marketing","marketing"],["Sales","sales"],["HR or recruiting","hr"],["Teaching or training","teacher"],["Finance or accounting","finance"],["Legal or compliance","legal"],["Managing a team","lead"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
 
 function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;

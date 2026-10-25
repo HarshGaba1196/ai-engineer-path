@@ -3,7 +3,7 @@
 #   ai-engineer-path.html  page body for the Claude artifact (Claude adds the document skeleton)
 #   index.html             standalone page for GitHub Pages or any static host
 cd "$(dirname "$0")"
-{ cat src/head.html; echo "<script>"; cat src/phases.js src/lessons.js src/modules2.js src/modules3.js src/modules4.js src/modules5.js src/modules6.js src/modules7.js src/tracks.js src/game.js src/dash.js src/paths.js src/home.js src/app.js; echo "</script>"; } > ai-engineer-path.html
+{ cat src/head.html; echo "<script>"; cat src/phases.js src/lessons.js src/modules2.js src/modules3.js src/modules4.js src/modules5.js src/modules6.js src/modules7.js src/modules8.js src/tracks.js src/game.js src/dash.js src/paths.js src/home.js src/app.js; echo "</script>"; } > ai-engineer-path.html
 {
   echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
   echo '<meta name="description" content="Gamified career paths into AI for engineers, product managers and non-technical professionals.">'
