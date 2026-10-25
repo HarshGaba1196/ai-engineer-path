@@ -19,10 +19,21 @@ Gamified learning paths for moving into AI from your current role:
 | Product manager | AI product manager |
 | Project manager / Scrum master | AI program lead |
 | Technical writer | AI knowledge designer |
+| Database administrator | AI database engineer |
+| IT support / sysadmin | AI automation engineer |
+| Student / career switcher | Junior AI engineer |
+| Customer support | AI support operations specialist |
+| Marketing | AI marketing specialist |
+| Sales | AI sales specialist |
+| HR / recruiter | AI talent partner |
+| Teacher / trainer | AI educator |
+| Finance / accounting | AI finance analyst |
+| Legal / compliance | AI governance specialist |
+| Manager / team lead | AI-ready leader |
 | Any non-technical role | AI-powered professional |
 
-- 42 modules shared between paths; each path keeps its own progress, XP and badges
-- 252 short lessons with examples and 10-minute exercises
+- 55 modules shared between paths; each path keeps its own progress, XP and badges
+- 330 short lessons with examples and 10-minute exercises
 - Phase quizzes, build projects, a daily challenge and a boss battle
 - XP, ranks, day streaks and badges
 
@@ -42,6 +53,8 @@ Open `index.html` in a browser.
 | `src/modules3.js` | Modules and lessons for the data analyst, data engineer and UX paths |
 | `src/modules4.js` | Modules and lessons for the security, mobile and business analyst paths |
 | `src/modules5.js` | Modules and lessons for the data scientist, project manager and technical writer paths |
+| `src/modules6.js` | Modules and lessons for DBA, IT, support, marketing, sales, HR and teacher paths |
+| `src/modules7.js` | Modules and lessons for finance, legal, team lead and student paths |
 | `src/tracks.js` | Career paths: which modules each uses, plus role-specific bridges and builds |
 | `src/paths.js` | Path picker |
 | `src/game.js` | XP, ranks, streaks, badges, daily challenge |

@@ -18,11 +18,11 @@ const isCurrent = t => !needsPick && t.id===TRACK.id;
 const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
-const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], fullstack:["⧉","--indigo"], datasci:["∂","--cyan"], pmgr:["▦","--brown"], writer:["¶","--mint"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
-let homeFilter = "all", finder = {step:0, tech:null, pick:null};
+const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], fullstack:["⧉","--indigo"], datasci:["∂","--cyan"], pmgr:["▦","--brown"], writer:["¶","--mint"], dba:["⊞","--sky"], itops:["⌘","--slate"], student:["◔","--xp"], support:["“”","--teal"], marketing:["✦","--rose"], sales:["↗","--good"], hr:["◍","--plum"], teacher:["✎","--amber"], finance:["%","--cyan"], legal:["§","--indigo"], lead:["▲","--flame"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
+let homeFilter = "all", mapMode = "tech", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
-  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Full-stack web development","fullstack"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Data science and modelling","datasci"],["Security and threat detection","security"]]},
-  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Project or delivery management","pmgr"],["Technical writing or documentation","writer"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
+  tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Full-stack web development","fullstack"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Data science and modelling","datasci"],["Security and threat detection","security"],["Databases and SQL administration","dba"],["IT support and systems administration","itops"]]},
+  non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Project or delivery management","pmgr"],["Technical writing or documentation","writer"],["Customer support","support"],["Marketing","marketing"],["Sales","sales"],["HR or recruiting","hr"],["Teaching or training","teacher"],["Finance or accounting","finance"],["Legal or compliance","legal"],["Managing a team","lead"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
 
 function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
@@ -44,7 +44,7 @@ function pathsView(){
         <button class="btn ${root.track?"sec":""}" id="findBtn">Find my path</button>
       </div>
     </div>
-    <div class="hh-map card" aria-label="Route map from current roles to AI roles">${routeMap()}<p class="map-hint">Hover or tap a role to see where it leads</p></div>
+    <div class="hh-map card" aria-label="Route map from current roles to AI roles"><div class="map-tabs seg" role="tablist" aria-label="Route map roles">${[["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-map="${k}" aria-selected="${mapMode===k}">${l}</button>`).join("")}</div><div id="mapBox">${routeMap()}</div><p class="map-hint">Hover or tap a role to see where it leads</p></div>
   </section>
   <section class="card finder" id="finder" ${finder.step?"":"hidden"}></section>
   <div class="home-bar">
@@ -67,15 +67,16 @@ function pathCards(){
   }).join("");
 }
 function routeMap(){
-  const W=610, n=TRACKS.length, H=Math.max(320, 48+n*28), y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
-  const rows = TRACKS.map((t,i)=>{
+  const list=TRACKS.filter(t=>(mapMode==="tech")===t.tech);
+  const W=610, n=list.length, H=Math.max(320, 48+n*28), y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
+  const rows = list.map((t,i)=>{
     const [,c]=LOOK[t.id];
     return `<g class="route" data-id="${t.id}" tabindex="0" role="link" aria-label="${esc(t.from)} to ${esc(t.to)}" style="--c:var(${c})">
       <path class="rl" d="M150 ${y(i)} C ${hx-60} ${y(i)}, ${hx-60} ${hy}, ${hx-26} ${hy}"/>
       <path class="rl" d="M${hx+26} ${hy} C ${hx+60} ${hy}, ${hx+60} ${y(i)}, ${W-175} ${y(i)}"/>
       <circle class="rd" cx="150" cy="${y(i)}" r="5"/><circle class="rd" cx="${W-175}" cy="${y(i)}" r="5"/>
       <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.short||t.from)}</text>
-      <text class="rt to" x="${W-165}" y="${y(i)+4}">${esc(t.to.replace("professional","pro"))}</text>
+      <text class="rt to" x="${W-165}" y="${y(i)+4}">${esc(t.to.replace("professional","pro").replace("operations","ops"))}</text>
       <rect x="0" y="${y(i)-16}" width="${W}" height="32" fill="transparent"/>
     </g>`;
   }).join("");
@@ -92,7 +93,7 @@ function renderFinder(){
   if(!finder.step) return;
   let body;
   if(finder.step===1) body = `<div class="label">Question 1 of 2</div><h2>Do you write code in your job?</h2>
-    <div class="f-opts"><button class="f-opt" data-tech="1"><b>Yes</b><span>I build or test software</span></button><button class="f-opt" data-tech="0"><b>No</b><span>I work with people, products or processes</span></button></div>`;
+    <div class="f-opts"><button class="f-opt" data-tech="1"><b>Yes</b><span>I build or test software</span></button><button class="f-opt" data-tech="0"><b>No</b><span>I work with people, products or processes</span></button><button class="f-opt" data-pick="student"><b>Not yet</b><span>I'm a student or switching careers into tech</span></button></div>`;
   else if(finder.step===2){ const q=FINDER_Q2[finder.tech?"tech":"non"];
     body = `<div class="label">Question 2 of 2</div><h2>${q.q}</h2><div class="f-opts">${q.o.map(([l,id])=>`<button class="f-opt" data-pick="${id}"><span class="pc-glyph num" style="--c:var(${LOOK[id][1]})">${esc(LOOK[id][0])}</span><b>${esc(l)}</b></button>`).join("")}</div>`; }
   else { const t=trackById(finder.pick);
@@ -103,7 +104,7 @@ function renderFinder(){
       <div class="home-hero-actions"><a class="btn" href="#path-${t.id}">See this path</a><button class="btn sec" id="fRestart">Start over</button></div>`; }
   el.innerHTML = `<button class="f-close" id="fClose" aria-label="Close path finder">×</button>${body}`;
   el.querySelectorAll("[data-tech]").forEach(b=>b.onclick=()=>{ finder.tech=b.dataset.tech==="1"; finder.step=2; renderFinder(); });
-  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ finder.pick=b.dataset.pick; finder.step=3; homeFilter="all"; renderFinder(); refreshGrid(); highlight(finder.pick, true); });
+  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ finder.pick=b.dataset.pick; finder.step=3; homeFilter="all"; mapMode=trackById(finder.pick).tech?"tech":"non"; pinned=finder.pick; renderFinder(); refreshGrid(); renderMap(); });
   $("fClose").onclick=()=>{ finder={step:0,tech:null,pick:null}; renderFinder(); refreshGrid(); highlight(null); };
   if($("fRestart")) $("fRestart").onclick=()=>{ finder={step:1,tech:null,pick:null}; renderFinder(); refreshGrid(); highlight(null); };
 }
@@ -132,15 +133,24 @@ function countUp(){
 }
 function bindHome(){
   $("findBtn").onclick=()=>{ finder={step:1,tech:null,pick:null}; renderFinder(); $("finder").scrollIntoView({behavior:"smooth",block:"center"}); };
-  document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); });
+  document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); if(homeFilter!=="all" && homeFilter!==mapMode){ mapMode=homeFilter; renderMap(); } });
+  document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{ mapMode=b.dataset.map; renderMap(); });
+  bindRoutes();
+  bindCards(); renderFinder(); countUp();
+  if(finder.pick) highlight(finder.pick, true);
+}
+function renderMap(){
+  $("mapBox").innerHTML=routeMap(); bindRoutes();
+  document.querySelectorAll("[data-map]").forEach(b=>b.setAttribute("aria-selected", b.dataset.map===mapMode));
+  if(pinned) highlight(pinned, true);
+}
+function bindRoutes(){
   document.querySelectorAll(".route").forEach(r=>{
     const id=r.dataset.id;
     r.onmouseenter=()=>highlight(id); r.onmouseleave=()=>highlight(null);
     r.onclick=()=>{ if(pinned===id) go("path-"+id); else { highlight(id,true); document.querySelector(`.path-card[data-id="${id}"]`)?.scrollIntoView({behavior:"smooth",block:"nearest"}); } };
     r.onkeydown=e=>{ if(e.key==="Enter") go("path-"+id); };
   });
-  bindCards(); renderFinder(); countUp();
-  if(finder.pick) highlight(finder.pick, true);
 }
 
 function pathDetail(t){
