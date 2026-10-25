@@ -1,19 +1,41 @@
 
 /* ---------- state & storage ---------- */
 const KEY = "ai-path-progress-v1";
-const blank = () => ({concepts:{}, quiz:{}, build:{}, exam:null, history:[]});
+const blank = () => ({concepts:{}, quiz:{}, build:{}, exam:null, history:[], bonus:0, flags:{}, badges:{}, daily:null});
+/* root holds what's shared (chosen path, study days); each path has its own progress object, and `state` points at the current one */
+let root = {v:2, track:null, days:[], paths:{}};
 let state = blank();
+function useTrackState(id){ root.paths[id] = Object.assign(blank(), root.paths[id]||{}); state = root.paths[id]; }
+function migrate(o){
+  if(!o) return {v:2, track:null, days:[], paths:{}};
+  if(o.v===2) return Object.assign({v:2, track:null, days:[], paths:{}}, o);
+  // v1 kept one progress object shared by every path: give each module's progress to exactly one path,
+  // the active path if it has that module, otherwise the first path that does
+  const r={v:2, track:o.track||null, days:o.days||[], paths:{}};
+  const any=Object.keys(o.concepts||{}).length||Object.keys(o.quiz||{}).length||Object.keys(o.build||{}).length||o.exam!=null;
+  if(!any) return r;
+  r.track = r.track || "backend";
+  const active=TRACKS.find(t=>t.id===r.track)||TRACKS[0];
+  const owner=k=>active.modules.includes(k) ? active.id : TRACKS.find(t=>t.modules.includes(k))?.id;
+  for(const t of TRACKS){
+    const pick=obj=>Object.fromEntries(Object.entries(obj||{}).filter(([k])=>owner(k)===t.id));
+    const p={...blank(), concepts:pick(o.concepts), quiz:pick(o.quiz), build:pick(o.build)};
+    if(t.id===r.track) Object.assign(p,{exam:o.exam??null, history:o.history||[], bonus:o.bonus||0, flags:o.flags||{}, badges:o.badges||{}, daily:o.daily||null});
+    if(t.id===r.track || Object.keys(p.concepts).length || Object.keys(p.quiz).length || Object.keys(p.build).length) r.paths[t.id]=p;
+  }
+  return r;
+}
 let docRef = null, saveTimer = null, quizRun = null, synced = false;
 
-function loadLocal(){ try{ const s = localStorage.getItem(KEY); if(s) state = Object.assign(blank(), JSON.parse(s)); }catch(e){} }
-function saveLocal(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function loadLocal(){ try{ const s = localStorage.getItem(KEY); if(s) root = migrate(JSON.parse(s)); }catch(e){} }
+function saveLocal(){ try{ localStorage.setItem(KEY, JSON.stringify(root)); }catch(e){} }
 function persist(){
   saveLocal();
   if(!docRef) return;
   clearTimeout(saveTimer);
   setSync("Saving…", synced);
   saveTimer = setTimeout(async ()=>{
-    try{ await docRef.set({progress: JSON.stringify(state), updated: Date.now()}); setSync("Synced to your account", true); }
+    try{ await docRef.set({progress: JSON.stringify(root), updated: Date.now()}); setSync("Synced to your account", true); }
     catch(e){ setSync("Saved on this device · sync failed", false); }
   }, 600);
 }
@@ -26,12 +48,12 @@ async function connect(){
     const uid = await user.id(); if(!uid) return;
     docRef = db.doc("data/users/" + uid + "/progress");
     const snap = await docRef.get();
-    if(snap.exists){ state = Object.assign(blank(), JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); if(!needsPick && parse().name==="paths") history.replaceState(null, "", "#dashboard"); route(); }
+    if(snap.exists){ root = migrate(JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); if(!needsPick && parse().name==="paths") history.replaceState(null, "", "#dashboard"); route(); }
     else if(hasProgress()) save();
     setSync("Synced to your account", true);
   }catch(e){}
 }
-const hasProgress = () => Object.keys(state.concepts).length || Object.keys(state.quiz).length || Object.keys(state.build).length || state.exam!=null;
+const hasProgress = () => Object.values(root.paths).some(p=>Object.keys(p.concepts||{}).length || Object.keys(p.quiz||{}).length || Object.keys(p.build||{}).length || p.exam!=null);
 
 /* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
@@ -62,7 +84,7 @@ function renderNav(r){
   const icon = d => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   $("nav").innerHTML =
     `<a href="#dashboard" class="${r.name==="dashboard"?"on":""}">${icon('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>')}<span class="t">Dashboard</span><span></span></a>
-     <a href="#paths" class="${r.name==="paths"?"on":""}">${icon('<path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="7" r="2"/>')}<span class="t">Switch path</span><span></span></a>
+     <a href="#paths" class="${r.name==="paths"||r.name==="pathdetail"?"on":""}">${icon('<path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="7" r="2"/>')}<span class="t">Switch path</span><span></span></a>
      <a href="#exam" class="${r.name==="exam"||r.name==="examrun"?"on":""}">${icon('<path d="M9 11l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/>')}<span class="t">Boss battle</span><span class="m">${state.exam!=null?pct(state.exam):""}</span></a>
      <a href="#daily" class="${r.name==="daily"?"on":""}">${flame(dailyDone())}<span class="t">Daily challenge</span><span class="m">${dailyDone()?"Done":"New"}</span></a>
      <div class="nav-h">Curriculum</div>` +
@@ -76,6 +98,7 @@ function parse(){
   if(h==="exam-run") return {name:"examrun"};
   if(h==="daily") return {name:"daily"};
   if(h==="paths") return {name:"paths"};
+  const pd = h.match(/^path-([a-z]+)$/); if(pd && trackById(pd[1])) return {name:"pathdetail", id:pd[1]};
   const l = h.match(/^p-([a-z]+)-l(\d)$/);
   if(l && idx(l[1])>=0 && +l[2] < PHASES[idx(l[1])].concepts.length) return {name:"lesson", id:l[1], k:+l[2]};
   const m = h.match(/^p-([a-z]+)(?:-(quiz|build))?$/);
@@ -91,6 +114,7 @@ function route(){
   if(np==null){ cb.href="#exam"; cb.querySelector(".lbl").textContent="Fight the boss"; }
   else { const a=nextAction(np); cb.href=a.href; cb.querySelector(".lbl").textContent="Continue: phase "+(np+1); }
   const v = $("view");
+  if(r.name==="pathdetail"){ const t=trackById(r.id); crumbs(["Paths", `${t.from} → ${t.to}`]); v.innerHTML = pathDetail(t); bindPaths(); return; }
   if(r.name==="paths"){ crumbs(["Choose your path"]); v.innerHTML = pathsView(); bindPaths(); return; }
   if(r.name==="dashboard"){ crumbs(["Dashboard"]); v.innerHTML = dashboard(); bindDashboard(); }
   else if(r.name==="exam"){ crumbs(["Boss battle"]); v.innerHTML = examHome(); bindExamHome(); }
@@ -410,9 +434,9 @@ $("menuBtn").onclick=()=>$("app").classList.add("open");
 $("scrim").onclick=()=>$("app").classList.remove("open");
 $("resetBox").addEventListener("click",e=>{
   const box=$("resetBox");
-  if(e.target.id==="resetBtn") box.innerHTML=`<div class="confirm"><span>Erase all progress?</span><button class="danger" id="resetYes">Erase</button><button id="resetNo">Cancel</button></div>`;
+  if(e.target.id==="resetBtn") box.innerHTML=`<div class="confirm"><span>Erase progress on this path?</span><button class="danger" id="resetYes">Erase</button><button id="resetNo">Cancel</button></div>`;
   else if(e.target.id==="resetNo") box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`;
-  else if(e.target.id==="resetYes"){ state=blank(); quizRun=null; lastLevel=null; save(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Progress reset"); }
+  else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
 loadLocal(); initTrack(); quietSync();

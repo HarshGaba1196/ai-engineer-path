@@ -11,7 +11,7 @@ Gamified learning paths for moving into AI from your current role:
 | Product manager | AI product manager |
 | Any non-technical role | AI-powered professional |
 
-- 26 shared modules; progress on a module counts in every path that uses it
+- 26 modules shared between paths; each path keeps its own progress, XP and badges
 - 156 short lessons with examples and 10-minute exercises
 - Phase quizzes, build projects, a daily challenge and a boss battle
 - XP, ranks, day streaks and badges

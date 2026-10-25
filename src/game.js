@@ -34,19 +34,19 @@ function levelInfo(x=xp()){
 
 /* streaks: one entry per local calendar day with activity */
 const dayKey = (d=new Date()) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-function recordDay(){ const t=dayKey(); state.days=state.days||[]; if(!state.days.includes(t)){ state.days.push(t); state.days=state.days.slice(-400); } }
+function recordDay(){ const t=dayKey(); root.days=root.days||[]; if(!root.days.includes(t)){ root.days.push(t); root.days=root.days.slice(-400); } }
 function streak(){
-  const set=new Set(state.days||[]); const d=new Date();
+  const set=new Set(root.days||[]); const d=new Date();
   if(!set.has(dayKey(d))) d.setDate(d.getDate()-1);
   let n=0; while(set.has(dayKey(d))){ n++; d.setDate(d.getDate()-1); }
   return n;
 }
 function bestStreak(){
-  const days=[...(state.days||[])].sort(); let best=0, run=0, prev=null;
+  const days=[...(root.days||[])].sort(); let best=0, run=0, prev=null;
   for(const k of days){ const t=new Date(k+"T12:00:00"); run = prev && (t-prev)/864e5<1.5 ? run+1 : 1; best=Math.max(best,run); prev=t; }
   return best;
 }
-const studiedToday = () => (state.days||[]).includes(dayKey());
+const studiedToday = () => (root.days||[]).includes(dayKey());
 
 const BADGES = [
   ["first-lesson","n₁","First neuron","Mark your first lesson as understood",()=>lessonsDone()>=1],

@@ -336,6 +336,32 @@ pre.code code{all:unset}
 .path .btn{align-self:flex-start;margin-top:auto}
 .stack{display:flex;flex-wrap:wrap;gap:6px}
 .chip{font:12px var(--f-mono);padding:3px 8px;border:1px solid var(--line);border-radius:4px;color:var(--muted);background:var(--surface)}
+.paths{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.path-card{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:18px;text-decoration:none;color:var(--ink);transition:transform .15s,border-color .15s}
+.path-card:hover{transform:translateY(-2px);border-color:var(--xp)}
+.path-card.cur{border-color:var(--xp);box-shadow:0 0 0 3px var(--xp-soft)}
+.pc-from{font-size:13px;color:var(--muted);font-weight:600}
+.pc-to{display:flex;align-items:center;gap:6px}
+.pc-to b{font:700 19px/1.2 var(--f-display)}
+.pc-meta{font-size:12px;color:var(--faint);margin-bottom:4px}
+.path-card .bar{width:100%;margin-top:4px}
+.back{font-size:14px;font-weight:600;text-decoration:none;align-self:flex-start}
+.pd-hero{padding:24px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(120deg,var(--xp-soft),var(--surface) 60%)}
+.pd-top{display:flex;gap:6px}
+.pd-route{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pd-route span{color:var(--muted);font-weight:600}
+.pd-stats{display:flex;gap:26px;flex-wrap:wrap}
+.pd-stats span{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}
+.pd-stats b{font-size:20px;color:var(--ink)}
+.pd-prog{display:flex;flex-direction:column;gap:6px;max-width:460px}
+.pd-mods{list-style:none;margin:0;padding:0}
+.pd-mods li{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:12px;padding:14px 20px;align-items:start}
+.pd-mods li+li{border-top:1px solid var(--line)}
+.pd-mods p{font-size:13.5px;margin:2px 0 8px}
+.pd-n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.pd-n.done{background:var(--good);border-color:var(--good);color:#fff}
+.pd-concepts{display:flex;flex-wrap:wrap;gap:5px}
+.pd-concepts span{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .scrim{display:none}
@@ -1373,19 +1399,19 @@ function levelInfo(x=xp()){
 
 /* streaks: one entry per local calendar day with activity */
 const dayKey = (d=new Date()) => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-function recordDay(){ const t=dayKey(); state.days=state.days||[]; if(!state.days.includes(t)){ state.days.push(t); state.days=state.days.slice(-400); } }
+function recordDay(){ const t=dayKey(); root.days=root.days||[]; if(!root.days.includes(t)){ root.days.push(t); root.days=root.days.slice(-400); } }
 function streak(){
-  const set=new Set(state.days||[]); const d=new Date();
+  const set=new Set(root.days||[]); const d=new Date();
   if(!set.has(dayKey(d))) d.setDate(d.getDate()-1);
   let n=0; while(set.has(dayKey(d))){ n++; d.setDate(d.getDate()-1); }
   return n;
 }
 function bestStreak(){
-  const days=[...(state.days||[])].sort(); let best=0, run=0, prev=null;
+  const days=[...(root.days||[])].sort(); let best=0, run=0, prev=null;
   for(const k of days){ const t=new Date(k+"T12:00:00"); run = prev && (t-prev)/864e5<1.5 ? run+1 : 1; best=Math.max(best,run); prev=t; }
   return best;
 }
-const studiedToday = () => (state.days||[]).includes(dayKey());
+const studiedToday = () => (root.days||[]).includes(dayKey());
 
 const BADGES = [
   ["first-lesson","n₁","First neuron","Mark your first lesson as understood",()=>lessonsDone()>=1],
@@ -1513,7 +1539,7 @@ function dashboard(){
     <div class="card kpi"><div class="label">Overall mastery</div><b>${pct(overall)}</b><div class="bar ${overall>=0.8?"good":""}" style="margin-top:8px"><i style="width:${pct(overall)}"></i></div></div>
     <div class="card kpi"><div class="label">Phases mastered</div><b>${ms.filter(m=>m>=0.8).length}<span class="muted" style="font-size:16px"> / ${PHASES.length}</span></b><small>80% mastery each</small></div>
     <div class="card kpi"><div class="label">Badges</div><b>${nEarned}<span class="muted" style="font-size:16px"> / ${BADGES.length}</span></b><small>${nEarned?"Keep collecting":"Earn your first one today"}</small></div>
-    <div class="card kpi"><div class="label">Best streak</div><b>${bestStreak()}<span class="muted" style="font-size:16px"> days</span></b><small>${(state.days||[]).length} study days total</small></div>
+    <div class="card kpi"><div class="label">Best streak</div><b>${bestStreak()}<span class="muted" style="font-size:16px"> days</span></b><small>${(root.days||[]).length} study days total</small></div>
   </div>
 
   <div class="grid2">
@@ -1545,7 +1571,7 @@ function dashboard(){
       :`<p class="empty">No quizzes taken yet. Your quiz and boss results will appear here.</p>`}</div>`;
 }
 function weekDots(){
-  const set=new Set(state.days||[]), out=[], d=new Date(); d.setDate(d.getDate()-6);
+  const set=new Set(root.days||[]), out=[], d=new Date(); d.setDate(d.getDate()-6);
   for(let i=0;i<7;i++){ const k=dayKey(d), on=set.has(k); out.push(`<span class="wd ${on?"on":""} ${i===6?"today":""}" title="${k}"><i></i>${"SMTWTFS"[d.getDay()]}</span>`); d.setDate(d.getDate()+1); }
   return out.join("");
 }
@@ -1568,41 +1594,76 @@ function dailyDoneHTML(){
 }
 function bindDashboard(){}
 
-/* ---------- path picker ---------- */
+/* ---------- paths: picker cards, detail page, per-path progress ---------- */
 let needsPick = false;
 function initTrack(){
-  if(!state.track && hasProgress()) state.track = "backend";        // people who started before paths existed
-  needsPick = !state.track;
-  setTrack(state.track || "backend");
+  needsPick = !root.track;
+  setTrack(root.track || "backend");
+  useTrackState(TRACK.id);
   const sub = $("brandSub"); if(sub) sub.textContent = needsPick ? "Your leap into AI" : `${TRACK.from} → ${TRACK.to}`;
 }
-function moduleMastery(p){
-  const c=(state.concepts[p.id]||[]).length/p.concepts.length, q=state.quiz[p.id]??0, b=state.build[p.id]?1:0;
+/* mastery of one module inside one path's own progress */
+function moduleMastery(p, d){
+  const c=(d.concepts[p.id]||[]).length/p.concepts.length, q=d.quiz[p.id]??0, b=d.build[p.id]?1:0;
   return 0.4*c + 0.4*q + 0.2*b;
 }
+function pathData(t){ return Object.assign(blank(), root.paths[t.id]||{}); }
+function pathMastery(t){ const d=pathData(t), ps=trackPhases(t); return ps.reduce((a,p)=>a+moduleMastery(p,d),0)/ps.length; }
+const isCurrent = t => !needsPick && t.id===TRACK.id;
+const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
+
 function pathsView(){
   const card = t => {
-    const ps=trackPhases(t), m=ps.reduce((a,p)=>a+moduleMastery(p),0)/ps.length, cur=!needsPick && t.id===TRACK.id;
-    return `<article class="card path ${cur?"cur":""}">
-      <div class="path-h"><span class="pill ${t.tech?"prog":"warn"}">${t.tech?"Technical":"Non-technical"}</span>${cur?'<span class="pill good">Your path</span>':""}</div>
-      <div class="path-route"><span>${esc(t.from)}</span><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--xp)" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><b>${esc(t.to)}</b></div>
-      <p class="muted">${esc(t.tagline)}</p>
-      <div class="stack">${t.stack.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}</div>
-      <div class="path-meta num"><span><b>${ps.length}</b> phases</span><span><b>~${trackWeeks(t)}</b> weeks</span><span><b>${t.overlap}</b> overlap</span></div>
-      <ol class="path-mods">${ps.map(p=>`<li class="${moduleMastery(p)>=0.8?"done":""}">${esc(p.title)}</li>`).join("")}</ol>
-      ${m>0?`<div class="bar ${m>=0.8?"good":""}"><i style="width:${pct(m)}"></i></div><small class="muted">${pct(m)} mastered so far</small>`:""}
-      <button class="btn ${cur?"sec":""}" data-track="${t.id}">${cur?"Continue this path":m>0?"Switch to this path":"Start this path"}</button>
-    </article>`;
+    const m=pathMastery(t), cur=isCurrent(t), started=!!root.paths[t.id] && m>0;
+    return `<a class="card path-card ${cur?"cur":""}" href="#path-${t.id}">
+      <span class="pc-from">${esc(t.from)}</span>
+      <span class="pc-to">${arrow}<b>${esc(t.to)}</b></span>
+      <span class="pc-meta num">${trackPhases(t).length} phases · ~${trackWeeks(t)} wks</span>
+      ${cur?'<span class="pill good">Your path</span>':started?`<span class="pill prog">${pct(m)} done</span>`:""}
+      ${started||cur?`<span class="bar ${m>=0.8?"good":""}"><i style="width:${pct(m)}"></i></span>`:""}
+    </a>`;
   };
   return `<div class="hero"><div><div class="label" style="color:var(--xp)">Choose your path</div><h1 style="margin-top:4px">Where are you now, and where do you want to go?</h1>
-    <p class="muted">Each path reuses shared modules, so anything you finish counts in every path that includes it. Your XP, streak and badges stay with you when you switch.</p></div></div>
+    <p class="muted">Tap a path to see what's inside. Each path keeps its own progress, XP and badges. Your daily streak counts across all of them.</p></div></div>
     <h2 class="sec-h">Technical paths</h2><div class="paths">${TRACKS.filter(t=>t.tech).map(card).join("")}</div>
     <h2 class="sec-h">Non-technical paths</h2><div class="paths">${TRACKS.filter(t=>!t.tech).map(card).join("")}</div>`;
+}
+
+function pathDetail(t){
+  const ps=trackPhases(t), d=pathData(t), m=pathMastery(t), cur=isCurrent(t), started=m>0;
+  const L=levelInfoFor(t, d);
+  return `<a href="#paths" class="back">← All paths</a>
+  <section class="card pd-hero">
+    <div class="pd-top"><span class="pill ${t.tech?"prog":"warn"}">${t.tech?"Technical":"Non-technical"}</span>${cur?'<span class="pill good">Your path</span>':""}</div>
+    <div class="pd-route"><span>${esc(t.from)}</span>${arrow}<h1>${esc(t.to)}</h1></div>
+    <p class="muted" style="max-width:62ch">${esc(t.tagline)}</p>
+    <div class="pd-stats num">
+      <span><b>${ps.length}</b>phases</span><span><b>~${trackWeeks(t)}</b>weeks</span>
+      <span><b>${ps.reduce((a,p)=>a+p.concepts.length,0)}</b>lessons</span><span><b>${t.overlap}</b>skill overlap</span>
+    </div>
+    ${started?`<div class="pd-prog"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Your progress on this path · Level ${L.level} ${esc(L.name)}</span><b class="num">${pct(m)}</b></div><div class="bar ${m>=0.8?"good":""}"><i style="width:${pct(m)}"></i></div></div>`:""}
+    <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" data-track="${t.id}">${cur?"Continue this path":started?"Switch to this path":"Start this path"}</button>${cur?"":`<a class="btn sec" href="#paths">Compare paths</a>`}</div>
+  </section>
+  <div class="layout">
+    <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+      <div class="card"><div class="card-h"><h2>What you'll learn</h2><span class="muted" style="font-size:13px">In this order</span></div>
+        <ol class="pd-mods">${ps.map((p,i)=>{ const mm=moduleMastery(p,d); return `<li><span class="pd-n num ${mm>=0.8?"done":""}">${mm>=0.8?"✓":i+1}</span><div><b>${esc(p.title)}</b> <span class="muted num" style="font-size:12px">· ${p.weeks}</span><p class="muted">${esc(p.why)}</p><div class="pd-concepts">${p.concepts.map(c=>`<span>${esc(c[0])}</span>`).join("")}</div></div>${started?`<span class="num muted" style="font-size:12px">${pct(mm)}</span>`:""}</li>`; }).join("")}</ol></div>
+    </div>
+    <div class="aside">
+      <div class="card"><div class="card-h"><h2>Good fit if you know</h2></div><div class="card-b"><div class="stack">${t.stack.map(s=>`<span class="chip">${esc(s)}</span>`).join("")}</div></div></div>
+      <div class="card"><div class="card-h"><h2>What you'll build</h2></div><ul class="hist">${ps.map(p=>`<li><span>${esc(p.build.title)}</span></li>`).join("")}</ul></div>
+    </div>
+  </div>`;
+}
+/* level for any path's data, without switching to it */
+function levelInfoFor(t, d){
+  const prev=[state, PHASES, TRACK]; state=d; TRACK=t; PHASES=trackPhases(t);
+  try{ return levelInfo(); } finally { [state, PHASES, TRACK]=prev; }
 }
 function bindPaths(){
   document.querySelectorAll("[data-track]").forEach(b=>b.onclick=()=>{
     const id=b.dataset.track, changed = needsPick || id!==TRACK.id;
-    state.track=id; quizRun=null; initTrack(); lastLevel=levelInfo().level; persist(); renderPlayer();   // picking a path isn't study activity, so no streak day
+    root.track=id; quizRun=null; initTrack(); lastLevel=levelInfo().level; persist(); renderPlayer();   // picking a path isn't study activity, so no streak day
     if(changed) toast(`Path set: ${TRACK.from} → ${TRACK.to}`);
     go("dashboard");
   });
@@ -1610,19 +1671,41 @@ function bindPaths(){
 
 /* ---------- state & storage ---------- */
 const KEY = "ai-path-progress-v1";
-const blank = () => ({concepts:{}, quiz:{}, build:{}, exam:null, history:[]});
+const blank = () => ({concepts:{}, quiz:{}, build:{}, exam:null, history:[], bonus:0, flags:{}, badges:{}, daily:null});
+/* root holds what's shared (chosen path, study days); each path has its own progress object, and `state` points at the current one */
+let root = {v:2, track:null, days:[], paths:{}};
 let state = blank();
+function useTrackState(id){ root.paths[id] = Object.assign(blank(), root.paths[id]||{}); state = root.paths[id]; }
+function migrate(o){
+  if(!o) return {v:2, track:null, days:[], paths:{}};
+  if(o.v===2) return Object.assign({v:2, track:null, days:[], paths:{}}, o);
+  // v1 kept one progress object shared by every path: give each module's progress to exactly one path,
+  // the active path if it has that module, otherwise the first path that does
+  const r={v:2, track:o.track||null, days:o.days||[], paths:{}};
+  const any=Object.keys(o.concepts||{}).length||Object.keys(o.quiz||{}).length||Object.keys(o.build||{}).length||o.exam!=null;
+  if(!any) return r;
+  r.track = r.track || "backend";
+  const active=TRACKS.find(t=>t.id===r.track)||TRACKS[0];
+  const owner=k=>active.modules.includes(k) ? active.id : TRACKS.find(t=>t.modules.includes(k))?.id;
+  for(const t of TRACKS){
+    const pick=obj=>Object.fromEntries(Object.entries(obj||{}).filter(([k])=>owner(k)===t.id));
+    const p={...blank(), concepts:pick(o.concepts), quiz:pick(o.quiz), build:pick(o.build)};
+    if(t.id===r.track) Object.assign(p,{exam:o.exam??null, history:o.history||[], bonus:o.bonus||0, flags:o.flags||{}, badges:o.badges||{}, daily:o.daily||null});
+    if(t.id===r.track || Object.keys(p.concepts).length || Object.keys(p.quiz).length || Object.keys(p.build).length) r.paths[t.id]=p;
+  }
+  return r;
+}
 let docRef = null, saveTimer = null, quizRun = null, synced = false;
 
-function loadLocal(){ try{ const s = localStorage.getItem(KEY); if(s) state = Object.assign(blank(), JSON.parse(s)); }catch(e){} }
-function saveLocal(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function loadLocal(){ try{ const s = localStorage.getItem(KEY); if(s) root = migrate(JSON.parse(s)); }catch(e){} }
+function saveLocal(){ try{ localStorage.setItem(KEY, JSON.stringify(root)); }catch(e){} }
 function persist(){
   saveLocal();
   if(!docRef) return;
   clearTimeout(saveTimer);
   setSync("Saving…", synced);
   saveTimer = setTimeout(async ()=>{
-    try{ await docRef.set({progress: JSON.stringify(state), updated: Date.now()}); setSync("Synced to your account", true); }
+    try{ await docRef.set({progress: JSON.stringify(root), updated: Date.now()}); setSync("Synced to your account", true); }
     catch(e){ setSync("Saved on this device · sync failed", false); }
   }, 600);
 }
@@ -1635,12 +1718,12 @@ async function connect(){
     const uid = await user.id(); if(!uid) return;
     docRef = db.doc("data/users/" + uid + "/progress");
     const snap = await docRef.get();
-    if(snap.exists){ state = Object.assign(blank(), JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); if(!needsPick && parse().name==="paths") history.replaceState(null, "", "#dashboard"); route(); }
+    if(snap.exists){ root = migrate(JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); if(!needsPick && parse().name==="paths") history.replaceState(null, "", "#dashboard"); route(); }
     else if(hasProgress()) save();
     setSync("Synced to your account", true);
   }catch(e){}
 }
-const hasProgress = () => Object.keys(state.concepts).length || Object.keys(state.quiz).length || Object.keys(state.build).length || state.exam!=null;
+const hasProgress = () => Object.values(root.paths).some(p=>Object.keys(p.concepts||{}).length || Object.keys(p.quiz||{}).length || Object.keys(p.build||{}).length || p.exam!=null);
 
 /* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
@@ -1671,7 +1754,7 @@ function renderNav(r){
   const icon = d => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   $("nav").innerHTML =
     `<a href="#dashboard" class="${r.name==="dashboard"?"on":""}">${icon('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>')}<span class="t">Dashboard</span><span></span></a>
-     <a href="#paths" class="${r.name==="paths"?"on":""}">${icon('<path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="7" r="2"/>')}<span class="t">Switch path</span><span></span></a>
+     <a href="#paths" class="${r.name==="paths"||r.name==="pathdetail"?"on":""}">${icon('<path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="7" r="2"/>')}<span class="t">Switch path</span><span></span></a>
      <a href="#exam" class="${r.name==="exam"||r.name==="examrun"?"on":""}">${icon('<path d="M9 11l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/>')}<span class="t">Boss battle</span><span class="m">${state.exam!=null?pct(state.exam):""}</span></a>
      <a href="#daily" class="${r.name==="daily"?"on":""}">${flame(dailyDone())}<span class="t">Daily challenge</span><span class="m">${dailyDone()?"Done":"New"}</span></a>
      <div class="nav-h">Curriculum</div>` +
@@ -1685,6 +1768,7 @@ function parse(){
   if(h==="exam-run") return {name:"examrun"};
   if(h==="daily") return {name:"daily"};
   if(h==="paths") return {name:"paths"};
+  const pd = h.match(/^path-([a-z]+)$/); if(pd && trackById(pd[1])) return {name:"pathdetail", id:pd[1]};
   const l = h.match(/^p-([a-z]+)-l(\d)$/);
   if(l && idx(l[1])>=0 && +l[2] < PHASES[idx(l[1])].concepts.length) return {name:"lesson", id:l[1], k:+l[2]};
   const m = h.match(/^p-([a-z]+)(?:-(quiz|build))?$/);
@@ -1700,6 +1784,7 @@ function route(){
   if(np==null){ cb.href="#exam"; cb.querySelector(".lbl").textContent="Fight the boss"; }
   else { const a=nextAction(np); cb.href=a.href; cb.querySelector(".lbl").textContent="Continue: phase "+(np+1); }
   const v = $("view");
+  if(r.name==="pathdetail"){ const t=trackById(r.id); crumbs(["Paths", `${t.from} → ${t.to}`]); v.innerHTML = pathDetail(t); bindPaths(); return; }
   if(r.name==="paths"){ crumbs(["Choose your path"]); v.innerHTML = pathsView(); bindPaths(); return; }
   if(r.name==="dashboard"){ crumbs(["Dashboard"]); v.innerHTML = dashboard(); bindDashboard(); }
   else if(r.name==="exam"){ crumbs(["Boss battle"]); v.innerHTML = examHome(); bindExamHome(); }
@@ -2019,9 +2104,9 @@ $("menuBtn").onclick=()=>$("app").classList.add("open");
 $("scrim").onclick=()=>$("app").classList.remove("open");
 $("resetBox").addEventListener("click",e=>{
   const box=$("resetBox");
-  if(e.target.id==="resetBtn") box.innerHTML=`<div class="confirm"><span>Erase all progress?</span><button class="danger" id="resetYes">Erase</button><button id="resetNo">Cancel</button></div>`;
+  if(e.target.id==="resetBtn") box.innerHTML=`<div class="confirm"><span>Erase progress on this path?</span><button class="danger" id="resetYes">Erase</button><button id="resetNo">Cancel</button></div>`;
   else if(e.target.id==="resetNo") box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`;
-  else if(e.target.id==="resetYes"){ state=blank(); quizRun=null; lastLevel=null; save(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Progress reset"); }
+  else if(e.target.id==="resetYes"){ root.paths[TRACK.id]=blank(); useTrackState(TRACK.id); quizRun=null; lastLevel=null; persist(); renderPlayer(); box.innerHTML=`<button class="linkbtn" id="resetBtn">Reset progress</button>`; route(); toast("Path progress reset"); }
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
 loadLocal(); initTrack(); quietSync();

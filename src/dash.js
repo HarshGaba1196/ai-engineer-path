@@ -27,7 +27,7 @@ function dashboard(){
     <div class="card kpi"><div class="label">Overall mastery</div><b>${pct(overall)}</b><div class="bar ${overall>=0.8?"good":""}" style="margin-top:8px"><i style="width:${pct(overall)}"></i></div></div>
     <div class="card kpi"><div class="label">Phases mastered</div><b>${ms.filter(m=>m>=0.8).length}<span class="muted" style="font-size:16px"> / ${PHASES.length}</span></b><small>80% mastery each</small></div>
     <div class="card kpi"><div class="label">Badges</div><b>${nEarned}<span class="muted" style="font-size:16px"> / ${BADGES.length}</span></b><small>${nEarned?"Keep collecting":"Earn your first one today"}</small></div>
-    <div class="card kpi"><div class="label">Best streak</div><b>${bestStreak()}<span class="muted" style="font-size:16px"> days</span></b><small>${(state.days||[]).length} study days total</small></div>
+    <div class="card kpi"><div class="label">Best streak</div><b>${bestStreak()}<span class="muted" style="font-size:16px"> days</span></b><small>${(root.days||[]).length} study days total</small></div>
   </div>
 
   <div class="grid2">
@@ -59,7 +59,7 @@ function dashboard(){
       :`<p class="empty">No quizzes taken yet. Your quiz and boss results will appear here.</p>`}</div>`;
 }
 function weekDots(){
-  const set=new Set(state.days||[]), out=[], d=new Date(); d.setDate(d.getDate()-6);
+  const set=new Set(root.days||[]), out=[], d=new Date(); d.setDate(d.getDate()-6);
   for(let i=0;i<7;i++){ const k=dayKey(d), on=set.has(k); out.push(`<span class="wd ${on?"on":""} ${i===6?"today":""}" title="${k}"><i></i>${"SMTWTFS"[d.getDay()]}</span>`); d.setDate(d.getDate()+1); }
   return out.join("");
 }
