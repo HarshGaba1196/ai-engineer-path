@@ -31,7 +31,7 @@ function dashboard(){
   </div>
 
   <div class="grid2">
-    <div class="card"><div class="card-h"><div><h2>Quest map</h2><p class="muted" style="font-size:13px;margin-top:2px">${PHASES.length} worlds from ${esc(TRACK.from.toLowerCase())} to ${esc(TRACK.to.toLowerCase())}. Master each one at 80%. <a href="#paths">Switch path</a></p></div></div>
+    <div class="card"><div class="card-h"><div><h2>Quest map</h2><p class="muted" style="font-size:13px;margin-top:2px">${PHASES.length} worlds from ${esc(TRACK.from.toLowerCase())} to ${esc(TRACK.to.toLowerCase())}. Master each one at 80%.</p></div></div>
       <div class="quest">${questMap(ms, np)}</div></div>
     <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
       ${dailyCard()}

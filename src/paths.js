@@ -29,7 +29,8 @@ function pathsView(){
     </a>`;
   };
   return `<div class="hero"><div><div class="label" style="color:var(--xp)">Choose your path</div><h1 style="margin-top:4px">Where are you now, and where do you want to go?</h1>
-    <p class="muted">Tap a path to see what's inside. Each path keeps its own progress, XP and badges. Your daily streak counts across all of them.</p></div></div>
+    <p class="muted">Tap a path to see what's inside. Each path keeps its own progress, XP and badges. Your daily streak counts across all of them.</p>
+    ${root.track?`<div class="home-hero-actions"><a class="btn" href="#dashboard">Continue: ${esc(TRACK.from)} → ${esc(TRACK.to)}</a></div>`:""}</div></div>
     <h2 class="sec-h">Technical paths</h2><div class="paths">${TRACKS.filter(t=>t.tech).map(card).join("")}</div>
     <h2 class="sec-h">Non-technical paths</h2><div class="paths">${TRACKS.filter(t=>!t.tech).map(card).join("")}</div>`;
 }

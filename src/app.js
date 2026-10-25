@@ -48,7 +48,7 @@ async function connect(){
     const uid = await user.id(); if(!uid) return;
     docRef = db.doc("data/users/" + uid + "/progress");
     const snap = await docRef.get();
-    if(snap.exists){ root = migrate(JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); if(!needsPick && parse().name==="paths") history.replaceState(null, "", "#dashboard"); route(); }
+    if(snap.exists){ root = migrate(JSON.parse(snap.data().progress || "{}")); saveLocal(); initTrack(); quietSync(); route(); }
     else if(hasProgress()) save();
     setSync("Synced to your account", true);
   }catch(e){}
@@ -84,7 +84,7 @@ function renderNav(r){
   const icon = d => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   $("nav").innerHTML =
     `<a href="#dashboard" class="${r.name==="dashboard"?"on":""}">${icon('<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>')}<span class="t">Dashboard</span><span></span></a>
-     <a href="#paths" class="${r.name==="paths"||r.name==="pathdetail"?"on":""}">${icon('<path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="2"/><circle cx="20" cy="7" r="2"/>')}<span class="t">Switch path</span><span></span></a>
+     <a href="#paths" class="${r.name==="paths"||r.name==="pathdetail"?"on":""}">${icon('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>')}<span class="t">Home: all paths</span><span></span></a>
      <a href="#exam" class="${r.name==="exam"||r.name==="examrun"?"on":""}">${icon('<path d="M9 11l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/>')}<span class="t">Boss battle</span><span class="m">${state.exam!=null?pct(state.exam):""}</span></a>
      <a href="#daily" class="${r.name==="daily"?"on":""}">${flame(dailyDone())}<span class="t">Daily challenge</span><span class="m">${dailyDone()?"Done":"New"}</span></a>
      <div class="nav-h">Curriculum</div>` +
@@ -97,16 +97,20 @@ function parse(){
   if(h==="exam") return {name:"exam"};
   if(h==="exam-run") return {name:"examrun"};
   if(h==="daily") return {name:"daily"};
-  if(h==="paths") return {name:"paths"};
+  if(h==="" || h==="paths" || h==="home") return {name:"paths"};
+  if(h==="dashboard") return {name:"dashboard"};
   const pd = h.match(/^path-([a-z]+)$/); if(pd && trackById(pd[1])) return {name:"pathdetail", id:pd[1]};
   const l = h.match(/^p-([a-z]+)-l(\d)$/);
   if(l && idx(l[1])>=0 && +l[2] < PHASES[idx(l[1])].concepts.length) return {name:"lesson", id:l[1], k:+l[2]};
   const m = h.match(/^p-([a-z]+)(?:-(quiz|build))?$/);
   if(m && idx(m[1])>=0) return {name: m[2]||"phase", id:m[1]};
-  return {name:"dashboard"};
+  return {name:"paths"};
 }
 function route(){
-  const r = parse();
+  let r = parse();
+  const homeView = r.name==="paths" || r.name==="pathdetail";
+  if(!homeView && !root.track){ history.replaceState(null, "", "#paths"); r = {name:"paths"}; }   // a course page needs a chosen path
+  $("app").classList.toggle("home", r.name==="paths" || r.name==="pathdetail");
   $("app").classList.remove("open");
   renderNav(r);
   const np = nextPhase();
@@ -440,5 +444,4 @@ $("resetBox").addEventListener("click",e=>{
 });
 addEventListener("hashchange",()=>{ route(); scrollTo({top:0}); });
 loadLocal(); initTrack(); quietSync();
-if(needsPick && (!location.hash || location.hash==="#dashboard")) history.replaceState(null, "", "#paths");
 route(); connect();
