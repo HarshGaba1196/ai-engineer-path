@@ -19,7 +19,7 @@ const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" strok
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
 const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], fullstack:["⧉","--indigo"], datasci:["∂","--cyan"], pmgr:["▦","--brown"], writer:["¶","--mint"], dba:["⊞","--sky"], itops:["⌘","--slate"], student:["◔","--xp"], support:["“”","--teal"], marketing:["✦","--rose"], sales:["↗","--good"], hr:["◍","--plum"], teacher:["✎","--amber"], finance:["%","--cyan"], legal:["§","--indigo"], lead:["▲","--flame"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
-let homeFilter = "all", mapMode = "tech", finder = {step:0, tech:null, pick:null};
+let homeFilter = "all", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
   tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Full-stack web development","fullstack"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Data science and modelling","datasci"],["Security and threat detection","security"],["Databases and SQL administration","dba"],["IT support and systems administration","itops"]]},
   non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Project or delivery management","pmgr"],["Technical writing or documentation","writer"],["Customer support","support"],["Marketing","marketing"],["Sales","sales"],["HR or recruiting","hr"],["Teaching or training","teacher"],["Finance or accounting","finance"],["Legal or compliance","legal"],["Managing a team","lead"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
@@ -28,7 +28,7 @@ function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
   const nLessons = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+(LESSONS[id]||[]).length,0);
   const nQs = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+MODULES.find(m=>m.id===id).quiz.length,0);
-  return `${root.track?streakPanel():""}<section class="home-hero">
+  return `<section class="home-hero">
     <div class="hh-text">
       <div class="label" style="color:var(--xp)">${TRACKS.length} career paths into AI</div>
       <h1>Make your leap into AI, from the job you already have</h1>
@@ -44,9 +44,9 @@ function pathsView(){
         <button class="btn ${root.track?"sec":""}" id="findBtn">Find my path</button>
       </div>
     </div>
-    <div class="hh-map card" aria-label="Route map from current roles to AI roles"><div class="map-tabs seg" role="tablist" aria-label="Route map roles">${[["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-map="${k}" aria-selected="${mapMode===k}">${l}</button>`).join("")}</div><div id="mapBox">${routeMap()}</div><p class="map-hint">Hover or tap a role to see where it leads</p></div>
+    ${showcaseHTML()}
   </section>
-  ${root.track?"":streakPanel()}
+  ${streakPanel()}
   <section class="card finder" id="finder" ${finder.step?"":"hidden"}></section>
   <div class="home-bar">
     <div class="search-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -75,27 +75,6 @@ function pathCards(){
     </a>`;
   }).join("");
 }
-function routeMap(){
-  const list=TRACKS.filter(t=>(mapMode==="tech")===t.tech);
-  const W=610, n=list.length, H=Math.max(320, 48+n*28), y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
-  const rows = list.map((t,i)=>{
-    const [,c]=LOOK[t.id];
-    return `<g class="route" data-id="${t.id}" tabindex="0" role="link" aria-label="${esc(t.from)} to ${esc(t.to)}" style="--c:var(${c})">
-      <path class="rl" d="M150 ${y(i)} C ${hx-60} ${y(i)}, ${hx-60} ${hy}, ${hx-26} ${hy}"/>
-      <path class="rl" d="M${hx+26} ${hy} C ${hx+60} ${hy}, ${hx+60} ${y(i)}, ${W-175} ${y(i)}"/>
-      <circle class="rd" cx="150" cy="${y(i)}" r="5"/><circle class="rd" cx="${W-175}" cy="${y(i)}" r="5"/>
-      <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.short||t.from)}</text>
-      <text class="rt to" x="${W-165}" y="${y(i)+4}">${esc(t.to.replace("professional","pro").replace("operations","ops"))}</text>
-      <rect x="0" y="${y(i)-16}" width="${W}" height="32" fill="transparent"/>
-    </g>`;
-  }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}" class="map" role="img">
-    <text x="140" y="14" text-anchor="end" class="mh">YOU TODAY</text><text x="${W-165}" y="14" class="mh">YOUR AI ROLE</text>
-    ${rows}
-    <circle class="hub-glow" cx="${hx}" cy="${hy}" r="34"/><circle class="hub" cx="${hx}" cy="${hy}" r="24"/>
-    <text x="${hx}" y="${hy+5}" text-anchor="middle" class="hub-t">AI</text>
-  </svg>`;
-}
 function renderFinder(){
   const el=$("finder"); if(!el) return;
   el.hidden = !finder.step;
@@ -113,7 +92,7 @@ function renderFinder(){
       <div class="home-hero-actions"><a class="btn" href="#path-${t.id}">See this path</a><button class="btn sec" id="fRestart">Start over</button></div>`; }
   el.innerHTML = `<button class="f-close" id="fClose" aria-label="Close path finder">×</button>${body}`;
   el.querySelectorAll("[data-tech]").forEach(b=>b.onclick=()=>{ finder.tech=b.dataset.tech==="1"; finder.step=2; renderFinder(); });
-  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ finder.pick=b.dataset.pick; finder.step=3; homeFilter="all"; mapMode=trackById(finder.pick).tech?"tech":"non"; pinned=finder.pick; renderFinder(); refreshGrid(); renderMap(); });
+  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ finder.pick=b.dataset.pick; finder.step=3; homeFilter="all"; renderFinder(); refreshGrid(); showcaseTo(finder.pick, true); });
   $("fClose").onclick=()=>{ finder={step:0,tech:null,pick:null}; renderFinder(); refreshGrid(); highlight(null); };
   if($("fRestart")) $("fRestart").onclick=()=>{ finder={step:1,tech:null,pick:null}; renderFinder(); refreshGrid(); highlight(null); };
 }
@@ -123,14 +102,12 @@ function refreshGrid(){
   document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-selected", b.dataset.filter===homeFilter));
   const c=$("pathCount"); if(c) c.innerHTML=countLabel();
   const sg=document.querySelector(".sugg"); if(sg){ sg.innerHTML = !homeQuery ? `<span class="muted">Try:</span>${["SQL","Python","Excel","Kubernetes","Figma","Security","Teaching","No coding"].map(s=>`<button class="chipbtn" data-q="${s}">${s}</button>`).join("")}` : `<button class="chipbtn" id="clearQ">Clear search ×</button>`; bindSugg(); }
-  const vis=visibleTracks(); if(homeQuery && vis.length===1){ mapMode=vis[0].tech?"tech":"non"; renderMap(); highlight(vis[0].id); } else if(!pinned) highlight(null);
+  const vis=visibleTracks(); if(homeQuery && vis.length===1) showcaseTo(vis[0].id, true);
 }
 let pinned=null;
 function highlight(id, pin){
   if(pin!==undefined) pinned = pin ? id : null;
   const on = id || pinned;
-  document.querySelector(".map")?.classList.toggle("focus", !!on);
-  document.querySelectorAll(".route").forEach(r=>r.classList.toggle("on", r.dataset.id===on));
   document.querySelectorAll(".path-card").forEach(c=>c.classList.toggle("lit", c.dataset.id===on));
 }
 function bindCards(){
@@ -145,9 +122,8 @@ function countUp(){
 }
 function bindHome(){
   $("findBtn").onclick=()=>{ finder={step:1,tech:null,pick:null}; renderFinder(); $("finder").scrollIntoView({behavior:"smooth",block:"center"}); };
-  document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); if(homeFilter!=="all" && homeFilter!==mapMode){ mapMode=homeFilter; renderMap(); } });
-  document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{ mapMode=b.dataset.map; renderMap(); });
-  bindRoutes();
+  document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); });
+  bindShowcase();
   const si=$("pathSearch");
   si.oninput=()=>{ homeQuery=si.value.trim(); refreshGrid(); };
   si.onkeydown=e=>{ if(e.key==="Escape"){ si.value=""; homeQuery=""; refreshGrid(); } if(e.key==="Enter"){ const first=document.querySelector(".path-card"); if(first) go("path-"+first.dataset.id); } };
@@ -159,20 +135,6 @@ function bindSugg(){
   document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{ homeQuery=b.dataset.q; $("pathSearch").value=homeQuery; refreshGrid(); });
   if($("clearQ")) $("clearQ").onclick=()=>{ homeQuery=""; $("pathSearch").value=""; refreshGrid(); $("pathSearch").focus(); };
 }
-function renderMap(){
-  $("mapBox").innerHTML=routeMap(); bindRoutes();
-  document.querySelectorAll("[data-map]").forEach(b=>b.setAttribute("aria-selected", b.dataset.map===mapMode));
-  if(pinned) highlight(pinned, true);
-}
-function bindRoutes(){
-  document.querySelectorAll(".route").forEach(r=>{
-    const id=r.dataset.id;
-    r.onmouseenter=()=>highlight(id); r.onmouseleave=()=>highlight(null);
-    r.onclick=()=>{ if(pinned===id) go("path-"+id); else { highlight(id,true); document.querySelector(`.path-card[data-id="${id}"]`)?.scrollIntoView({behavior:"smooth",block:"nearest"}); } };
-    r.onkeydown=e=>{ if(e.key==="Enter") go("path-"+id); };
-  });
-}
-
 function pathDetail(t){
   const ps=trackPhases(t), d=pathData(t), m=pathMastery(t), cur=isCurrent(t), started=m>0;
   const L=levelInfoFor(t, d);

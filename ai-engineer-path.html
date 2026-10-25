@@ -377,26 +377,6 @@ a.brand{text-decoration:none}
 .hh-stats{display:flex;gap:24px;flex-wrap:wrap;margin-top:4px}
 .hh-stats span{display:flex;flex-direction:column;font-size:12px;color:var(--muted)}
 .hh-stats b{font-size:26px;color:var(--ink);line-height:1.1}
-.hh-map{padding:14px 10px 8px;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 50%,var(--xp-soft),var(--surface) 65%)}
-.map{width:100%;height:auto;display:block}
-.map .mh{font:600 10px var(--f-ui);letter-spacing:.1em;fill:var(--faint)}
-.map .rl{fill:none;stroke:var(--line);stroke-width:2;transition:stroke .2s,stroke-width .2s,opacity .2s}
-.map .rd{fill:var(--surface);stroke:var(--faint);stroke-width:2;transition:.2s}
-.map .rt{font:600 12.5px var(--f-ui);fill:var(--muted);transition:fill .2s,opacity .2s}
-.map .rt.to{fill:var(--ink)}
-.map .route{cursor:pointer;outline:none}
-.map .route .rl{stroke-dasharray:6 6;animation:flow 1.4s linear infinite}
-@keyframes flow{to{stroke-dashoffset:-24}}
-.map.focus .route:not(.on){opacity:.28}
-.map .route.on .rl{stroke:var(--c);stroke-width:3.5}
-.map .route.on .rd{fill:var(--c);stroke:var(--c)}
-.map .route.on .rt{fill:var(--c)}
-.map .route:focus-visible .rt{text-decoration:underline}
-.map .hub{fill:var(--xp)}
-.map .hub-glow{fill:var(--xp);opacity:.18;animation:glow 2.4s ease-in-out infinite;transform-origin:center;transform-box:fill-box}
-@keyframes glow{50%{transform:scale(1.25);opacity:.06}}
-.map .hub-t{font:700 15px var(--f-display);fill:#fff}
-.map-hint{text-align:center;font-size:12px;color:var(--faint);margin:2px 0 0}
 .finder{padding:24px;position:relative;display:flex;flex-direction:column;gap:12px;border-color:var(--xp);animation:rise .35s ease-out}
 .f-close{position:absolute;top:10px;right:12px;border:0;background:none;font-size:22px;color:var(--faint);line-height:1}
 .f-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
@@ -421,10 +401,8 @@ a.brand{text-decoration:none}
 .path-card:hover .pc-peek,.path-card.lit .pc-peek,.path-card:focus-visible .pc-peek{max-height:120px;opacity:1;margin-top:8px}
 @media (hover:none){ .pc-peek{max-height:none;opacity:1;margin-top:8px} }
 @media (max-width:900px){ .home-hero{grid-template-columns:1fr} }
-@media (max-width:520px){ .map .rt{font-size:14px} .f-result{grid-template-columns:1fr} }
-@media (prefers-reduced-motion:reduce){ .map .route .rl,.map .hub-glow,.path-card{animation:none} }
-.map-tabs{display:flex;width:max-content;margin:0 auto 6px}
-.map-tabs button{padding:5px 12px;font-size:13px}
+@media (max-width:520px){ .f-result{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ .path-card{animation:none} }
 /* home: streak panel and search */
 .streak-panel{display:grid;grid-template-columns:1.25fr 1fr 1fr 1.35fr;gap:0;padding:0;overflow:hidden}
 .streak-panel.risk{border-color:var(--flame);box-shadow:0 0 0 3px var(--flame-soft)}
@@ -487,6 +465,41 @@ mark{background:color-mix(in srgb,var(--amber) 30%,transparent);color:inherit;bo
 @media (max-width:1060px){ .streak-panel{grid-template-columns:1fr 1fr} .sp-cell:nth-child(3){border-left:0} .sp-cell:nth-child(n+3){border-top:1px solid var(--line)} }
 @media (max-width:560px){ .streak-panel{grid-template-columns:1fr} .sp-cell+.sp-cell{border-left:0;border-top:1px solid var(--line)} .home-bar{top:calc(env(safe-area-inset-top,0px) + 57px)} .search-box{min-width:0;width:100%} }
 @media (prefers-reduced-motion:reduce){ .sp-flame svg{animation:none!important} }
+/* home: role showcase */
+.showcase{padding:18px 20px 0;display:flex;flex-direction:column;gap:12px;overflow:hidden;position:relative}
+.sc-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.sc-pick{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--muted)}
+.sc-pick select{font:inherit;font-weight:600;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:6px 10px;max-width:230px}
+.sc-ctrl{display:flex;gap:4px}
+.sc-ctrl button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:15px;line-height:1;color:var(--muted)}
+.sc-ctrl button:hover{border-color:var(--xp);color:var(--xp)}
+.sc-body{display:flex;flex-direction:column;gap:16px;animation:scIn .45s cubic-bezier(.2,.9,.3,1)}
+@keyframes scIn{from{transform:translateX(18px);opacity:.2}}
+.sc-route{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;padding:16px;border-radius:12px;background:linear-gradient(120deg,color-mix(in srgb,var(--c) 14%,var(--surface)),var(--surface) 75%);border:1px solid color-mix(in srgb,var(--c) 25%,var(--line))}
+.sc-from{display:flex;align-items:center;gap:12px;grid-column:1/-1}
+.sc-from small,.sc-to small{display:block;font:600 10.5px var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.sc-from b{font-size:16px}
+.sc-from .pc-glyph{background:var(--c)}
+.sc-arrow{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding-left:18px}
+.sc-line{width:3px;height:30px;border-radius:2px;background:repeating-linear-gradient(to bottom,var(--c) 0 6px,transparent 6px 11px);background-size:100% 22px;animation:drip 1s linear infinite}
+@keyframes drip{to{background-position:0 22px}}
+.sc-weeks{font-size:12px;color:var(--muted)}
+.sc-to{grid-column:1/-1}
+.sc-typed{font-size:clamp(24px,3vw,32px);color:var(--c);min-height:1.2em}
+.sc-typed.typing::after{content:"";display:inline-block;width:3px;height:.9em;background:var(--c);margin-left:3px;vertical-align:-2px;animation:blink .7s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.sc-skills{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sc-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sc-chip{font-size:12.5px;padding:4px 10px;border-radius:99px;animation:chipIn .4s both;animation-delay:calc(var(--d) * 70ms + 150ms)}
+@keyframes chipIn{from{transform:translateY(8px) scale(.9)}}
+.sc-chip.keep{background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.sc-chip.add{background:color-mix(in srgb,var(--c) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--c) 35%,transparent);color:var(--ink);font-weight:600}
+.sc-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:16px}
+.sc-foot .btn{background:var(--c);border-color:var(--c);color:#fff}
+.sc-prog{height:3px;background:var(--line);margin:0 -20px}
+.sc-prog i{display:block;height:100%;width:0;background:var(--xp);transition:width .1s linear}
+@media (max-width:560px){ .sc-skills{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ .sc-body,.sc-chip,.sc-line{animation:none} }
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .scrim{display:none}
@@ -2833,7 +2846,7 @@ const arrow = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" strok
 
 /* ---------- home: route map, path finder, filters, cards ---------- */
 const LOOK = {backend:["{ }","--accent"], frontend:["</>","--xp"], devops:["∞","--good"], qa:["✓","--amber"], analyst:["Σ","--teal"], dataeng:["⇶","--sky"], security:["◈","--bad"], fullstack:["⧉","--indigo"], datasci:["∂","--cyan"], pmgr:["▦","--brown"], writer:["¶","--mint"], dba:["⊞","--sky"], itops:["⌘","--slate"], student:["◔","--xp"], support:["“”","--teal"], marketing:["✦","--rose"], sales:["↗","--good"], hr:["◍","--plum"], teacher:["✎","--amber"], finance:["%","--cyan"], legal:["§","--indigo"], lead:["▲","--flame"], mobile:["▯","--lime"], ba:["≡","--slate"], pm:["◎","--flame"], ux:["◐","--plum"], nontech:["★","--rose"]};
-let homeFilter = "all", mapMode = "tech", finder = {step:0, tech:null, pick:null};
+let homeFilter = "all", finder = {step:0, tech:null, pick:null};
 const FINDER_Q2 = {
   tech:{q:"What do you mostly work on?", o:[["Backend services and APIs","backend"],["Web interfaces","frontend"],["Full-stack web development","fullstack"],["Mobile apps (iOS or Android)","mobile"],["Infrastructure, CI/CD and cloud","devops"],["Testing and quality","qa"],["Data analysis, SQL and dashboards","analyst"],["Data pipelines and warehouses","dataeng"],["Data science and modelling","datasci"],["Security and threat detection","security"],["Databases and SQL administration","dba"],["IT support and systems administration","itops"]]},
   non:{q:"Which is closest to your role?", o:[["Product management","pm"],["UX, UI or product design","ux"],["Business analysis and requirements","ba"],["Project or delivery management","pmgr"],["Technical writing or documentation","writer"],["Customer support","support"],["Marketing","marketing"],["Sales","sales"],["HR or recruiting","hr"],["Teaching or training","teacher"],["Finance or accounting","finance"],["Legal or compliance","legal"],["Managing a team","lead"],["Something else: operations, marketing, HR, sales, support, finance…","nontech"]]}};
@@ -2842,7 +2855,7 @@ function pathsView(){
   const nMods = new Set(TRACKS.flatMap(t=>t.modules)).size;
   const nLessons = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+(LESSONS[id]||[]).length,0);
   const nQs = [...new Set(TRACKS.flatMap(t=>t.modules))].reduce((a,id)=>a+MODULES.find(m=>m.id===id).quiz.length,0);
-  return `${root.track?streakPanel():""}<section class="home-hero">
+  return `<section class="home-hero">
     <div class="hh-text">
       <div class="label" style="color:var(--xp)">${TRACKS.length} career paths into AI</div>
       <h1>Make your leap into AI, from the job you already have</h1>
@@ -2858,9 +2871,9 @@ function pathsView(){
         <button class="btn ${root.track?"sec":""}" id="findBtn">Find my path</button>
       </div>
     </div>
-    <div class="hh-map card" aria-label="Route map from current roles to AI roles"><div class="map-tabs seg" role="tablist" aria-label="Route map roles">${[["tech","Technical"],["non","Non-technical"]].map(([k,l])=>`<button role="tab" data-map="${k}" aria-selected="${mapMode===k}">${l}</button>`).join("")}</div><div id="mapBox">${routeMap()}</div><p class="map-hint">Hover or tap a role to see where it leads</p></div>
+    ${showcaseHTML()}
   </section>
-  ${root.track?"":streakPanel()}
+  ${streakPanel()}
   <section class="card finder" id="finder" ${finder.step?"":"hidden"}></section>
   <div class="home-bar">
     <div class="search-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
@@ -2889,27 +2902,6 @@ function pathCards(){
     </a>`;
   }).join("");
 }
-function routeMap(){
-  const list=TRACKS.filter(t=>(mapMode==="tech")===t.tech);
-  const W=610, n=list.length, H=Math.max(320, 48+n*28), y=i=>34+i*(H-68)/(n-1), hx=W/2, hy=H/2;
-  const rows = list.map((t,i)=>{
-    const [,c]=LOOK[t.id];
-    return `<g class="route" data-id="${t.id}" tabindex="0" role="link" aria-label="${esc(t.from)} to ${esc(t.to)}" style="--c:var(${c})">
-      <path class="rl" d="M150 ${y(i)} C ${hx-60} ${y(i)}, ${hx-60} ${hy}, ${hx-26} ${hy}"/>
-      <path class="rl" d="M${hx+26} ${hy} C ${hx+60} ${hy}, ${hx+60} ${y(i)}, ${W-175} ${y(i)}"/>
-      <circle class="rd" cx="150" cy="${y(i)}" r="5"/><circle class="rd" cx="${W-175}" cy="${y(i)}" r="5"/>
-      <text class="rt" x="140" y="${y(i)+4}" text-anchor="end">${esc(t.short||t.from)}</text>
-      <text class="rt to" x="${W-165}" y="${y(i)+4}">${esc(t.to.replace("professional","pro").replace("operations","ops"))}</text>
-      <rect x="0" y="${y(i)-16}" width="${W}" height="32" fill="transparent"/>
-    </g>`;
-  }).join("");
-  return `<svg viewBox="0 0 ${W} ${H}" class="map" role="img">
-    <text x="140" y="14" text-anchor="end" class="mh">YOU TODAY</text><text x="${W-165}" y="14" class="mh">YOUR AI ROLE</text>
-    ${rows}
-    <circle class="hub-glow" cx="${hx}" cy="${hy}" r="34"/><circle class="hub" cx="${hx}" cy="${hy}" r="24"/>
-    <text x="${hx}" y="${hy+5}" text-anchor="middle" class="hub-t">AI</text>
-  </svg>`;
-}
 function renderFinder(){
   const el=$("finder"); if(!el) return;
   el.hidden = !finder.step;
@@ -2927,7 +2919,7 @@ function renderFinder(){
       <div class="home-hero-actions"><a class="btn" href="#path-${t.id}">See this path</a><button class="btn sec" id="fRestart">Start over</button></div>`; }
   el.innerHTML = `<button class="f-close" id="fClose" aria-label="Close path finder">×</button>${body}`;
   el.querySelectorAll("[data-tech]").forEach(b=>b.onclick=()=>{ finder.tech=b.dataset.tech==="1"; finder.step=2; renderFinder(); });
-  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ finder.pick=b.dataset.pick; finder.step=3; homeFilter="all"; mapMode=trackById(finder.pick).tech?"tech":"non"; pinned=finder.pick; renderFinder(); refreshGrid(); renderMap(); });
+  el.querySelectorAll("[data-pick]").forEach(b=>b.onclick=()=>{ finder.pick=b.dataset.pick; finder.step=3; homeFilter="all"; renderFinder(); refreshGrid(); showcaseTo(finder.pick, true); });
   $("fClose").onclick=()=>{ finder={step:0,tech:null,pick:null}; renderFinder(); refreshGrid(); highlight(null); };
   if($("fRestart")) $("fRestart").onclick=()=>{ finder={step:1,tech:null,pick:null}; renderFinder(); refreshGrid(); highlight(null); };
 }
@@ -2937,14 +2929,12 @@ function refreshGrid(){
   document.querySelectorAll("[data-filter]").forEach(b=>b.setAttribute("aria-selected", b.dataset.filter===homeFilter));
   const c=$("pathCount"); if(c) c.innerHTML=countLabel();
   const sg=document.querySelector(".sugg"); if(sg){ sg.innerHTML = !homeQuery ? `<span class="muted">Try:</span>${["SQL","Python","Excel","Kubernetes","Figma","Security","Teaching","No coding"].map(s=>`<button class="chipbtn" data-q="${s}">${s}</button>`).join("")}` : `<button class="chipbtn" id="clearQ">Clear search ×</button>`; bindSugg(); }
-  const vis=visibleTracks(); if(homeQuery && vis.length===1){ mapMode=vis[0].tech?"tech":"non"; renderMap(); highlight(vis[0].id); } else if(!pinned) highlight(null);
+  const vis=visibleTracks(); if(homeQuery && vis.length===1) showcaseTo(vis[0].id, true);
 }
 let pinned=null;
 function highlight(id, pin){
   if(pin!==undefined) pinned = pin ? id : null;
   const on = id || pinned;
-  document.querySelector(".map")?.classList.toggle("focus", !!on);
-  document.querySelectorAll(".route").forEach(r=>r.classList.toggle("on", r.dataset.id===on));
   document.querySelectorAll(".path-card").forEach(c=>c.classList.toggle("lit", c.dataset.id===on));
 }
 function bindCards(){
@@ -2959,9 +2949,8 @@ function countUp(){
 }
 function bindHome(){
   $("findBtn").onclick=()=>{ finder={step:1,tech:null,pick:null}; renderFinder(); $("finder").scrollIntoView({behavior:"smooth",block:"center"}); };
-  document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); if(homeFilter!=="all" && homeFilter!==mapMode){ mapMode=homeFilter; renderMap(); } });
-  document.querySelectorAll("[data-map]").forEach(b=>b.onclick=()=>{ mapMode=b.dataset.map; renderMap(); });
-  bindRoutes();
+  document.querySelectorAll("[data-filter]").forEach(b=>b.onclick=()=>{ homeFilter=b.dataset.filter; refreshGrid(); });
+  bindShowcase();
   const si=$("pathSearch");
   si.oninput=()=>{ homeQuery=si.value.trim(); refreshGrid(); };
   si.onkeydown=e=>{ if(e.key==="Escape"){ si.value=""; homeQuery=""; refreshGrid(); } if(e.key==="Enter"){ const first=document.querySelector(".path-card"); if(first) go("path-"+first.dataset.id); } };
@@ -2973,20 +2962,6 @@ function bindSugg(){
   document.querySelectorAll("[data-q]").forEach(b=>b.onclick=()=>{ homeQuery=b.dataset.q; $("pathSearch").value=homeQuery; refreshGrid(); });
   if($("clearQ")) $("clearQ").onclick=()=>{ homeQuery=""; $("pathSearch").value=""; refreshGrid(); $("pathSearch").focus(); };
 }
-function renderMap(){
-  $("mapBox").innerHTML=routeMap(); bindRoutes();
-  document.querySelectorAll("[data-map]").forEach(b=>b.setAttribute("aria-selected", b.dataset.map===mapMode));
-  if(pinned) highlight(pinned, true);
-}
-function bindRoutes(){
-  document.querySelectorAll(".route").forEach(r=>{
-    const id=r.dataset.id;
-    r.onmouseenter=()=>highlight(id); r.onmouseleave=()=>highlight(null);
-    r.onclick=()=>{ if(pinned===id) go("path-"+id); else { highlight(id,true); document.querySelector(`.path-card[data-id="${id}"]`)?.scrollIntoView({behavior:"smooth",block:"nearest"}); } };
-    r.onkeydown=e=>{ if(e.key==="Enter") go("path-"+id); };
-  });
-}
-
 function pathDetail(t){
   const ps=trackPhases(t), d=pathData(t), m=pathMastery(t), cur=isCurrent(t), started=m>0;
   const L=levelInfoFor(t, d);
@@ -3136,6 +3111,85 @@ document.addEventListener("keydown",e=>{
   if(e.key!=="/" || ["INPUT","TEXTAREA"].includes(document.activeElement?.tagName)) return;
   const s=$("pathSearch"); if(s){ e.preventDefault(); s.focus(); s.scrollIntoView({behavior:"smooth",block:"center"}); }
 });
+
+/* ---------- role showcase: cycles through paths, showing skills kept and skills added ---------- */
+const GENERIC = ["aifound","promptpro","aigov","aileader","aiwork"];
+const SHOW_MS = 5500;
+let showIdx = 0, showPaused = false, showElapsed = 0, showTimer = null, typeTimer = null;
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function showcaseHTML(){
+  if(root.track && !showTimer) showIdx = Math.max(0, TRACKS.findIndex(t=>t.id===root.track));
+  return `<div class="card showcase" id="showcase" aria-roledescription="carousel" aria-label="Career path showcase">
+    <div class="sc-top">
+      <label class="sc-pick">I'm a<select id="scSel" aria-label="Choose your current role">${TRACKS.map((t,i)=>`<option value="${i}" ${i===showIdx?"selected":""}>${esc(t.from)}</option>`).join("")}</select></label>
+      <div class="sc-ctrl">
+        <button id="scPrev" aria-label="Previous role">‹</button>
+        <button id="scPlay" aria-label="Pause">${reducedMotion()?"▶":"❚❚"}</button>
+        <button id="scNext" aria-label="Next role">›</button>
+      </div>
+    </div>
+    <div id="scBody" aria-live="polite">${showcaseInner(TRACKS[showIdx])}</div>
+    <div class="sc-prog"><i id="scBar"></i></div>
+  </div>`;
+}
+function showcaseInner(t){
+  const ps=trackPhases(t), [g,c]=LOOK[t.id];
+  const keep=t.stack.slice(0,4);
+  const distinct=ps.filter(p=>!GENERIC.includes(p.id)), add=(distinct.length>=3?distinct:ps).slice(0,4).map(p=>p.title);
+  const lessons=ps.reduce((a,p)=>a+p.concepts.length,0);
+  return `<div class="sc-body" style="--c:var(${c})">
+    <div class="sc-route">
+      <div class="sc-from"><span class="pc-glyph num">${esc(g)}</span><div><small>Today</small><b>${esc(t.from)}</b></div></div>
+      <div class="sc-arrow" aria-hidden="true"><span class="sc-line"></span><span class="sc-weeks num">~${trackWeeks(t)} weeks</span></div>
+      <div class="sc-to"><small>You become</small><h2 class="sc-typed" data-text="${esc(t.to)}">${esc(t.to)}</h2></div>
+    </div>
+    <div class="sc-skills">
+      <div><div class="label">Skills you keep</div><div class="sc-chips">${keep.map((s,i)=>`<span class="sc-chip keep" style="--d:${i}">${esc(s)}</span>`).join("")}</div></div>
+      <div><div class="label">Skills you'll add</div><div class="sc-chips">${add.map((s,i)=>`<span class="sc-chip add" style="--d:${i+keep.length}">+ ${esc(s)}</span>`).join("")}</div></div>
+    </div>
+    <div class="sc-foot"><span class="muted num">${ps.length} phases · ${lessons} lessons · ${t.tech?"Technical":"No coding"}</span><a class="btn" href="#path-${t.id}">See this path →</a></div>
+  </div>`;
+}
+function showcaseTo(id, pause){
+  const i=TRACKS.findIndex(t=>t.id===id); if(i<0 || !$("scBody")) return;
+  if(pause) setShowPaused(true);
+  setShow(i);
+}
+function setShow(i){
+  showIdx=(i+TRACKS.length)%TRACKS.length; showElapsed=0;
+  $("scBody").innerHTML=showcaseInner(TRACKS[showIdx]);
+  $("scSel").value=String(showIdx);
+  typeIn();
+}
+function typeIn(){
+  const h=document.querySelector(".sc-typed"); clearInterval(typeTimer);
+  if(!h || reducedMotion()) return;
+  const full=h.dataset.text; let n=0; h.textContent=""; h.classList.add("typing");
+  typeTimer=setInterval(()=>{ n++; h.textContent=full.slice(0,n); if(n>=full.length){ clearInterval(typeTimer); h.classList.remove("typing"); } }, 45);
+}
+function setShowPaused(p){
+  showPaused=p; const b=$("scPlay"); if(!b) return;
+  b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label", p?"Play":"Pause");
+}
+function bindShowcase(){
+  const box=$("showcase"); if(!box) return;
+  $("scPrev").onclick=()=>{ setShowPaused(true); setShow(showIdx-1); };
+  $("scNext").onclick=()=>{ setShowPaused(true); setShow(showIdx+1); };
+  $("scPlay").onclick=()=>setShowPaused(!showPaused);
+  $("scSel").onchange=e=>{ setShowPaused(true); setShow(+e.target.value); };
+  let hover=false;
+  box.onmouseenter=()=>hover=true; box.onmouseleave=()=>hover=false;
+  if(reducedMotion()) setShowPaused(true);
+  clearInterval(showTimer);
+  showTimer=setInterval(()=>{
+    if(!$("showcase")){ clearInterval(showTimer); showTimer=null; return; }
+    if(showPaused || hover || document.hidden) return;
+    showElapsed+=100; $("scBar").style.width=Math.min(100,showElapsed/SHOW_MS*100)+"%";
+    if(showElapsed>=SHOW_MS) setShow(showIdx+1);
+  },100);
+  typeIn();
+}
 
 /* ---------- state & storage ---------- */
 const KEY = "ai-path-progress-v1";

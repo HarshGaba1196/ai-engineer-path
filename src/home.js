@@ -107,3 +107,82 @@ document.addEventListener("keydown",e=>{
   if(e.key!=="/" || ["INPUT","TEXTAREA"].includes(document.activeElement?.tagName)) return;
   const s=$("pathSearch"); if(s){ e.preventDefault(); s.focus(); s.scrollIntoView({behavior:"smooth",block:"center"}); }
 });
+
+/* ---------- role showcase: cycles through paths, showing skills kept and skills added ---------- */
+const GENERIC = ["aifound","promptpro","aigov","aileader","aiwork"];
+const SHOW_MS = 5500;
+let showIdx = 0, showPaused = false, showElapsed = 0, showTimer = null, typeTimer = null;
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function showcaseHTML(){
+  if(root.track && !showTimer) showIdx = Math.max(0, TRACKS.findIndex(t=>t.id===root.track));
+  return `<div class="card showcase" id="showcase" aria-roledescription="carousel" aria-label="Career path showcase">
+    <div class="sc-top">
+      <label class="sc-pick">I'm a<select id="scSel" aria-label="Choose your current role">${TRACKS.map((t,i)=>`<option value="${i}" ${i===showIdx?"selected":""}>${esc(t.from)}</option>`).join("")}</select></label>
+      <div class="sc-ctrl">
+        <button id="scPrev" aria-label="Previous role">‹</button>
+        <button id="scPlay" aria-label="Pause">${reducedMotion()?"▶":"❚❚"}</button>
+        <button id="scNext" aria-label="Next role">›</button>
+      </div>
+    </div>
+    <div id="scBody" aria-live="polite">${showcaseInner(TRACKS[showIdx])}</div>
+    <div class="sc-prog"><i id="scBar"></i></div>
+  </div>`;
+}
+function showcaseInner(t){
+  const ps=trackPhases(t), [g,c]=LOOK[t.id];
+  const keep=t.stack.slice(0,4);
+  const distinct=ps.filter(p=>!GENERIC.includes(p.id)), add=(distinct.length>=3?distinct:ps).slice(0,4).map(p=>p.title);
+  const lessons=ps.reduce((a,p)=>a+p.concepts.length,0);
+  return `<div class="sc-body" style="--c:var(${c})">
+    <div class="sc-route">
+      <div class="sc-from"><span class="pc-glyph num">${esc(g)}</span><div><small>Today</small><b>${esc(t.from)}</b></div></div>
+      <div class="sc-arrow" aria-hidden="true"><span class="sc-line"></span><span class="sc-weeks num">~${trackWeeks(t)} weeks</span></div>
+      <div class="sc-to"><small>You become</small><h2 class="sc-typed" data-text="${esc(t.to)}">${esc(t.to)}</h2></div>
+    </div>
+    <div class="sc-skills">
+      <div><div class="label">Skills you keep</div><div class="sc-chips">${keep.map((s,i)=>`<span class="sc-chip keep" style="--d:${i}">${esc(s)}</span>`).join("")}</div></div>
+      <div><div class="label">Skills you'll add</div><div class="sc-chips">${add.map((s,i)=>`<span class="sc-chip add" style="--d:${i+keep.length}">+ ${esc(s)}</span>`).join("")}</div></div>
+    </div>
+    <div class="sc-foot"><span class="muted num">${ps.length} phases · ${lessons} lessons · ${t.tech?"Technical":"No coding"}</span><a class="btn" href="#path-${t.id}">See this path →</a></div>
+  </div>`;
+}
+function showcaseTo(id, pause){
+  const i=TRACKS.findIndex(t=>t.id===id); if(i<0 || !$("scBody")) return;
+  if(pause) setShowPaused(true);
+  setShow(i);
+}
+function setShow(i){
+  showIdx=(i+TRACKS.length)%TRACKS.length; showElapsed=0;
+  $("scBody").innerHTML=showcaseInner(TRACKS[showIdx]);
+  $("scSel").value=String(showIdx);
+  typeIn();
+}
+function typeIn(){
+  const h=document.querySelector(".sc-typed"); clearInterval(typeTimer);
+  if(!h || reducedMotion()) return;
+  const full=h.dataset.text; let n=0; h.textContent=""; h.classList.add("typing");
+  typeTimer=setInterval(()=>{ n++; h.textContent=full.slice(0,n); if(n>=full.length){ clearInterval(typeTimer); h.classList.remove("typing"); } }, 45);
+}
+function setShowPaused(p){
+  showPaused=p; const b=$("scPlay"); if(!b) return;
+  b.textContent=p?"▶":"❚❚"; b.setAttribute("aria-label", p?"Play":"Pause");
+}
+function bindShowcase(){
+  const box=$("showcase"); if(!box) return;
+  $("scPrev").onclick=()=>{ setShowPaused(true); setShow(showIdx-1); };
+  $("scNext").onclick=()=>{ setShowPaused(true); setShow(showIdx+1); };
+  $("scPlay").onclick=()=>setShowPaused(!showPaused);
+  $("scSel").onchange=e=>{ setShowPaused(true); setShow(+e.target.value); };
+  let hover=false;
+  box.onmouseenter=()=>hover=true; box.onmouseleave=()=>hover=false;
+  if(reducedMotion()) setShowPaused(true);
+  clearInterval(showTimer);
+  showTimer=setInterval(()=>{
+    if(!$("showcase")){ clearInterval(showTimer); showTimer=null; return; }
+    if(showPaused || hover || document.hidden) return;
+    showElapsed+=100; $("scBar").style.width=Math.min(100,showElapsed/SHOW_MS*100)+"%";
+    if(showElapsed>=SHOW_MS) setShow(showIdx+1);
+  },100);
+  typeIn();
+}
